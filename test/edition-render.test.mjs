@@ -47,6 +47,12 @@ test('chaque date devient un ed-date', () => {
   assert.equal((h.match(/class="ed-date"/g) || []).length, 2);
   assert.match(h, /class="ed-date"[^>]*>12 juin</);
 });
+test('chaque brève est une carte (date + corps + source à l’intérieur)', () => {
+  const h = renderEditionHtml(ED);
+  assert.equal((h.match(/class="card ed-breve"/g) || []).length, 2);
+  // la carte contient la date puis le corps puis le lien, et se referme
+  assert.match(h, /<div class="card ed-breve"><div class="ed-date">12 juin<\/div>.*?<strong>Google publie l'OKF<\/strong>.*?ed-src.*?<\/div>/s);
+});
 test('accroche en gras', () => {
   assert.match(renderEditionHtml(ED), /<strong>Google publie l'OKF<\/strong>/);
 });
