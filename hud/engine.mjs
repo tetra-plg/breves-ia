@@ -4,6 +4,7 @@ import { runSkill as realRunSkill, runRaw as realRunRaw } from '../lib/runner.mj
 import { readSoul as realReadSoul } from '../lib/soul.mjs';
 import { listEditions as realListEditions } from '../lib/editions.mjs';
 import { loadEngineConfig } from '../lib/config.mjs';
+import { parseSoul, replaceSoulSections } from '../lib/soul-model.mjs';
 
 const SOUL_PARTS = ['.claude', 'breves-ia', 'SOUL.md'];
 
@@ -22,16 +23,21 @@ export function defaultDeps(env = process.env) {
   };
 }
 
-// Texte brut de la SOUL (le fichier tel quel), pour affichage/édition fidèle.
-export function readSoulRaw(deps) {
-  try { return deps.readFile(join(deps.repoDir, ...SOUL_PARTS)); } catch { return null; }
+export function getSoul(deps) {
+  try { return parseSoul(deps.readFile(join(deps.repoDir, ...SOUL_PARTS))); }
+  catch { return null; }
 }
 
-// Écrit la SOUL (mutable, hors raw/). Refuse un contenu vide pour ne jamais l'effacer.
-export function saveSoul(deps, text) {
-  if (typeof text !== 'string' || !text.trim()) return { ok: false, error: 'contenu vide' };
-  try { deps.writeFile(join(deps.repoDir, ...SOUL_PARTS), text); return { ok: true }; }
-  catch (e) { return { ok: false, error: e.message }; }
+export function saveSoulSections(deps, edits) {
+  const req = ['quiParle', 'audience', 'voix', 'lignesRouges'];
+  for (const k of req) {
+    if (typeof edits?.[k] !== 'string' || !edits[k].trim()) return { ok: false, error: `${k} vide` };
+  }
+  try {
+    const raw = deps.readFile(join(deps.repoDir, ...SOUL_PARTS));
+    deps.writeFile(join(deps.repoDir, ...SOUL_PARTS), replaceSoulSections(raw, edits));
+    return { ok: true };
+  } catch (e) { return { ok: false, error: e.message }; }
 }
 
 // Lit le texte intégral d'une édition archivée. Nom de fichier strictement validé

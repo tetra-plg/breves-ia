@@ -1,6 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { dispatch, getDashboard, readEdition, readSoulRaw, saveSoul, archiveAndIngest } from '../hud/engine.mjs';
+import { readFileSync } from 'node:fs';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, archiveAndIngest } from '../hud/engine.mjs';
+
+const SOUL_FIXTURE = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
 test('dispatch passe les bons arguments à runSkill', async () => {
   let seen = null;
@@ -49,23 +52,30 @@ test('readEdition renvoie null si lecture échoue', () => {
   const deps = { bbDir: '/tmp/bb', readFile: () => { throw new Error('ENOENT'); } };
   assert.equal(readEdition(deps, '2026-06-17-breves-ia-merim.md'), null);
 });
-test('readSoulRaw lit le fichier SOUL au bon chemin', () => {
+test('getSoul parse le fichier SOUL au bon chemin', () => {
   let asked = null;
-  const deps = { repoDir: '/tmp/repo', readFile: (p) => { asked = p; return '# SOUL'; } };
-  assert.equal(readSoulRaw(deps), '# SOUL');
-  assert.match(asked, /\/tmp\/repo\/\.claude\/breves-ia\/SOUL\.md$/);
+  const deps = { repoDir: '/repo', readFile: (p) => { asked = p; return SOUL_FIXTURE; } };
+  const s = getSoul(deps);
+  assert.equal(s.quiParle, 'Je suis Pierre, VP Engineering.');
+  assert.match(asked, /\/repo\/\.claude\/breves-ia\/SOUL\.md$/);
 });
-test('saveSoul écrit le contenu au bon chemin', () => {
+test('getSoul renvoie null si lecture échoue', () => {
+  const deps = { repoDir: '/repo', readFile: () => { throw new Error('ENOENT'); } };
+  assert.equal(getSoul(deps), null);
+});
+test('saveSoulSections écrit le markdown avec §1-4 modifiés', () => {
   let wrote = null;
-  const deps = { repoDir: '/tmp/repo', writeFile: (p, t) => { wrote = { p, t }; } };
-  assert.deepEqual(saveSoul(deps, '# nouveau'), { ok: true });
-  assert.match(wrote.p, /\/tmp\/repo\/\.claude\/breves-ia\/SOUL\.md$/);
-  assert.equal(wrote.t, '# nouveau');
+  const deps = { repoDir: '/repo', readFile: () => SOUL_FIXTURE, writeFile: (p, t) => { wrote = { p, t }; } };
+  const r = saveSoulSections(deps, { quiParle: 'A', audience: 'B', voix: '- C', lignesRouges: '- D' });
+  assert.equal(r.ok, true);
+  assert.match(wrote.p, /\/repo\/\.claude\/breves-ia\/SOUL\.md$/);
+  assert.match(wrote.t, /## 1\. Qui parle\nA\n/);
+  assert.ok(wrote.t.includes('## 5.'));                    // §5 toujours présente
 });
-test('saveSoul refuse un contenu vide (ne jamais effacer la SOUL)', () => {
+test('saveSoulSections refuse un champ vide (n\'écrit pas)', () => {
   let called = false;
-  const deps = { repoDir: '/tmp/repo', writeFile: () => { called = true; } };
-  assert.equal(saveSoul(deps, '   ').ok, false);
+  const deps = { repoDir: '/repo', readFile: () => SOUL_FIXTURE, writeFile: () => { called = true; } };
+  assert.equal(saveSoulSections(deps, { quiParle: '  ', audience: 'B', voix: 'C', lignesRouges: 'D' }).ok, false);
   assert.equal(called, false);
 });
 
