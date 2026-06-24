@@ -1,6 +1,7 @@
 import { nextView, stepper, viewTitle } from '../lib/ui-state.mjs';
 import { dateLong, inlineMd, escapeHtml, soulVersionLabel } from '../lib/ui-format.mjs';
 import { applyEvent, applyResult, summary } from '../lib/checking-model.mjs';
+import { renderEditionHtml } from '../lib/edition-render.mjs';
 
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
@@ -248,7 +249,7 @@ function renderArchived(a) {
     row.style.display = 'flex';
     box.appendChild(row);
   });
-  $('#newsletter-final').textContent = a.newsletterText || '';
+  $('#newsletter-final').innerHTML = renderEditionHtml(a.newsletterText || '');
 }
 
 // ============ SOUL (structuré : §1-4 éditables, §5-6 display) ============
@@ -303,7 +304,9 @@ async function openReader(e) {
   state.returnTo = state.view;
   show('reader');
   const text = e.file ? await window.breves.readEdition(e.file) : null;
-  $('#reader-text').textContent = text || 'Texte introuvable dans le wiki (raw/notes/' + (e.file || '') + ').';
+  state.readerText = text || '';
+  $('#reader-text').innerHTML = text ? renderEditionHtml(text)
+    : 'Texte introuvable dans le wiki (raw/notes/' + escapeHtml(e.file || '') + ').';
 }
 
 // ============ EVENTS MOTEUR (streaming) ============
@@ -316,6 +319,11 @@ window.breves.onCommandEvent((ev) => {
 
 // ============ CÂBLAGE ============
 function wire() {
+  // liens sources des éditions → navigateur externe
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('.ed-src');
+    if (a && a.dataset.url) { e.preventDefault(); window.breves.openExternal(a.dataset.url); }
+  });
   $('#btn-back').onclick = () => {
     if (state.view === 'detail' || state.view === 'reader') show(state.returnTo || 'dashboard');
     else go('goDash');
@@ -335,7 +343,7 @@ function wire() {
   $('#btn-copy-final').onclick = () => { window.breves.copy(archiveValue?.newsletterText || ''); toast('Brèves copiées : prêtes à coller dans Teams'); };
   $('#btn-hist2').onclick = () => go('goHist');
   $('#btn-new2').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
-  $('#reader-copy').onclick = () => { window.breves.copy($('#reader-text').textContent); toast('Brèves copiées'); };
+  $('#reader-copy').onclick = () => { window.breves.copy(state.readerText || ''); toast('Brèves copiées'); };
 }
 
 wire();

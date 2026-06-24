@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld('breves', {
   getSoulStructured: () => ipcRenderer.invoke('get-soul-structured'),
   saveSoulSections: (edits) => ipcRenderer.invoke('save-soul-sections', edits),
   copy: (text) => ipcRenderer.invoke('copy', text),
+  openExternal: (url) => ipcRenderer.invoke('open-external', url),
   hideWindow: () => ipcRenderer.invoke('hide-window'),
 });

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, ipcMain, clipboard } from 'electron';
+import { app, BrowserWindow, Menu, ipcMain, clipboard, shell } from 'electron';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defaultDeps, dispatch, getDashboard, readEdition, archiveAndIngest, getSoul, saveSoulSections } from './engine.mjs';
@@ -45,6 +45,7 @@ app.whenReady().then(() => {
   ipcMain.handle('get-soul-structured', () => getSoul(deps));
   ipcMain.handle('save-soul-sections', (_e, edits) => saveSoulSections(deps, edits));
   ipcMain.handle('copy', (_e, text) => { clipboard.writeText(String(text)); return true; });
+  ipcMain.handle('open-external', (_e, url) => { if (/^https?:\/\//.test(String(url))) shell.openExternal(url); });
   ipcMain.handle('hide-window', () => { if (win) win.hide(); });
 
   makeWindow();
