@@ -251,15 +251,31 @@ function renderArchived(a) {
   $('#newsletter-final').textContent = a.newsletterText || '';
 }
 
-// ============ SOUL (éditeur brut du vrai fichier) ============
+// ============ SOUL (structuré : §1-4 éditables, §5-6 display) ============
+const SOUL_FIELDS = ['quiParle', 'audience', 'voix', 'lignesRouges'];
 async function renderSoul() {
-  $('#soul-raw').value = 'Chargement…';
-  const raw = await window.breves.getSoulRaw();
-  $('#soul-raw').value = raw ?? '(SOUL introuvable)';
+  const s = await window.breves.getSoulStructured();
+  if (!s) { $('#soul-version').textContent = '(SOUL introuvable)'; return; }
+  $('#soul-version').textContent = s.version;
+  for (const f of SOUL_FIELDS) $('#soul-' + f).value = s[f] || '';
+  const ech = $('#soul-echantillons'); ech.innerHTML = '';
+  (s.echantillons || []).forEach((e) => {
+    const card = el('div', 'card');
+    const pin = e.epingle ? ' <span class="badge-good">épinglé</span>' : '';
+    card.innerHTML = `<div style="font:500 10.5px var(--mono);color:var(--accent);margin-bottom:5px">${escapeHtml(e.date)}${pin}</div><div style="font:400 12.5px/1.5 var(--body)">${inlineMd(e.texte)}</div>`;
+    ech.appendChild(card);
+  });
+  const jrn = $('#soul-journal'); jrn.innerHTML = '';
+  if (!(s.journal || []).length) jrn.appendChild(el('div', 'faint', 'Aucune leçon enregistrée.'));
+  (s.journal || []).forEach((l) => {
+    jrn.appendChild(el('div', '', `<div style="font:500 10.5px var(--mono);color:var(--faint)">${escapeHtml(l.date)}</div><div style="font:400 12.5px/1.45 var(--body);margin-top:1px">${escapeHtml(l.texte)}</div>`));
+  });
 }
 async function saveSoulFromUI() {
-  const text = $('#soul-raw').value;
-  const r = await window.breves.saveSoul(text);
+  const edits = {};
+  for (const f of SOUL_FIELDS) edits[f] = $('#soul-' + f).value.trim();
+  if (SOUL_FIELDS.some((f) => !edits[f])) { toast('Les 4 sections doivent être remplies.'); return; }
+  const r = await window.breves.saveSoulSections(edits);
   if (!r || !r.ok) { toast('Échec de l\'enregistrement : ' + (r?.error || 'inconnu')); return; }
   toast('SOUL enregistrée');
   state.dashboard = await window.breves.getDashboard();  // rafraîchit la version au dashboard

@@ -253,12 +253,25 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
       </div>
     </section>
 
-    <!-- SOUL (éditeur brut du vrai fichier) -->
+    <!-- SOUL (structuré : §1-4 éditables, §5-6 display) -->
     <section data-view="soul">
       <div class="pad">
-        <p class="muted" style="font:400 12.5px/1.5 var(--body);margin:0 0 12px">Le document « âme » : la voix de Pierre, telle quelle. Édite-la directement, puis enregistre.</p>
-        <textarea id="soul-raw" spellcheck="false" style="min-height:440px;font:400 12.5px/1.6 var(--mono)"></textarea>
-        <button id="btn-soul-save" class="btn-primary" style="margin-top:12px">Enregistrer la SOUL</button>
+        <p class="muted" style="font:400 12.5px/1.5 var(--body);margin:0 0 6px">La voix de Pierre. Édite les 4 premières sections, puis enregistre. <span id="soul-version" style="color:var(--accent)"></span></p>
+        <label class="eyebrow" style="display:block;margin:14px 0 5px">1 · Qui parle</label>
+        <textarea id="soul-quiParle" spellcheck="false" style="min-height:70px;font:400 12.5px/1.55 var(--body)"></textarea>
+        <label class="eyebrow" style="display:block;margin:14px 0 5px">2 · Audience</label>
+        <textarea id="soul-audience" spellcheck="false" style="min-height:70px;font:400 12.5px/1.55 var(--body)"></textarea>
+        <label class="eyebrow" style="display:block;margin:14px 0 5px">3 · Voix &amp; tics</label>
+        <textarea id="soul-voix" spellcheck="false" style="min-height:110px;font:400 12.5px/1.55 var(--mono)"></textarea>
+        <label class="eyebrow" style="display:block;margin:14px 0 5px">4 · Lignes rouges</label>
+        <textarea id="soul-lignesRouges" spellcheck="false" style="min-height:90px;font:400 12.5px/1.55 var(--mono)"></textarea>
+        <button id="btn-soul-save" class="btn-primary" style="margin-top:12px">Enregistrer §1-4</button>
+
+        <div class="eyebrow" style="margin:22px 0 9px">5 · Échantillons vivants</div>
+        <div id="soul-echantillons" style="display:flex;flex-direction:column;gap:9px"></div>
+
+        <div class="eyebrow" style="margin:22px 0 9px">6 · Journal d'évolution</div>
+        <div id="soul-journal" style="display:flex;flex-direction:column;gap:9px"></div>
       </div>
     </section>
 
