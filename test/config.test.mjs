@@ -18,6 +18,7 @@ test('repoDir par défaut est un chemin absolu vers le repo', () => {
 });
 test('wikiMcp pointe le script python du wiki', () => {
   const m = loadEngineConfig({ BREVES_BB_DIR: '/tmp/bb' }).wikiMcp;
+  assert.equal(m.type, 'stdio');
   assert.equal(m.command, '/Users/pleguern/.local/pipx/venvs/fastmcp/bin/python');
   assert.deepEqual(m.args, ['/tmp/bb/scripts/mcp/mcp-wiki.py']);
 });
