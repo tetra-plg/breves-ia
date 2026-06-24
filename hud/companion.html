@@ -253,22 +253,12 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
       </div>
     </section>
 
-    <!-- SOUL -->
+    <!-- SOUL (éditeur brut du vrai fichier) -->
     <section data-view="soul">
       <div class="pad">
-        <p class="muted" style="font:400 12.5px/1.5 var(--body);margin:0 0 16px">Le document « âme » : comment écrire dans la voix de Pierre. Il s'enrichit à chaque correction validée.</p>
-        <div class="card" style="margin-bottom:12px">
-          <div class="eyebrow" style="margin-bottom:11px">Règles de style</div>
-          <div id="soul-rules" style="display:flex;flex-direction:column;gap:9px"></div>
-        </div>
-        <div class="card" style="margin-bottom:12px">
-          <div class="eyebrow" style="margin-bottom:11px">Exemples récents validés</div>
-          <div id="soul-examples" style="display:flex;flex-direction:column;gap:11px"></div>
-        </div>
-        <div class="card">
-          <div class="eyebrow" style="margin-bottom:11px">Leçons apprises</div>
-          <div id="soul-lessons" style="display:flex;flex-direction:column;gap:11px"></div>
-        </div>
+        <p class="muted" style="font:400 12.5px/1.5 var(--body);margin:0 0 12px">Le document « âme » : la voix de Pierre, telle quelle. Édite-la directement, puis enregistre.</p>
+        <textarea id="soul-raw" spellcheck="false" style="min-height:440px;font:400 12.5px/1.6 var(--mono)"></textarea>
+        <button id="btn-soul-save" class="btn-primary" style="margin-top:12px">Enregistrer la SOUL</button>
       </div>
     </section>
 

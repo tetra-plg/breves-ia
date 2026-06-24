@@ -230,12 +230,13 @@ async function runArchive() {
   const leconSOUL = (wantSoulLesson && draftValue.soulLessonProposee) || undefined;
   const inputs = { teamsText, topics: verifyValue.topics, sources: draftValue.sources };
   if (leconSOUL) inputs.leconSOUL = leconSOUL;
-  toast('Archivage en cours…');
-  const r = await window.breves.sendCommand('breves-archive', inputs);
+  toast('Archivage + ingestion en cours…');
+  const r = await window.breves.archive(inputs);   // archive (cwd repo) puis /ingest (cwd wiki)
   if (!r.ok) { toast('Échec de l\'archivage : ' + r.error); return; }
   archiveValue = r.value;
   show('archived');
   renderArchived(archiveValue);
+  if (r.ingest && !r.ingest.ok) toast('Déposé dans raw/, mais l\'ingestion a échoué : relance /ingest côté wiki');
 }
 function renderArchived(a) {
   const box = $('#archive-steps'); box.innerHTML = '';
@@ -250,28 +251,18 @@ function renderArchived(a) {
   $('#newsletter-final').textContent = a.newsletterText || '';
 }
 
-// ============ SOUL ============
-function renderSoul() {
-  const s = state.dashboard?.soul;
-  const rules = $('#soul-rules'); rules.innerHTML = '';
-  (s?.rules || []).forEach((r) => {
-    const row = el('div'); row.style.cssText = 'display:flex;gap:10px;align-items:flex-start';
-    const d = el('span'); d.style.cssText = 'width:6px;height:6px;border-radius:2px;background:var(--accent);margin-top:7px;flex:none;transform:rotate(45deg)';
-    row.appendChild(d);
-    row.appendChild(el('span', '', `<span style="font:400 13.5px/1.5 var(--body)">${escapeHtml(r)}</span>`));
-    rules.appendChild(row);
-  });
-  const ex = $('#soul-examples'); ex.innerHTML = '';
-  (s?.examples || []).forEach((e) => {
-    const row = el('div'); row.style.cssText = 'border-left:2px solid var(--accent);padding-left:11px';
-    row.appendChild(el('div', '', `<div style="font:500 10.5px var(--mono);color:var(--accent)">${escapeHtml(e.date)}</div><div style="font:400 12.5px/1.5 var(--body);font-style:italic;margin-top:2px">${escapeHtml(e.text)}</div>`));
-    ex.appendChild(row);
-  });
-  const le = $('#soul-lessons'); le.innerHTML = '';
-  if (!(s?.lessons || []).length) le.appendChild(el('div', 'faint', 'Aucune leçon enregistrée.'));
-  (s?.lessons || []).forEach((l) => {
-    le.appendChild(el('div', '', `<div style="font:500 10.5px var(--mono);color:var(--faint)">${escapeHtml(l.date)}</div><div style="font:400 12.5px/1.45 var(--body);margin-top:1px">${escapeHtml(l.text)}</div>`));
-  });
+// ============ SOUL (éditeur brut du vrai fichier) ============
+async function renderSoul() {
+  $('#soul-raw').value = 'Chargement…';
+  const raw = await window.breves.getSoulRaw();
+  $('#soul-raw').value = raw ?? '(SOUL introuvable)';
+}
+async function saveSoulFromUI() {
+  const text = $('#soul-raw').value;
+  const r = await window.breves.saveSoul(text);
+  if (!r || !r.ok) { toast('Échec de l\'enregistrement : ' + (r?.error || 'inconnu')); return; }
+  toast('SOUL enregistrée');
+  state.dashboard = await window.breves.getDashboard();  // rafraîchit la version au dashboard
 }
 
 // ============ HISTORY + READER ============
@@ -314,6 +305,7 @@ function wire() {
   $('#btn-theme').onclick = toggleTheme;
   $('#cta-new').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
   $('#btn-soul').onclick = () => go('goSoul');
+  $('#btn-soul-save').onclick = saveSoulFromUI;
   $('#btn-hist').onclick = () => go('goHist');
   $('#raw-text').addEventListener('input', renderDetected);
   $('#btn-launch').onclick = launch;
