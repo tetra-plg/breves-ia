@@ -26,7 +26,9 @@ function toast(msg) {
 // ============ SHELL / NAV ============
 function renderShell() {
   document.querySelectorAll('[data-view]').forEach((s) => { s.hidden = s.dataset.view !== state.view; });
-  $('#view-title').textContent = viewTitle(state.view);
+  $('#view-title').textContent = state.view === 'detail' ? 'Sujet vérifié'
+    : state.view === 'reader' ? (state.readerLabel || 'Édition')
+    : viewTitle(state.view);
   $('#view-sub').hidden = state.view !== 'dashboard';
   $('#head-diamond').hidden = state.view !== 'dashboard';
   $('#btn-back').hidden = state.view === 'dashboard';
@@ -176,7 +178,8 @@ function openDrawer(key) {
   $('#drawer-source').textContent = t.source || '';
   $('#drawer-url').textContent = t.url_citee || '';
   $('#drawer-clip').textContent = t.clipping_contenu ? (t.clipping_contenu.slice(0, 600)) : '(pas de clipping)';
-  $('#drawer').hidden = false;
+  state.returnTo = state.view;
+  show('detail');
 }
 
 // ============ EDITOR ============
@@ -284,11 +287,14 @@ function renderHistory() {
     box.appendChild(b);
   });
 }
-function openReader(e) {
-  $('#reader-range').textContent = dateLong(e.date);
+async function openReader(e) {
+  state.readerLabel = dateLong(e.date);
   $('#reader-sub').textContent = `${e.count} brèves · archivée`;
-  $('#reader-text').textContent = e.text || 'Le texte intégral de cette édition vit dans le wiki (raw/notes/' + (e.file || '') + ').';
-  $('#reader').hidden = false;
+  $('#reader-text').textContent = 'Chargement…';
+  state.returnTo = state.view;
+  show('reader');
+  const text = e.file ? await window.breves.readEdition(e.file) : null;
+  $('#reader-text').textContent = text || 'Texte introuvable dans le wiki (raw/notes/' + (e.file || '') + ').';
 }
 
 // ============ EVENTS MOTEUR (streaming) ============
@@ -301,7 +307,10 @@ window.breves.onCommandEvent((ev) => {
 
 // ============ CÂBLAGE ============
 function wire() {
-  $('#btn-back').onclick = () => go('goDash');
+  $('#btn-back').onclick = () => {
+    if (state.view === 'detail' || state.view === 'reader') show(state.returnTo || 'dashboard');
+    else go('goDash');
+  };
   $('#btn-theme').onclick = toggleTheme;
   $('#cta-new').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
   $('#btn-soul').onclick = () => go('goSoul');
@@ -316,10 +325,6 @@ function wire() {
   $('#btn-copy-final').onclick = () => { window.breves.copy(archiveValue?.newsletterText || ''); toast('Brèves copiées : prêtes à coller dans Teams'); };
   $('#btn-hist2').onclick = () => go('goHist');
   $('#btn-new2').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
-  $('#drawer-close').onclick = () => { $('#drawer').hidden = true; };
-  $('#drawer').onclick = (e) => { if (e.target.id === 'drawer') $('#drawer').hidden = true; };
-  $('#reader-close').onclick = () => { $('#reader').hidden = true; };
-  $('#reader').onclick = (e) => { if (e.target.id === 'reader') $('#reader').hidden = true; };
   $('#reader-copy').onclick = () => { window.breves.copy($('#reader-text').textContent); toast('Brèves copiées'); };
 }
 

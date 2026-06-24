@@ -30,8 +30,7 @@ body.dark{
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;
-  display:flex;align-items:center;justify-content:center;overflow:hidden}
+body{background:var(--win);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow:hidden}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 ::-webkit-scrollbar{width:9px;height:9px}
@@ -42,15 +41,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font
 button{font-family:inherit;cursor:pointer}
 [hidden]{display:none !important}
 
-.win{width:400px;max-width:94vw;height:760px;max-height:96vh;display:flex;flex-direction:column;
-  background:var(--win);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.win{width:100vw;height:100vh;display:flex;flex-direction:column;background:var(--win);overflow:hidden}
 
 /* header */
-.head{flex:none;display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line);-webkit-app-region:drag}
+.head{flex:none;display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line)}
 .head button{-webkit-app-region:no-drag}
 .iconbtn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;flex:none;
   border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px}
-.h-titles{flex:1;min-width:0}
+.h-titles{flex:1;min-width:0;-webkit-app-region:drag}
 .h-title{font:600 14px var(--display);color:var(--text);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .h-sub{font:500 10px var(--mono);color:var(--faint);letter-spacing:.02em}
 .diamond{width:11px;height:11px;border-radius:3px;background:var(--accent);transform:rotate(45deg);flex:none;margin-left:3px}
@@ -282,45 +280,38 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
       </div>
     </section>
 
-  </div>
-</div>
-
-<!-- ── DRAWER (détail sujet) ── -->
-<div id="drawer" class="overlay" hidden>
-  <div class="sheet" id="drawer-sheet">
-    <div style="position:sticky;top:0;display:flex;align-items:center;gap:9px;padding:13px 16px;background:var(--win);border-bottom:1px solid var(--line)">
-      <button id="drawer-close" class="iconbtn">&#8592;</button>
-      <span class="eyebrow" style="font-size:11px">Sujet vérifié</span>
-    </div>
-    <div class="pad">
-      <h2 id="drawer-title" style="font:600 18px/1.3 var(--display);margin:0 0 7px"></h2>
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:18px;flex-wrap:wrap">
-        <span id="drawer-date" class="pill" style="color:var(--accent);background:var(--accentSoft)"></span>
-        <span id="drawer-raw" class="faint" style="font:400 11.5px var(--body)"></span>
+    <!-- DETAIL (sujet vérifié) — une vue, plus un popup -->
+    <section data-view="detail" hidden>
+      <div class="pad">
+        <h2 id="drawer-title" style="font:600 18px/1.3 var(--display);margin:0 0 7px"></h2>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:18px;flex-wrap:wrap">
+          <span id="drawer-date" class="pill" style="color:var(--accent);background:var(--accentSoft)"></span>
+          <span id="drawer-raw" class="faint" style="font:400 11.5px var(--body)"></span>
+        </div>
+        <div id="drawer-alert-wrap" hidden style="margin-bottom:18px"></div>
+        <div class="eyebrow" style="margin-bottom:10px">Faits vérifiés</div>
+        <div id="drawer-facts" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
+        <div class="eyebrow" style="margin-bottom:10px">Source retenue</div>
+        <div class="card" style="border-radius:var(--radiusSm);margin-bottom:18px">
+          <div id="drawer-source" style="font:600 13px var(--body)"></div>
+          <div id="drawer-url" style="font:400 11px var(--mono);color:var(--accent);word-break:break-all;margin-top:5px"></div>
+        </div>
+        <div class="eyebrow" style="margin-bottom:10px">Extrait (clipping)</div>
+        <div id="drawer-clip" style="background:var(--panel2);border-left:3px solid var(--accent);border-radius:0 var(--radiusSm) var(--radiusSm) 0;padding:12px 14px;font:400 12.5px/1.6 var(--body);color:var(--muted);font-style:italic"></div>
       </div>
-      <div id="drawer-alert-wrap" hidden style="margin-bottom:18px"></div>
-      <div class="eyebrow" style="margin-bottom:10px">Faits vérifiés</div>
-      <div id="drawer-facts" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
-      <div class="eyebrow" style="margin-bottom:10px">Source retenue</div>
-      <div class="card" style="border-radius:var(--radiusSm);margin-bottom:18px">
-        <div id="drawer-source" style="font:600 13px var(--body)"></div>
-        <div id="drawer-url" style="font:400 11px var(--mono);color:var(--accent);word-break:break-all;margin-top:5px"></div>
-      </div>
-      <div class="eyebrow" style="margin-bottom:10px">Extrait (clipping)</div>
-      <div id="drawer-clip" style="background:var(--panel2);border-left:3px solid var(--accent);border-radius:0 var(--radiusSm) var(--radiusSm) 0;padding:12px 14px;font:400 12.5px/1.6 var(--body);color:var(--muted);font-style:italic"></div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ── READER (ancienne édition) ── -->
-<div id="reader" class="overlay" style="z-index:45" hidden>
-  <div class="sheet" style="display:flex;flex-direction:column">
-    <div style="flex:none;display:flex;align-items:center;gap:9px;padding:13px 16px;background:var(--win);border-bottom:1px solid var(--line)">
-      <button id="reader-close" class="iconbtn">&#8592;</button>
-      <div style="flex:1;min-width:0"><div id="reader-range" style="font:600 14px var(--display)"></div><div id="reader-sub" class="faint" style="font:500 10px var(--mono)"></div></div>
-    </div>
-    <div id="reader-text" style="flex:1;overflow:auto;padding:18px;font:400 13.5px/1.7 var(--mono);white-space:pre-wrap"></div>
-    <div style="flex:none;padding:13px 16px;border-top:1px solid var(--line)"><button id="reader-copy" class="btn-primary">Copier ces brèves</button></div>
+    <!-- READER (ancienne édition) — une vue, plus un popup -->
+    <section data-view="reader" hidden>
+      <div class="pad">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span id="reader-sub" class="faint" style="font:500 10px var(--mono)"></span>
+          <button id="reader-copy" class="btn-ghost" style="margin-left:auto;padding:7px 13px">Copier</button>
+        </div>
+        <div id="reader-text" style="font:400 13.5px/1.7 var(--mono);white-space:pre-wrap"></div>
+      </div>
+    </section>
+
   </div>
 </div>
 
