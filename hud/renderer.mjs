@@ -255,8 +255,8 @@ function renderArchived(a) {
 const SOUL_FIELDS = ['quiParle', 'audience', 'voix', 'lignesRouges'];
 async function renderSoul() {
   const s = await window.breves.getSoulStructured();
-  if (!s) { $('#soul-version').textContent = '(SOUL introuvable)'; return; }
-  $('#soul-version').textContent = s.version;
+  if (!s) { $('#soul-view-version').textContent = '(SOUL introuvable)'; return; }
+  $('#soul-view-version').textContent = s.version;
   for (const f of SOUL_FIELDS) $('#soul-' + f).value = s[f] || '';
   const ech = $('#soul-echantillons'); ech.innerHTML = '';
   (s.echantillons || []).forEach((e) => {
