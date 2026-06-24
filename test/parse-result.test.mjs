@@ -30,3 +30,10 @@ test('parse les sentinelles dans l\'ordre', () => {
 test('ignore un step inconnu', () => {
   assert.deepEqual(parseSentinels('«BREVES» step glm bidon'), []);
 });
+test('extrait le JSON malgré des fences imbriquées dans la valeur', () => {
+  const nested = '{"clipping_contenu":"voici du code:\\n```py\\nprint(1)\\n```\\nfin"}';
+  const t = `texte\n\`\`\`json\n${nested}\n\`\`\`\n`;
+  assert.deepEqual(extractJsonBlock(t), {
+    clipping_contenu: 'voici du code:\n```py\nprint(1)\n```\nfin',
+  });
+});
