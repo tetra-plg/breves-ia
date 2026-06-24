@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, ipcMain, clipboard } from 'electron';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defaultDeps, dispatch, getDashboard, readEdition, archiveAndIngest, readSoulRaw, saveSoul } from './engine.mjs';
+import { defaultDeps, dispatch, getDashboard, readEdition, archiveAndIngest, getSoul, saveSoulSections } from './engine.mjs';
 import { loadEnvFile } from '../lib/load-env.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -42,8 +42,8 @@ app.whenReady().then(() => {
     try { return await archiveAndIngest({ ...inputs, onEvent }, deps); }
     catch (err) { return { ok: false, error: err.message }; }
   });
-  ipcMain.handle('get-soul-raw', () => readSoulRaw(deps));
-  ipcMain.handle('save-soul', (_e, text) => saveSoul(deps, text));
+  ipcMain.handle('get-soul-structured', () => getSoul(deps));
+  ipcMain.handle('save-soul-sections', (_e, edits) => saveSoulSections(deps, edits));
   ipcMain.handle('copy', (_e, text) => { clipboard.writeText(String(text)); return true; });
   ipcMain.handle('hide-window', () => { if (win) win.hide(); });
 

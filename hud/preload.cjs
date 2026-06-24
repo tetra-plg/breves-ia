@@ -5,8 +5,8 @@ contextBridge.exposeInMainWorld('breves', {
   getDashboard: () => ipcRenderer.invoke('get-dashboard'),
   readEdition: (file) => ipcRenderer.invoke('read-edition', file),
   archive: (inputs) => ipcRenderer.invoke('archive-ingest', inputs),
-  getSoulRaw: () => ipcRenderer.invoke('get-soul-raw'),
-  saveSoul: (text) => ipcRenderer.invoke('save-soul', text),
+  getSoulStructured: () => ipcRenderer.invoke('get-soul-structured'),
+  saveSoulSections: (edits) => ipcRenderer.invoke('save-soul-sections', edits),
   copy: (text) => ipcRenderer.invoke('copy', text),
   hideWindow: () => ipcRenderer.invoke('hide-window'),
 });
