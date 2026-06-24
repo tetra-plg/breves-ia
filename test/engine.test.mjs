@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { dispatch, getDashboard, readEdition } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition, readSoulRaw, saveSoul } from '../hud/engine.mjs';
 
 test('dispatch passe les bons arguments à runSkill', async () => {
   let seen = null;
@@ -46,4 +46,23 @@ test('readEdition rejette un nom hors motif (anti-traversal)', () => {
 test('readEdition renvoie null si lecture échoue', () => {
   const deps = { bbDir: '/tmp/bb', readFile: () => { throw new Error('ENOENT'); } };
   assert.equal(readEdition(deps, '2026-06-17-breves-ia-merim.md'), null);
+});
+test('readSoulRaw lit le fichier SOUL au bon chemin', () => {
+  let asked = null;
+  const deps = { bbDir: '/tmp/bb', readFile: (p) => { asked = p; return '# SOUL'; } };
+  assert.equal(readSoulRaw(deps), '# SOUL');
+  assert.match(asked, /\/tmp\/bb\/\.claude\/breves-ia\/SOUL\.md$/);
+});
+test('saveSoul écrit le contenu au bon chemin', () => {
+  let wrote = null;
+  const deps = { bbDir: '/tmp/bb', writeFile: (p, t) => { wrote = { p, t }; } };
+  assert.deepEqual(saveSoul(deps, '# nouveau'), { ok: true });
+  assert.match(wrote.p, /\/tmp\/bb\/\.claude\/breves-ia\/SOUL\.md$/);
+  assert.equal(wrote.t, '# nouveau');
+});
+test('saveSoul refuse un contenu vide (ne jamais effacer la SOUL)', () => {
+  let called = false;
+  const deps = { bbDir: '/tmp/bb', writeFile: () => { called = true; } };
+  assert.equal(saveSoul(deps, '   ').ok, false);
+  assert.equal(called, false);
 });
