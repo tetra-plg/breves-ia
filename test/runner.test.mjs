@@ -1,7 +1,7 @@
 // test/runner.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { runSkill } from '../lib/runner.mjs';
+import { runSkill, runRaw } from '../lib/runner.mjs';
 
 // Fabrique un faux query() du SDK : émet des messages assistant puis un result.
 function fakeQuery(messages) {
@@ -54,5 +54,26 @@ test('runSkill remonte un échec SDK (result is_error)', async () => {
     onEvent: () => {},
     query: fakeQuery([{ type: 'result', subtype: 'error', is_error: true, result: 'boom' }]),
   });
+  assert.equal(r.ok, false);
+});
+
+test('runSkill insère mcpServers dans les options', async () => {
+  let opts = null;
+  const fq = (arg) => { opts = arg.options; return (async function* () { yield { type: 'result', subtype: 'success', is_error: false, result: '```json\n{"topics":[]}\n```' }; })(); };
+  await runSkill({ skill: 'breves-verify', inputs: { sujets: 'x' }, bbDir: '/cwd', mcpServers: { wiki: { command: 'py', args: ['s'] } }, onEvent: () => {}, query: fq });
+  assert.equal(opts.cwd, '/cwd');
+  assert.deepEqual(opts.mcpServers, { wiki: { command: 'py', args: ['s'] } });
+});
+
+test('runRaw renvoie ok sur succès SDK sans exiger de JSON', async () => {
+  const fq = () => (async function* () { yield { type: 'result', subtype: 'success', is_error: false, result: 'ingéré 3 sources' }; })();
+  const r = await runRaw({ prompt: '/ingest', cwd: '/bb', onEvent: () => {}, query: fq });
+  assert.equal(r.ok, true);
+  assert.equal(r.text, 'ingéré 3 sources');
+});
+
+test('runRaw remonte un échec SDK', async () => {
+  const fq = () => (async function* () { yield { type: 'result', subtype: 'error', is_error: true, result: 'boom' }; })();
+  const r = await runRaw({ prompt: '/ingest', cwd: '/bb', onEvent: () => {}, query: fq });
   assert.equal(r.ok, false);
 });
