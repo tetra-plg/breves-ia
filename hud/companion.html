@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>html,body{margin:0;height:100%;background:#e7e1d4;font-family:system-ui;color:#2e2a22}
+.bar{height:46px;-webkit-app-region:drag;display:flex;align-items:center;padding:0 14px;font-weight:600}
+.c{padding:16px}</style></head>
+<body>
+  <div class="bar">Brèves IA</div>
+  <div class="c"><button id="probe">Tester le dashboard</button><pre id="out"></pre></div>
+  <script type="module" src="renderer.mjs"></script>
+  <script>
+    document.getElementById('probe').onclick = async () => {
+      const d = await window.breves.getDashboard();
+      document.getElementById('out').textContent = JSON.stringify(d, null, 2);
+    };
+  </script>
+</body></html>
