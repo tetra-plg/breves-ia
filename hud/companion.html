@@ -221,9 +221,10 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
         <div class="card" style="padding:0;overflow:hidden">
           <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line)">
             <span style="font:500 11px var(--mono);color:var(--muted)">prêt-à-coller · Teams</span>
-            <span style="margin-left:auto" class="pill" >éditable</span>
+            <button id="btn-edit-toggle" class="pill" style="margin-left:auto;cursor:pointer;border:none">Éditer</button>
           </div>
-          <div id="teams-text" class="editable" contenteditable="true" spellcheck="false"></div>
+          <div id="teams-text" class="editable"></div>
+          <textarea id="teams-edit" spellcheck="false" hidden style="width:100%;min-height:240px;border:none;border-radius:0;padding:14px 15px;font:400 13px/1.6 var(--mono);color:var(--text);background:transparent;resize:vertical"></textarea>
         </div>
         <div class="row" style="margin-top:13px">
           <button id="btn-corriger" class="btn-ghost" style="flex:none">Corriger</button>

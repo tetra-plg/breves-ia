@@ -194,8 +194,26 @@ async function runDraft(feedback) {
   draftValue = r.value;
   renderEditor(draftValue);
 }
+let editorMode = 'preview';
+function applyEditorMode() {
+  const preview = editorMode === 'preview';
+  $('#teams-text').hidden = !preview;
+  $('#teams-edit').hidden = preview;
+  if (preview) $('#teams-text').innerHTML = renderEditionHtml(state.teamsText);
+  else $('#teams-edit').value = state.teamsText;
+  $('#btn-edit-toggle').textContent = preview ? 'Éditer' : 'Aperçu';
+}
+function toggleEditor() {
+  if (editorMode === 'edit') state.teamsText = $('#teams-edit').value;
+  editorMode = editorMode === 'preview' ? 'edit' : 'preview';
+  applyEditorMode();
+}
+function syncTeamsText() { if (editorMode === 'edit') state.teamsText = $('#teams-edit').value; }
+
 function renderEditor(d) {
-  $('#teams-text').innerHTML = escapeHtml(d.teamsText).replace(/\n/g, '<br>');
+  state.teamsText = d.teamsText || '';
+  editorMode = 'preview';
+  applyEditorMode();
   const cl = $('#corrections-list'); cl.innerHTML = '';
   if (!d.corrections?.length) cl.appendChild(el('div', 'faint', 'Aucune correction.'));
   (d.corrections || []).forEach((x) => {
@@ -227,7 +245,8 @@ function submitCorrect() {
 // ============ ARCHIVE ============
 async function runArchive() {
   if (!draftValue || !verifyValue) return;
-  const teamsText = $('#teams-text').innerText.trim() || draftValue.teamsText;
+  syncTeamsText();
+  const teamsText = (state.teamsText || '').trim() || draftValue.teamsText;
   const leconSOUL = (wantSoulLesson && draftValue.soulLessonProposee) || undefined;
   const inputs = { teamsText, topics: verifyValue.topics, sources: draftValue.sources };
   if (leconSOUL) inputs.leconSOUL = leconSOUL;
@@ -336,6 +355,7 @@ function wire() {
   $('#raw-text').addEventListener('input', renderDetected);
   $('#btn-launch').onclick = launch;
   $('#btn-redact').onclick = () => { go('toEditor'); runDraft(); };
+  $('#btn-edit-toggle').onclick = toggleEditor;
   $('#btn-corriger').onclick = openCorrect;
   $('#btn-valider').onclick = runArchive;
   $('#correct-cancel').onclick = () => { $('#correct-modal').hidden = true; };
