@@ -268,7 +268,9 @@ async function renderSoul() {
   const jrn = $('#soul-journal'); jrn.innerHTML = '';
   if (!(s.journal || []).length) jrn.appendChild(el('div', 'faint', 'Aucune leçon enregistrée.'));
   (s.journal || []).forEach((l) => {
-    jrn.appendChild(el('div', '', `<div style="font:500 10.5px var(--mono);color:var(--faint)">${escapeHtml(l.date)}</div><div style="font:400 12.5px/1.45 var(--body);margin-top:1px">${escapeHtml(l.texte)}</div>`));
+    const card = el('div', 'card');
+    card.innerHTML = `<div style="font:500 10.5px var(--mono);color:var(--accent);margin-bottom:5px">${escapeHtml(l.date)}</div><div style="font:400 12.5px/1.5 var(--body)">${escapeHtml(l.texte)}</div>`;
+    jrn.appendChild(card);
   });
 }
 async function saveSoulFromUI() {
