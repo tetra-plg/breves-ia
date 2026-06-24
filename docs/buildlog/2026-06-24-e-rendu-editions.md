@@ -38,3 +38,9 @@
 En testant sur de vraies notes, deux formats de sources n'étaient pas stylés :
 - **`Source : <url>`** (note du 17 juin) : `URL_RE` étendue à `^(?:source\s*:\s*)?https?://…`.
 - **Bloc `## Sources` + tableau markdown** (note du 24 juin) : `renderEditionHtml` gère désormais les titres `##`/`###` (`.ed-h2`), les séparateurs `---` (`.ed-hr`) et les **tableaux GFM** rendus en **liste de sources** `.ed-srclist` (sujet en gras + lien `.ed-src` + note en sourdine), au lieu du markdown brut. Probe sur la note réelle du 24 juin : 7 lignes de sources, 14 liens, zéro `|`/`##` résiduel. +4 tests (84/84).
+
+## Addendum 2 — brèves en cartes + séparation (retour Pierre)
+
+- **Chaque brève en carte** dans l'esprit des échantillons de la SOUL : `renderEditionHtml` regroupe chaque `— date —` + son corps + sa source dans une `.card.ed-breve` (date en accent mono, accroche en gras, lien source à l'intérieur).
+- **Séparation intra-carte** : quand une même date porte plusieurs brèves, un filet fin `.ed-bsep` les sépare (chaque brève s'ouvre par son accroche `**…**`).
+- Probe note réelle 24 juin : 5 cartes, 2 séparateurs, liste de sources stylée, zéro markdown brut. 86/86 tests.
