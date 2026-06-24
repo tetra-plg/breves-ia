@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, ipcMain, clipboard } from 'electron';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defaultDeps, dispatch, getDashboard } from './engine.mjs';
+import { defaultDeps, dispatch, getDashboard, readEdition } from './engine.mjs';
 import { loadEnvFile } from '../lib/load-env.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -15,6 +15,14 @@ function makeWindow() {
   });
   win.loadFile(path.join(__dirname, 'companion.html'));
   win.once('ready-to-show', () => win.show());
+  // DevTools accessibles même sans menu : Cmd/Ctrl+Alt+I ou F12
+  win.webContents.on('before-input-event', (_e, input) => {
+    if (input.type !== 'keyDown') return;
+    const key = (input.key || '').toLowerCase();
+    if (key === 'f12' || ((input.meta || input.control) && input.alt && key === 'i')) {
+      win.webContents.toggleDevTools();
+    }
+  });
 }
 
 app.whenReady().then(() => {
@@ -28,6 +36,7 @@ app.whenReady().then(() => {
     catch (err) { return { ok: false, error: err.message }; }
   });
   ipcMain.handle('get-dashboard', () => getDashboard(deps));
+  ipcMain.handle('read-edition', (_e, file) => readEdition(deps, file));
   ipcMain.handle('copy', (_e, text) => { clipboard.writeText(String(text)); return true; });
   ipcMain.handle('hide-window', () => { if (win) win.hide(); });
 

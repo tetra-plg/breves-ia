@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { runSkill as realRunSkill } from '../lib/runner.mjs';
 import { readSoul as realReadSoul } from '../lib/soul.mjs';
 import { listEditions as realListEditions } from '../lib/editions.mjs';
@@ -9,7 +11,15 @@ export function defaultDeps(env = process.env) {
     runSkill: realRunSkill,
     readSoul: realReadSoul,
     listEditions: realListEditions,
+    readFile: (p) => readFileSync(p, 'utf8'),
   };
+}
+
+// Lit le texte intégral d'une édition archivée. Nom de fichier strictement validé
+// (anti-traversal) : YYYY-MM-DD-breves-ia-merim.md, sous raw/notes/. Renvoie null sinon.
+export function readEdition(deps, file) {
+  if (!/^\d{4}-\d{2}-\d{2}-breves-ia-merim\.md$/.test(String(file))) return null;
+  try { return deps.readFile(join(deps.bbDir, 'raw', 'notes', file)); } catch { return null; }
 }
 
 export async function dispatch({ skill, inputs, onEvent }, deps) {

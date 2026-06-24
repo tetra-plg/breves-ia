@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { dispatch, getDashboard } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition } from '../hud/engine.mjs';
 
 test('dispatch passe les bons arguments à runSkill', async () => {
   let seen = null;
@@ -31,4 +31,19 @@ test('getDashboard tolère une SOUL absente', () => {
   const d = getDashboard(deps);
   assert.equal(d.soul, null);
   assert.deepEqual(d.editions, []);
+});
+test('readEdition lit le fichier validé', () => {
+  let asked = null;
+  const deps = { bbDir: '/tmp/bb', readFile: (p) => { asked = p; return '# contenu'; } };
+  assert.equal(readEdition(deps, '2026-06-17-breves-ia-merim.md'), '# contenu');
+  assert.match(asked, /\/tmp\/bb\/raw\/notes\/2026-06-17-breves-ia-merim\.md$/);
+});
+test('readEdition rejette un nom hors motif (anti-traversal)', () => {
+  const deps = { bbDir: '/tmp/bb', readFile: () => 'x' };
+  assert.equal(readEdition(deps, '../../etc/passwd'), null);
+  assert.equal(readEdition(deps, 'autre.md'), null);
+});
+test('readEdition renvoie null si lecture échoue', () => {
+  const deps = { bbDir: '/tmp/bb', readFile: () => { throw new Error('ENOENT'); } };
+  assert.equal(readEdition(deps, '2026-06-17-breves-ia-merim.md'), null);
 });
