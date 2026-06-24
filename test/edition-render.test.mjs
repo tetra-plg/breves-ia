@@ -47,6 +47,19 @@ test('chaque date devient un ed-date', () => {
   assert.equal((h.match(/class="ed-date"/g) || []).length, 2);
   assert.match(h, /class="ed-date"[^>]*>12 juin</);
 });
+test('plusieurs brèves sous une même date → séparateur entre elles', () => {
+  const md = `📰 Brèves IA
+
+— 24 juin —
+**Brève une.** corps un.
+https://a.com/x
+
+**Brève deux.** corps deux.
+https://b.com/y`;
+  const h = renderEditionHtml(md);
+  assert.equal((h.match(/class="card ed-breve"/g) || []).length, 1);   // une seule carte (même date)
+  assert.equal((h.match(/class="ed-bsep"/g) || []).length, 1);          // un séparateur entre les 2 brèves
+});
 test('chaque brève est une carte (date + corps + source à l’intérieur)', () => {
   const h = renderEditionHtml(ED);
   assert.equal((h.match(/class="card ed-breve"/g) || []).length, 2);
