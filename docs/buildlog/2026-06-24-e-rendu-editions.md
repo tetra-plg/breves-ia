@@ -32,3 +32,9 @@
 - **`state.teamsText`/`state.readerText` initialisés** explicitement (review finale) pour ne pas dépendre d'un `undefined` implicite.
 - **Hors scope** : moteur de brèves, format des fichiers de note, autres écrans — inchangés.
 - Le reader rend le **fichier de note entier** (en-tête de contexte + newsletter + sources) ; les lignes non reconnues tombent en `.ed-body` (dégradation propre).
+
+## Addendum — sources & tableaux (retour Pierre)
+
+En testant sur de vraies notes, deux formats de sources n'étaient pas stylés :
+- **`Source : <url>`** (note du 17 juin) : `URL_RE` étendue à `^(?:source\s*:\s*)?https?://…`.
+- **Bloc `## Sources` + tableau markdown** (note du 24 juin) : `renderEditionHtml` gère désormais les titres `##`/`###` (`.ed-h2`), les séparateurs `---` (`.ed-hr`) et les **tableaux GFM** rendus en **liste de sources** `.ed-srclist` (sujet en gras + lien `.ed-src` + note en sourdine), au lieu du markdown brut. Probe sur la note réelle du 24 juin : 7 lignes de sources, 14 liens, zéro `|`/`##` résiduel. +4 tests (84/84).
