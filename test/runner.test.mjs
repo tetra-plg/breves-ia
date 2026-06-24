@@ -77,3 +77,10 @@ test('runRaw remonte un échec SDK', async () => {
   const r = await runRaw({ prompt: '/ingest', cwd: '/bb', onEvent: () => {}, query: fq });
   assert.equal(r.ok, false);
 });
+
+test('runSkill insère agents dans les options', async () => {
+  let opts = null;
+  const fq = (a) => { opts = a.options; return (async function*(){ yield { type:'result', subtype:'success', is_error:false, result:'```json\n{"topics":[]}\n```' }; })(); };
+  await runSkill({ skill:'breves-verify', inputs:{ sujets:'x' }, bbDir:'/cwd', agents:{ enqueteur:{ description:'d', prompt:'p' } }, onEvent:()=>{}, query: fq });
+  assert.deepEqual(opts.agents, { enqueteur:{ description:'d', prompt:'p' } });
+});

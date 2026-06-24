@@ -1,10 +1,11 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { runSkill as realRunSkill, runRaw as realRunRaw } from '../lib/runner.mjs';
 import { readSoul as realReadSoul } from '../lib/soul.mjs';
 import { listEditions as realListEditions } from '../lib/editions.mjs';
 import { loadEngineConfig } from '../lib/config.mjs';
 import { parseSoul, replaceSoulSections } from '../lib/soul-model.mjs';
+import { parseAgent, toAgentDefinition } from '../lib/agent-file.mjs';
 
 const SOUL_PARTS = ['.claude', 'breves-ia', 'SOUL.md'];
 
@@ -20,7 +21,22 @@ export function defaultDeps(env = process.env) {
     listEditions: realListEditions,
     readFile: (p) => readFileSync(p, 'utf8'),
     writeFile: (p, t) => writeFileSync(p, t, 'utf8'),
+    readdir: (p) => readdirSync(p),
   };
+}
+
+export function loadAgents(deps) {
+  const dir = join(deps.repoDir, '.claude', 'agents');
+  let files = [];
+  try { files = deps.readdir(dir); } catch { return { defs: {}, byName: {} }; }
+  const defs = {}, byName = {};
+  for (const f of files.filter((x) => x.endsWith('.md'))) {
+    const a = parseAgent(deps.readFile(join(dir, f)));
+    if (!a.name) continue;
+    byName[a.name] = a;
+    if (a.enabled) defs[a.name] = toAgentDefinition(a);
+  }
+  return { defs, byName };
 }
 
 export function getSoul(deps) {
@@ -48,11 +64,18 @@ export function readEdition(deps, file) {
 }
 
 export async function dispatch({ skill, inputs, onEvent }, deps) {
+  const { defs, byName } = loadAgents(deps);
+  const finalInputs = { ...inputs };
+  if (skill === 'breves-verify' && finalInputs.sceptique == null) {
+    const s = byName.sceptique;
+    finalInputs.sceptique = (s && s.enabled && s.mode) ? s.mode : 'off';
+  }
   return deps.runSkill({
     skill,
-    inputs,
+    inputs: finalInputs,
     bbDir: deps.repoDir,
     mcpServers: deps.wikiMcp ? { 'boiling-brain-wiki': deps.wikiMcp } : undefined,
+    agents: Object.keys(defs).length ? defs : undefined,
     onEvent,
   });
 }

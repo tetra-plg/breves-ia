@@ -35,3 +35,8 @@ test('buildPrompt produit /skill + bloc INPUTS et lève hors allow-list', () => 
   assert.match(p, /ne pose aucune question/);
   assert.throws(() => buildPrompt('rm-rf', {}));
 });
+
+test('verify accepte un mode sceptique valide et refuse un invalide', () => {
+  assert.equal(validateInputs('breves-verify', { sujets: 'x', sceptique: 'ciblé' }).ok, true);
+  assert.equal(validateInputs('breves-verify', { sujets: 'x', sceptique: 'bidon' }).ok, false);
+});

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, archiveAndIngest } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, archiveAndIngest, loadAgents } from '../hud/engine.mjs';
 
 const SOUL_FIXTURE = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
@@ -110,4 +110,24 @@ test('archiveAndIngest ne lance pas /ingest si l\'archive échoue', async () => 
   const r = await archiveAndIngest({ teamsText: 't', topics: [], sources: [], onEvent: () => {} }, deps);
   assert.equal(r.ok, false);
   assert.equal(ingestCalled, false);
+});
+
+test('loadAgents lit les agents activés en définitions SDK', () => {
+  const files = { 'enqueteur.md': '---\nname: enqueteur\ndescription: d\ntools: WebSearch\nmodel: sonnet\n---\nprompt enq',
+                  'sceptique.md': '---\nname: sceptique\nbreves_enabled: false\nbreves_mode: ciblé\n---\nprompt scep' };
+  const deps = { repoDir: '/repo', readdir: () => Object.keys(files), readFile: (p) => files[p.split('/').pop()] };
+  const { defs, byName } = loadAgents(deps);
+  assert.deepEqual(defs.enqueteur, { description: 'd', prompt: 'prompt enq', tools: ['WebSearch'], model: 'sonnet' });
+  assert.equal(defs.sceptique, undefined);           // désactivé → non injecté
+  assert.equal(byName.sceptique.mode, 'ciblé');
+});
+
+test('dispatch injecte les agents + le mode sceptique dans les inputs verify', async () => {
+  let seen = null;
+  const files = { 'sceptique.md': '---\nname: sceptique\nbreves_enabled: true\nbreves_mode: toujours\n---\np' };
+  const deps = { repoDir:'/repo', bbDir:'/bb', readdir:()=>Object.keys(files), readFile:(p)=>files[p.split('/').pop()],
+    runSkill: async (a)=>{ seen=a; return { ok:true, value:{ topics:[] } }; } };
+  await dispatch({ skill:'breves-verify', inputs:{ sujets:'x' }, onEvent:()=>{} }, deps);
+  assert.equal(seen.inputs.sceptique, 'toujours');
+  assert.ok(seen.agents.sceptique);
 });
