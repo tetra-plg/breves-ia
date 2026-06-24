@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { dispatch, getDashboard, readEdition, readSoulRaw, saveSoul } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition, readSoulRaw, saveSoul, archiveAndIngest } from '../hud/engine.mjs';
 
 test('dispatch passe les bons arguments à runSkill', async () => {
   let seen = null;
-  const deps = { bbDir: '/tmp/bb', runSkill: async (a) => { seen = a; return { ok: true, value: { topics: [] } }; } };
+  const deps = { repoDir: '/tmp/bb', bbDir: '/tmp/bb', runSkill: async (a) => { seen = a; return { ok: true, value: { topics: [] } }; } };
   const onEvent = () => {};
   const r = await dispatch({ skill: 'breves-verify', inputs: { sujets: 'x' }, onEvent }, deps);
   assert.equal(r.ok, true);
@@ -14,6 +14,7 @@ test('dispatch passe les bons arguments à runSkill', async () => {
 });
 test('getDashboard agrège soul + editions', () => {
   const deps = {
+    repoDir: '/tmp/repo',
     bbDir: '/tmp/bb',
     readSoul: () => ({ version: 'v8', rules: ['r'], examples: [], lessons: [] }),
     listEditions: () => [{ date: '2026-06-17', range: '2026-06-17', count: 3, corr: 0, file: 'f' }],
@@ -24,6 +25,7 @@ test('getDashboard agrège soul + editions', () => {
 });
 test('getDashboard tolère une SOUL absente', () => {
   const deps = {
+    repoDir: '/tmp/repo',
     bbDir: '/tmp/bb',
     readSoul: () => { throw new Error('ENOENT'); },
     listEditions: () => [],
@@ -49,20 +51,53 @@ test('readEdition renvoie null si lecture échoue', () => {
 });
 test('readSoulRaw lit le fichier SOUL au bon chemin', () => {
   let asked = null;
-  const deps = { bbDir: '/tmp/bb', readFile: (p) => { asked = p; return '# SOUL'; } };
+  const deps = { repoDir: '/tmp/repo', readFile: (p) => { asked = p; return '# SOUL'; } };
   assert.equal(readSoulRaw(deps), '# SOUL');
-  assert.match(asked, /\/tmp\/bb\/\.claude\/breves-ia\/SOUL\.md$/);
+  assert.match(asked, /\/tmp\/repo\/\.claude\/breves-ia\/SOUL\.md$/);
 });
 test('saveSoul écrit le contenu au bon chemin', () => {
   let wrote = null;
-  const deps = { bbDir: '/tmp/bb', writeFile: (p, t) => { wrote = { p, t }; } };
+  const deps = { repoDir: '/tmp/repo', writeFile: (p, t) => { wrote = { p, t }; } };
   assert.deepEqual(saveSoul(deps, '# nouveau'), { ok: true });
-  assert.match(wrote.p, /\/tmp\/bb\/\.claude\/breves-ia\/SOUL\.md$/);
+  assert.match(wrote.p, /\/tmp\/repo\/\.claude\/breves-ia\/SOUL\.md$/);
   assert.equal(wrote.t, '# nouveau');
 });
 test('saveSoul refuse un contenu vide (ne jamais effacer la SOUL)', () => {
   let called = false;
-  const deps = { bbDir: '/tmp/bb', writeFile: () => { called = true; } };
+  const deps = { repoDir: '/tmp/repo', writeFile: () => { called = true; } };
   assert.equal(saveSoul(deps, '   ').ok, false);
   assert.equal(called, false);
+});
+
+test('dispatch utilise repoDir comme cwd + injecte le MCP wiki', async () => {
+  let seen = null;
+  const deps = { repoDir: '/repo', bbDir: '/bb', wikiMcp: { command: 'py', args: ['s'] },
+    runSkill: async (a) => { seen = a; return { ok: true, value: { topics: [] } }; } };
+  await dispatch({ skill: 'breves-verify', inputs: { sujets: 'x' }, onEvent: () => {} }, deps);
+  assert.equal(seen.bbDir, '/repo');                       // cwd = repoDir
+  assert.deepEqual(seen.mcpServers, { 'boiling-brain-wiki': { command: 'py', args: ['s'] } });
+});
+
+test('archiveAndIngest enchaîne archive (repoDir) puis /ingest (bbDir)', async () => {
+  const calls = [];
+  const deps = {
+    repoDir: '/repo', bbDir: '/bb', wikiMcp: { command: 'py', args: ['s'] },
+    runSkill: async (a) => { calls.push(['skill', a.skill, a.bbDir]); return { ok: true, value: { archiveSteps: [], newsletterText: 'x', soulVersion: 'v2' } }; },
+    runRaw: async (a) => { calls.push(['raw', a.prompt, a.cwd]); return { ok: true, text: 'ingéré' }; },
+  };
+  const r = await archiveAndIngest({ teamsText: 't', topics: [], sources: [], onEvent: () => {} }, deps);
+  assert.equal(r.ok, true);
+  assert.equal(r.ingest.ok, true);
+  assert.deepEqual(calls[0], ['skill', 'breves-archive', '/repo']);
+  assert.deepEqual(calls[1], ['raw', '/ingest', '/bb']);
+});
+
+test('archiveAndIngest ne lance pas /ingest si l\'archive échoue', async () => {
+  let ingestCalled = false;
+  const deps = { repoDir: '/repo', bbDir: '/bb',
+    runSkill: async () => ({ ok: false, error: 'boom' }),
+    runRaw: async () => { ingestCalled = true; return { ok: true, text: '' }; } };
+  const r = await archiveAndIngest({ teamsText: 't', topics: [], sources: [], onEvent: () => {} }, deps);
+  assert.equal(r.ok, false);
+  assert.equal(ingestCalled, false);
 });
