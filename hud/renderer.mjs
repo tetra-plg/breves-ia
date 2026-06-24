@@ -6,7 +6,7 @@ import { renderEditionHtml } from '../lib/edition-render.mjs';
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
 
-const state = { view: 'dashboard', theme: 'light', dashboard: null };
+const state = { view: 'dashboard', theme: 'light', dashboard: null, teamsText: '', readerText: '' };
 let cards = [];
 let verifyValue = null;
 let draftValue = null;
