@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, archiveAndIngest, loadAgents } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, archiveAndIngest, loadAgents, getAgents, saveAgent } from '../hud/engine.mjs';
 
 const SOUL_FIXTURE = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
@@ -120,6 +120,35 @@ test('loadAgents lit les agents activés en définitions SDK', () => {
   assert.deepEqual(defs.enqueteur, { description: 'd', prompt: 'prompt enq', tools: ['WebSearch'], model: 'sonnet' });
   assert.equal(defs.sceptique, undefined);           // désactivé → non injecté
   assert.equal(byName.sceptique.mode, 'ciblé');
+});
+
+test('getAgents liste tous les agents triés par nom', () => {
+  const files = { 'sceptique.md': '---\nname: sceptique\nbreves_mode: ciblé\n---\np scep',
+                  'enqueteur.md': '---\nname: enqueteur\ntools: WebSearch\n---\np enq' };
+  const deps = { repoDir: '/repo', readdir: () => Object.keys(files), readFile: (p) => files[p.split('/').pop()] };
+  const list = getAgents(deps);
+  assert.deepEqual(list.map((a) => a.name), ['enqueteur', 'sceptique']);   // trié
+  assert.equal(list[0].tools[0], 'WebSearch');
+});
+test('saveAgent fusionne les edits et écrit', () => {
+  let wrote = null;
+  const existing = '---\nname: sceptique\ndescription: Réfute.\ntools: WebSearch\nmodel: sonnet\nbreves_enabled: true\nbreves_mode: ciblé\n---\nancien prompt';
+  const deps = { repoDir: '/repo', readFile: () => existing, writeFile: (p, t) => { wrote = { p, t }; } };
+  const r = saveAgent(deps, 'sceptique', { model: 'haiku', tools: ['WebSearch', 'WebFetch'], systemPrompt: 'nouveau prompt', enabled: false, mode: 'toujours' });
+  assert.equal(r.ok, true);
+  assert.match(wrote.p, /\/repo\/\.claude\/agents\/sceptique\.md$/);
+  assert.match(wrote.t, /model: haiku/);
+  assert.match(wrote.t, /breves_enabled: false/);
+  assert.match(wrote.t, /breves_mode: toujours/);
+  assert.match(wrote.t, /tools: WebSearch, WebFetch/);
+  assert.match(wrote.t, /nouveau prompt/);
+  assert.match(wrote.t, /description: Réfute\./);   // conservé (non édité)
+});
+test('saveAgent refuse un prompt vide (n\'écrit pas)', () => {
+  let called = false;
+  const deps = { repoDir: '/repo', readFile: () => '---\nname: x\n---\np', writeFile: () => { called = true; } };
+  assert.equal(saveAgent(deps, 'x', { model: 'sonnet', tools: [], systemPrompt: '   ', enabled: true }).ok, false);
+  assert.equal(called, false);
 });
 
 test('dispatch injecte les agents + le mode sceptique dans les inputs verify', async () => {

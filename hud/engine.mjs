@@ -5,7 +5,7 @@ import { readSoul as realReadSoul } from '../lib/soul.mjs';
 import { listEditions as realListEditions } from '../lib/editions.mjs';
 import { loadEngineConfig } from '../lib/config.mjs';
 import { parseSoul, replaceSoulSections } from '../lib/soul-model.mjs';
-import { parseAgent, toAgentDefinition } from '../lib/agent-file.mjs';
+import { parseAgent, toAgentDefinition, serializeAgent } from '../lib/agent-file.mjs';
 
 const SOUL_PARTS = ['.claude', 'breves-ia', 'SOUL.md'];
 
@@ -86,6 +86,32 @@ export function getDashboard(deps) {
   let editions = [];
   try { editions = deps.listEditions(deps.bbDir); } catch { editions = []; }
   return { soul, editions };
+}
+
+export function getAgents(deps) {
+  const { byName } = loadAgents(deps);
+  return Object.values(byName).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function saveAgent(deps, name, edits) {
+  if (!name || typeof edits?.systemPrompt !== 'string' || !edits.systemPrompt.trim()) {
+    return { ok: false, error: 'nom ou prompt vide' };
+  }
+  const path = join(deps.repoDir, '.claude', 'agents', `${name}.md`);
+  try {
+    const current = parseAgent(deps.readFile(path));
+    const merged = {
+      ...current,
+      model: edits.model ?? current.model,
+      tools: edits.tools ?? current.tools,
+      systemPrompt: edits.systemPrompt,
+      enabled: edits.enabled ?? current.enabled,
+      mode: edits.mode ?? current.mode,
+      description: edits.description ?? current.description,
+    };
+    deps.writeFile(path, serializeAgent(merged));
+    return { ok: true };
+  } catch (e) { return { ok: false, error: e.message }; }
 }
 
 export async function archiveAndIngest({ teamsText, topics, sources, leconSOUL, onEvent }, deps) {
