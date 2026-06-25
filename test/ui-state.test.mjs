@@ -11,6 +11,7 @@ test('transitions du flux', () => {
   assert.equal(nextView('archived', 'goDash'), 'dashboard');
   assert.equal(nextView('dashboard', 'goSoul'), 'soul');
   assert.equal(nextView('dashboard', 'goHist'), 'history');
+  assert.equal(nextView('dashboard', 'goAgents'), 'agents');
 });
 test('action inconnue garde la vue', () => {
   assert.equal(nextView('editor', 'bidon'), 'editor');
@@ -27,5 +28,6 @@ test('viewTitle', () => {
   assert.equal(viewTitle('compose'), 'Nouvelle édition');
   assert.equal(viewTitle('soul'), 'SOUL — le style');
   assert.equal(viewTitle('history'), 'Historique');
+  assert.equal(viewTitle('agents'), 'Agents');
   assert.equal(viewTitle('dashboard'), 'Brèves IA');
 });

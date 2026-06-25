@@ -191,6 +191,18 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
             <span style="font:400 11px var(--body);color:var(--muted)"><span id="hist-count">0</span> éditions archivées</span>
           </button>
         </div>
+        <button id="btn-agents" class="card" style="width:100%;text-align:left;margin-top:8px;display:flex;flex-direction:column;gap:3px">
+          <span style="font:600 13px var(--body)">Agents</span>
+          <span style="font:400 11px var(--body);color:var(--muted)">Enquêteur &amp; sceptique : modèle, outils, prompt</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- AGENTS (config) -->
+    <section data-view="agents">
+      <div class="pad">
+        <p class="muted" style="font:400 12.5px/1.5 var(--body);margin:0 0 14px">Configure les sous-agents de vérification. Le sceptique tente de réfuter chaque brève (selon son mode).</p>
+        <div id="agents-list" style="display:flex;flex-direction:column;gap:14px"></div>
       </div>
     </section>
 

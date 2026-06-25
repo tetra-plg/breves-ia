@@ -48,6 +48,7 @@ function onEnter(view) {
   if (view === 'dashboard') loadDashboard();
   if (view === 'soul') renderSoul();
   if (view === 'history') renderHistory();
+  if (view === 'agents') renderAgents();
 }
 function applyTheme() { document.body.classList.toggle('dark', state.theme === 'dark'); }
 function toggleTheme() { state.theme = state.theme === 'light' ? 'dark' : 'light'; applyTheme(); }
@@ -271,6 +272,50 @@ function renderArchived(a) {
   $('#newsletter-final').innerHTML = renderEditionHtml(a.newsletterText || '');
 }
 
+// ============ AGENTS (config) ============
+const MODELES = [['', 'Hériter'], ['opus', 'Opus'], ['sonnet', 'Sonnet'], ['haiku', 'Haiku']];
+async function renderAgents() {
+  const agents = await window.breves.getAgents();
+  const box = $('#agents-list'); box.innerHTML = '';
+  if (!agents || !agents.length) { box.appendChild(el('div', 'faint', 'Aucun agent dans .claude/agents/.')); return; }
+  agents.forEach((a) => box.appendChild(agentCard(a)));
+}
+function agentCard(a) {
+  const card = el('div', 'card');
+  const opts = MODELES.map(([v, l]) => `<option value="${v}"${a.model === v ? ' selected' : ''}>${l}</option>`).join('');
+  const isScept = !!a.mode || a.name === 'sceptique';
+  const modes = ['off', 'ciblé', 'toujours'].map((m) => `<option value="${m}"${a.mode === m ? ' selected' : ''}>${m}</option>`).join('');
+  const sel = 'width:100%;padding:8px;border:1px solid var(--line);border-radius:var(--radiusSm);background:var(--panel);color:var(--text);margin-bottom:10px';
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font:600 14px var(--display)">${escapeHtml(a.name)}</span>
+      <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font:500 11px var(--body);color:var(--muted)">
+        <input type="checkbox" class="ag-enabled"${a.enabled ? ' checked' : ''}> activé</label>
+    </div>
+    <div style="font:400 11.5px var(--body);color:var(--muted);margin-bottom:10px">${escapeHtml(a.description || '')}</div>
+    <label class="eyebrow" style="display:block;margin-bottom:4px">Modèle</label>
+    <select class="ag-model" style="${sel}">${opts}</select>
+    ${isScept ? `<label class="eyebrow" style="display:block;margin-bottom:4px">Mode sceptique</label>
+    <select class="ag-mode" style="${sel}">${modes}</select>` : ''}
+    <label class="eyebrow" style="display:block;margin-bottom:4px">Outils (séparés par des virgules)</label>
+    <input class="ag-tools" value="${escapeHtml((a.tools || []).join(', '))}" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:var(--radiusSm);background:var(--panel);color:var(--text);font:400 12px var(--mono);margin-bottom:10px">
+    <label class="eyebrow" style="display:block;margin-bottom:4px">Prompt système</label>
+    <textarea class="ag-prompt" spellcheck="false" style="min-height:160px;font:400 12px/1.55 var(--mono)">${escapeHtml(a.systemPrompt || '')}</textarea>
+    <button class="ag-save btn-primary" style="margin-top:10px">Enregistrer</button>`;
+  card.querySelector('.ag-save').onclick = async () => {
+    const edits = {
+      model: card.querySelector('.ag-model').value,
+      tools: card.querySelector('.ag-tools').value.split(',').map((t) => t.trim()).filter(Boolean),
+      systemPrompt: card.querySelector('.ag-prompt').value,
+      enabled: card.querySelector('.ag-enabled').checked,
+    };
+    const m = card.querySelector('.ag-mode'); if (m) edits.mode = m.value;
+    const r = await window.breves.saveAgent(a.name, edits);
+    toast(r && r.ok ? `Agent « ${a.name} » enregistré` : 'Échec : ' + (r?.error || 'inconnu'));
+  };
+  return card;
+}
+
 // ============ SOUL (structuré : §1-4 éditables, §5-6 display) ============
 const SOUL_FIELDS = ['quiParle', 'audience', 'voix', 'lignesRouges'];
 async function renderSoul() {
@@ -351,6 +396,7 @@ function wire() {
   $('#cta-new').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
   $('#btn-soul').onclick = () => go('goSoul');
   $('#btn-soul-save').onclick = saveSoulFromUI;
+  $('#btn-agents').onclick = () => go('goAgents');
   $('#btn-hist').onclick = () => go('goHist');
   $('#raw-text').addEventListener('input', renderDetected);
   $('#btn-launch').onclick = launch;
