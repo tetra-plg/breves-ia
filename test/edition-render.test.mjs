@@ -69,6 +69,12 @@ test('chaque brève est une carte (date + corps + source à l’intérieur)', ()
 test('accroche en gras', () => {
   assert.match(renderEditionHtml(ED), /<strong>Google publie l'OKF<\/strong>/);
 });
+test('texte commençant par une date : 1re brève = corps, pas un titre (cas draft)', () => {
+  // Le teamsText du draft démarre directement par « — date — » (aucun titre d'édition).
+  const h = renderEditionHtml('— 17 juin 2026 —\n**Accroche.** Corps normal.\nhttps://x.com/a');
+  assert.doesNotMatch(h, /class="ed-title"/);                 // pas de titre parasite (sinon tout en gros/gras)
+  assert.match(h, /<p class="ed-body"><strong>Accroche\.<\/strong> Corps normal\.<\/p>/);
+});
 test('URL → lien externe avec data-url + domaine', () => {
   assert.match(renderEditionHtml(ED), /<a class="ed-src" data-url="https:\/\/cloud\.google\.com\/blog\/x">cloud\.google\.com →<\/a>/);
 });
