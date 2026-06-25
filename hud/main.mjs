@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, ipcMain, clipboard, shell } from 'electron';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defaultDeps, dispatch, getDashboard, readEdition, archiveAndIngest, getSoul, saveSoulSections, getAgents, saveAgent } from './engine.mjs';
+import { defaultDeps, dispatch, getDashboard, readEdition, archiveAndIngest, getSoul, saveSoulSections, saveSoulEchantillons, getAgents, saveAgent } from './engine.mjs';
 import { loadEnvFile } from '../lib/load-env.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -44,6 +44,7 @@ app.whenReady().then(() => {
   });
   ipcMain.handle('get-soul-structured', () => getSoul(deps));
   ipcMain.handle('save-soul-sections', (_e, edits) => saveSoulSections(deps, edits));
+  ipcMain.handle('save-soul-echantillons', (_e, entries) => saveSoulEchantillons(deps, entries));
   ipcMain.handle('get-agents', () => getAgents(deps));
   ipcMain.handle('save-agent', (_e, { name, edits }) => saveAgent(deps, name, edits));
   ipcMain.handle('copy', (_e, text) => { clipboard.writeText(String(text)); return true; });

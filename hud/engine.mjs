@@ -4,7 +4,7 @@ import { runSkill as realRunSkill, runRaw as realRunRaw } from '../lib/runner.mj
 import { readSoul as realReadSoul } from '../lib/soul.mjs';
 import { listEditions as realListEditions } from '../lib/editions.mjs';
 import { loadEngineConfig } from '../lib/config.mjs';
-import { parseSoul, replaceSoulSections } from '../lib/soul-model.mjs';
+import { parseSoul, replaceSoulSections, replaceSoulEchantillons } from '../lib/soul-model.mjs';
 import { parseAgent, toAgentDefinition, serializeAgent } from '../lib/agent-file.mjs';
 
 const SOUL_PARTS = ['.claude', 'breves-ia', 'SOUL.md'];
@@ -52,6 +52,16 @@ export function saveSoulSections(deps, edits) {
   try {
     const raw = deps.readFile(join(deps.repoDir, ...SOUL_PARTS));
     deps.writeFile(join(deps.repoDir, ...SOUL_PARTS), replaceSoulSections(raw, edits));
+    return { ok: true };
+  } catch (e) { return { ok: false, error: e.message }; }
+}
+
+export function saveSoulEchantillons(deps, entries) {
+  if (!Array.isArray(entries) || entries.length > 3) return { ok: false, error: 'max 3 échantillons' };
+  if (entries.some((e) => typeof e?.texte !== 'string' || !e.texte.trim())) return { ok: false, error: 'échantillon vide' };
+  try {
+    const path = join(deps.repoDir, ...SOUL_PARTS);
+    deps.writeFile(path, replaceSoulEchantillons(deps.readFile(path), entries));
     return { ok: true };
   } catch (e) { return { ok: false, error: e.message }; }
 }

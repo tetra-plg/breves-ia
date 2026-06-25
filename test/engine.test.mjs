@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, archiveAndIngest, loadAgents, getAgents, saveAgent } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent } from '../hud/engine.mjs';
 
 const SOUL_FIXTURE = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
@@ -159,4 +159,24 @@ test('dispatch injecte les agents + le mode sceptique dans les inputs verify', a
   await dispatch({ skill:'breves-verify', inputs:{ sujets:'x' }, onEvent:()=>{} }, deps);
   assert.equal(seen.inputs.sceptique, 'toujours');
   assert.ok(seen.agents.sceptique);
+});
+
+const SOUL_MIN = '# SOUL\n\n## 5. Échantillons vivants\n> p\n### [2026-06-17]\n**Vieux.** x.\n\n## 6. Journal\n> j\n- [2026-06-24] l.';
+
+test('saveSoulEchantillons écrit §5 (≤ 3)', () => {
+  let wrote = null;
+  const deps = { repoDir: '/repo', readFile: () => SOUL_MIN, writeFile: (p, t) => { wrote = { p, t }; } };
+  const r = saveSoulEchantillons(deps, [{ date: '2026-06-18', source: 'z.ai', texte: '**Neuf.** corps.' }]);
+  assert.equal(r.ok, true);
+  assert.match(wrote.p, /SOUL\.md$/);
+  assert.match(wrote.t, /### \[2026-06-18\] · z\.ai/);
+  assert.doesNotMatch(wrote.t, /Vieux/);
+});
+test('saveSoulEchantillons refuse > 3 et texte vide, sans écrire', () => {
+  let called = false;
+  const deps = { repoDir: '/repo', readFile: () => SOUL_MIN, writeFile: () => { called = true; } };
+  const quatre = [1, 2, 3, 4].map((n) => ({ date: '2026-06-18', source: '', texte: `**${n}.** x.` }));
+  assert.equal(saveSoulEchantillons(deps, quatre).ok, false);
+  assert.equal(saveSoulEchantillons(deps, [{ date: '2026-06-18', source: '', texte: '   ' }]).ok, false);
+  assert.equal(called, false);
 });
