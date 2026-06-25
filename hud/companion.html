@@ -139,6 +139,9 @@ button:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
       <div id="view-title" class="h-title">Brèves IA</div>
       <div id="view-sub" class="h-sub">rédacteur en chef · /breves-ia</div>
     </div>
+    <button id="btn-soul" class="iconbtn" title="SOUL — le style">&#10022;</button>
+    <button id="btn-hist" class="iconbtn" title="Historique">&#9201;&#65038;</button>
+    <button id="btn-agents" class="iconbtn" title="Agents">&#9881;&#65038;</button>
     <button id="btn-theme" class="iconbtn" title="Thème">◑</button>
   </div>
 
@@ -180,25 +183,7 @@ button:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
         </div>
 
         <div class="eyebrow" style="margin:0 0 9px">Éditions récentes</div>
-        <div id="editions-list" style="display:flex;flex-direction:column;gap:7px;margin-bottom:20px"></div>
-
-        <div class="row">
-          <button id="btn-soul" class="card" style="flex:1;text-align:left;display:flex;flex-direction:column;gap:3px">
-            <span style="display:flex;align-items:center;gap:7px">
-              <span style="width:6px;height:6px;border-radius:50%;background:var(--good)"></span>
-              <span style="font:600 13px var(--body)">SOUL · <span id="soul-version">v1</span></span>
-            </span>
-            <span style="font:400 11px var(--body);color:var(--muted)">Le style de Pierre</span>
-          </button>
-          <button id="btn-hist" class="card" style="flex:1;text-align:left;display:flex;flex-direction:column;gap:3px">
-            <span style="font:600 13px var(--body)">Historique</span>
-            <span style="font:400 11px var(--body);color:var(--muted)"><span id="hist-count">0</span> éditions archivées</span>
-          </button>
-        </div>
-        <button id="btn-agents" class="card" style="width:100%;text-align:left;margin-top:8px;display:flex;flex-direction:column;gap:3px">
-          <span style="font:600 13px var(--body)">Agents</span>
-          <span style="font:400 11px var(--body);color:var(--muted)">Enquêteur &amp; sceptique : modèle, outils, prompt</span>
-        </button>
+        <div id="editions-list" style="display:flex;flex-direction:column;gap:7px"></div>
       </div>
     </section>
 

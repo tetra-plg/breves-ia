@@ -66,8 +66,8 @@ function renderDashboard(data) {
   $('#last-count').textContent = last ? String(last.count) : '0';
   $('#last-corr').textContent = last ? String(last.corr) : '0';
   $('#last-sources').textContent = last ? String(last.count) : '0';
-  $('#hist-count').textContent = String(eds.length);
-  $('#soul-version').textContent = soulVersionLabel(data?.soul?.version);
+  $('#btn-hist').title = `Historique · ${eds.length} édition${eds.length > 1 ? 's' : ''}`;
+  $('#btn-soul').title = `SOUL · ${soulVersionLabel(data?.soul?.version)} — le style`;
   const list = $('#editions-list'); list.innerHTML = '';
   if (!eds.length) list.appendChild(el('div', 'faint', 'Aucune édition archivée pour l\'instant.'));
   for (const e of eds.slice(0, 4)) {
