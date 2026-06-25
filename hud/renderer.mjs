@@ -94,10 +94,13 @@ function launch() {
   runVerify(sujets);
 }
 
-// ============ SUIVI LIVE (checking + rédaction) ============
+// ============ SUIVI LIVE (checking + rédaction + archivage) ============
+const RUN_BTNS = ['btn-launch', 'btn-redact', 'btn-corriger', 'btn-valider'];
+function setBusy(b) { RUN_BTNS.forEach((id) => { const el = $('#' + id); if (el) el.disabled = b; }); }
 let runTimer = null, runT0 = 0, runEls = null;
 function fmtClock(ms) { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
 function beginRun(prefix, title) {
+  setBusy(true);
   runEls = { status: $(`#${prefix}-status`), clock: $(`#${prefix}-clock`), activity: $(`#${prefix}-activity`), title: $(`#${prefix}-title`) };
   if (!runEls.status) { runEls = null; return; }
   if (title && runEls.title) runEls.title.textContent = title;
@@ -108,7 +111,7 @@ function beginRun(prefix, title) {
   clearInterval(runTimer);
   runTimer = setInterval(() => { if (runEls) runEls.clock.textContent = fmtClock(Date.now() - runT0); }, 1000);
 }
-function endRun() { clearInterval(runTimer); runTimer = null; if (runEls) runEls.status.hidden = true; runEls = null; }
+function endRun() { clearInterval(runTimer); runTimer = null; if (runEls) runEls.status.hidden = true; runEls = null; setBusy(false); }
 function onActivity(label) { if (runEls && label) runEls.activity.textContent = label; }
 
 // ============ CHECKING ============
@@ -271,12 +274,14 @@ async function runArchive() {
   const leconSOUL = (wantSoulLesson && draftValue.soulLessonProposee) || undefined;
   const inputs = { teamsText, topics: verifyValue.topics, sources: draftValue.sources };
   if (leconSOUL) inputs.leconSOUL = leconSOUL;
-  beginRun('draft', 'Archivage + ingestion en cours');
+  show('archived');                 // on passe à l'écran 4 tout de suite
+  $('#arch-done').hidden = true;     // contenu « succès » masqué pendant le travail
+  beginRun('arch', 'Archivage + ingestion en cours');
   const r = await window.breves.archive(inputs);   // archive (cwd repo) puis /ingest (cwd wiki)
   endRun();
-  if (!r.ok) { toast('Échec de l\'archivage : ' + r.error); return; }
+  if (!r.ok) { toast('Échec de l\'archivage : ' + r.error); show('editor'); return; }
   archiveValue = r.value;
-  show('archived');
+  $('#arch-done').hidden = false;
   renderArchived(archiveValue);
   if (r.ingest && !r.ingest.ok) toast('Déposé dans raw/, mais l\'ingestion a échoué : relance /ingest côté wiki');
 }
