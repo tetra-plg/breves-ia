@@ -7,7 +7,7 @@ const SOUL_FIXTURE = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta
 
 test('dispatch passe les bons arguments à runSkill', async () => {
   let seen = null;
-  const deps = { repoDir: '/tmp/bb', bbDir: '/tmp/bb', runSkill: async (a) => { seen = a; return { ok: true, value: { topics: [] } }; } };
+  const deps = { repoDir: '/tmp/bb', bbDir: '/tmp/bb', readdir: () => [], runSkill: async (a) => { seen = a; return { ok: true, value: { topics: [] } }; } };
   const onEvent = () => {};
   const r = await dispatch({ skill: 'breves-verify', inputs: { sujets: 'x' }, onEvent }, deps);
   assert.equal(r.ok, true);
@@ -81,7 +81,7 @@ test('saveSoulSections refuse un champ vide (n\'écrit pas)', () => {
 
 test('dispatch utilise repoDir comme cwd + injecte le MCP wiki', async () => {
   let seen = null;
-  const deps = { repoDir: '/repo', bbDir: '/bb', wikiMcp: { command: 'py', args: ['s'] },
+  const deps = { repoDir: '/repo', bbDir: '/bb', wikiMcp: { command: 'py', args: ['s'] }, readdir: () => [],
     runSkill: async (a) => { seen = a; return { ok: true, value: { topics: [] } }; } };
   await dispatch({ skill: 'breves-verify', inputs: { sujets: 'x' }, onEvent: () => {} }, deps);
   assert.equal(seen.bbDir, '/repo');                       // cwd = repoDir
@@ -91,7 +91,7 @@ test('dispatch utilise repoDir comme cwd + injecte le MCP wiki', async () => {
 test('archiveAndIngest enchaîne archive (repoDir) puis /ingest (bbDir)', async () => {
   const calls = [];
   const deps = {
-    repoDir: '/repo', bbDir: '/bb', wikiMcp: { command: 'py', args: ['s'] },
+    repoDir: '/repo', bbDir: '/bb', wikiMcp: { command: 'py', args: ['s'] }, readdir: () => [],
     runSkill: async (a) => { calls.push(['skill', a.skill, a.bbDir]); return { ok: true, value: { archiveSteps: [], newsletterText: 'x', soulVersion: 'v2' } }; },
     runRaw: async (a) => { calls.push(['raw', a.prompt, a.cwd]); return { ok: true, text: 'ingéré' }; },
   };
@@ -104,7 +104,7 @@ test('archiveAndIngest enchaîne archive (repoDir) puis /ingest (bbDir)', async 
 
 test('archiveAndIngest ne lance pas /ingest si l\'archive échoue', async () => {
   let ingestCalled = false;
-  const deps = { repoDir: '/repo', bbDir: '/bb',
+  const deps = { repoDir: '/repo', bbDir: '/bb', readdir: () => [],
     runSkill: async () => ({ ok: false, error: 'boom' }),
     runRaw: async () => { ingestCalled = true; return { ok: true, text: '' }; } };
   const r = await archiveAndIngest({ teamsText: 't', topics: [], sources: [], onEvent: () => {} }, deps);
