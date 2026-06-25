@@ -94,9 +94,27 @@ function launch() {
   runVerify(sujets);
 }
 
+// ============ SUIVI LIVE (checking + rédaction) ============
+let runTimer = null, runT0 = 0, runEls = null;
+function fmtClock(ms) { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+function beginRun(prefix) {
+  runEls = { status: $(`#${prefix}-status`), clock: $(`#${prefix}-clock`), activity: $(`#${prefix}-activity`) };
+  if (!runEls.status) { runEls = null; return; }
+  runEls.status.hidden = false;
+  runEls.activity.textContent = 'Démarrage…';
+  runEls.clock.textContent = '0:00';
+  runT0 = Date.now();
+  clearInterval(runTimer);
+  runTimer = setInterval(() => { if (runEls) runEls.clock.textContent = fmtClock(Date.now() - runT0); }, 1000);
+}
+function endRun() { clearInterval(runTimer); runTimer = null; if (runEls) runEls.status.hidden = true; runEls = null; }
+function onActivity(label) { if (runEls && label) runEls.activity.textContent = label; }
+
 // ============ CHECKING ============
 async function runVerify(sujets) {
+  beginRun('check');
   const r = await window.breves.sendCommand('breves-verify', { sujets });
+  endRun();
   if (!r.ok) { toast('Échec de la vérification : ' + r.error); return; }
   verifyValue = r.value;
   cards = applyResult(cards, verifyValue); // filet : termine les cartes même sans sentinelle
@@ -189,8 +207,9 @@ async function runDraft(feedback) {
   if (!verifyValue) return;
   const inputs = { topics: verifyValue.topics };
   if (feedback) inputs.feedback = feedback;
-  toast('Rédaction en cours…');
+  beginRun('draft');
   const r = await window.breves.sendCommand('breves-draft', inputs);
+  endRun();
   if (!r.ok) { toast('Échec de la rédaction : ' + r.error); return; }
   draftValue = r.value;
   renderEditor(draftValue);
@@ -375,6 +394,7 @@ async function openReader(e) {
 
 // ============ EVENTS MOTEUR (streaming) ============
 window.breves.onCommandEvent((ev) => {
+  if (ev.type === 'activity') { onActivity(ev.label); return; }
   if (['topic-detected', 'topic-progress', 'topic-done', 'topic-error'].includes(ev.type)) {
     cards = applyEvent(cards, ev);
     if (state.view === 'checking') renderChecking(false);

@@ -11,7 +11,8 @@ Domaine : IA. Date du jour = date d'édition.
 
 ## Étapes
 1. Extrais les **sujets distincts** du texte. Pour chacun, choisis une `key` courte en kebab-case.
-   Émets immédiatement, une ligne par sujet : `«BREVES» topic <key> | <libellé court>`
+   **AVANT tout appel d'outil**, émets en texte une ligne par sujet : `«BREVES» topic <key> | <libellé court>`.
+   N'appelle AUCUN outil `Task` tant que toutes les lignes `topic` ne sont pas émises (elles alimentent l'écran de suivi).
 2. Si **plus de 15 sujets**, n'en traite que les 15 premiers et ajoute `"avertissement_lot": true` au JSON final.
 3. Dispatche **en parallèle un sous-agent par sujet** via l'outil Task avec **`subagent_type: "enqueteur"`** (un seul message, plusieurs `Task`). Tâche = le sujet (+ date/URL fournies). Le brief EST le prompt système de l'agent : ne le répète pas.
 4. Dès réception de la réponse de chaque sous-agent, émets ses jalons :
