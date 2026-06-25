@@ -29,5 +29,7 @@ test('viewTitle', () => {
   assert.equal(viewTitle('soul'), 'SOUL — le style');
   assert.equal(viewTitle('history'), 'Historique');
   assert.equal(viewTitle('agents'), 'Agents');
+  assert.equal(viewTitle('ech-editions'), 'Choisir une édition');
+  assert.equal(viewTitle('ech-breves'), 'Choisir une brève');
   assert.equal(viewTitle('dashboard'), 'Brèves IA');
 });

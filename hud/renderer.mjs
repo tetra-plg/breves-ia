@@ -47,9 +47,14 @@ function show(view) { state.view = view; renderShell(); onEnter(view); }
 function go(action) { show(nextView(state.view, action)); }
 function onEnter(view) {
   if (view === 'dashboard') loadDashboard();
-  if (view === 'soul') renderSoul();
+  if (view === 'soul') {
+    // retour depuis le sélecteur d'échantillons : garder l'état local de §5 (ajouts non encore enregistrés)
+    if (state.echKeepLocal) { state.echKeepLocal = false; renderEchantillons(); } else renderSoul();
+  }
   if (view === 'history') renderHistory();
   if (view === 'agents') renderAgents();
+  if (view === 'ech-editions') renderEchEditions();
+  if (view === 'ech-breves') renderEchBreves();
 }
 function applyTheme() { document.body.classList.toggle('dark', state.theme === 'dark'); }
 function toggleTheme() { state.theme = state.theme === 'light' ? 'dark' : 'light'; applyTheme(); }
@@ -358,34 +363,43 @@ function renderEchantillons() {
   });
   $('#btn-ech-add').disabled = echantillons.length >= 3;
 }
-async function openEchPicker() {
-  const body = $('#ech-picker-body'); body.innerHTML = '';
+// Écran 1 du sélecteur : choisir une édition
+function renderEchEditions() {
+  const box = $('#ech-editions-list'); box.innerHTML = '';
   const eds = state.dashboard?.editions || [];
-  if (!eds.length) { body.appendChild(el('div', 'faint', 'Aucune édition archivée.')); }
+  if (!eds.length) { box.appendChild(el('div', 'faint', 'Aucune édition archivée.')); return; }
   eds.forEach((ed) => {
     const row = el('button', 'card'); row.style.cssText = 'display:block;width:100%;text-align:left';
-    row.textContent = `${dateLong(ed.date)}${ed.title ? ' · ' + ed.title : ''}`;
-    row.onclick = () => showEchBrevesOf(ed);
-    body.appendChild(row);
+    row.innerHTML = `<div style="font:600 13px var(--display)">${escapeHtml(dateLong(ed.date))}</div>${ed.title ? `<div style="font:400 11.5px var(--body);color:var(--muted);margin-top:2px">${escapeHtml(ed.title)}</div>` : ''}`;
+    row.onclick = () => { state.echEdition = ed; show('ech-breves'); };
+    box.appendChild(row);
   });
-  $('#ech-picker').hidden = false;
 }
-async function showEchBrevesOf(ed) {
-  const body = $('#ech-picker-body'); body.innerHTML = '';
-  const back = el('button', 'btn-ghost', '‹ éditions'); back.style.cssText = 'padding:6px 11px;margin-bottom:4px'; back.onclick = openEchPicker; body.appendChild(back);
+// Écran 2 du sélecteur : choisir une brève de l'édition retenue
+async function renderEchBreves() {
+  const ed = state.echEdition;
+  if (!ed) { show('ech-editions'); return; }
+  $('#ech-breves-head').textContent = `${dateLong(ed.date)}${ed.title ? ' · ' + ed.title : ''}`;
+  const box = $('#ech-breves-list'); box.innerHTML = '';
+  box.appendChild(el('div', 'faint', 'Chargement…'));
   const text = ed.file ? await window.breves.readEdition(ed.file) : '';
   const breves = extractBreves(text || '');
-  if (!breves.length) { body.appendChild(el('div', 'faint', 'Aucune brève détectée.')); return; }
+  box.innerHTML = '';
+  if (!breves.length) { box.appendChild(el('div', 'faint', 'Aucune brève détectée dans cette édition.')); return; }
+  const plein = echantillons.length >= 3;
   breves.forEach((b) => {
     const card = el('div', 'card');
-    card.innerHTML = `<div style="font:400 12px/1.5 var(--body);margin-bottom:8px">${inlineMd(b.texte)}</div>`;
-    const add = el('button', 'btn-primary', 'Ajouter cet échantillon'); add.style.cssText = 'padding:7px 12px;font-size:12px';
+    card.innerHTML = `<div style="font:400 12px/1.55 var(--body);margin-bottom:9px">${inlineMd(b.texte)}</div>`;
+    const add = el('button', 'btn-primary', plein ? '3 échantillons max atteint' : 'Ajouter cet échantillon');
+    add.style.cssText = 'padding:8px 13px;font-size:12px'; add.disabled = plein;
     add.onclick = () => {
       if (echantillons.length >= 3) { toast('3 échantillons maximum.'); return; }
       echantillons.push({ date: ed.date, source: b.source, texte: b.texte }); // ed.date = ISO de l'édition (format §5)
-      $('#ech-picker').hidden = true; renderEchantillons();
+      state.echKeepLocal = true;
+      show('soul');
+      toast('Échantillon ajouté — pense à « Enregistrer §5 ».');
     };
-    card.appendChild(add); body.appendChild(card);
+    card.appendChild(add); box.appendChild(card);
   });
 }
 async function saveEchantillons() {
@@ -460,15 +474,16 @@ function wire() {
   });
   $('#btn-back').onclick = () => {
     if (state.view === 'detail' || state.view === 'reader') show(state.returnTo || 'dashboard');
+    else if (state.view === 'ech-breves') show('ech-editions');
+    else if (state.view === 'ech-editions') { state.echKeepLocal = true; show('soul'); }
     else go('goDash');
   };
   $('#btn-theme').onclick = toggleTheme;
   $('#cta-new').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
   $('#btn-soul').onclick = () => go('goSoul');
   $('#btn-soul-save').onclick = saveSoulFromUI;
-  $('#btn-ech-add').onclick = openEchPicker;
+  $('#btn-ech-add').onclick = () => show('ech-editions');
   $('#btn-ech-save').onclick = saveEchantillons;
-  $('#ech-picker-close').onclick = () => { $('#ech-picker').hidden = true; };
   $('#btn-agents').onclick = () => go('goAgents');
   $('#btn-hist').onclick = () => go('goHist');
   $('#raw-text').addEventListener('input', renderDetected);

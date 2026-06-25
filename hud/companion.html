@@ -312,17 +312,25 @@ button:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
           <button id="btn-ech-add" class="btn-ghost" style="flex:1">+ Ajouter depuis une édition</button>
           <button id="btn-ech-save" class="btn-primary" style="flex:1">Enregistrer §5</button>
         </div>
-        <div id="ech-picker" class="overlay" hidden>
-          <div class="sheet">
-            <div class="pad">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><b style="font:600 14px var(--display)">Choisir une brève</b><button id="ech-picker-close" class="btn-ghost" style="margin-left:auto;padding:7px 13px">Fermer</button></div>
-              <div id="ech-picker-body" style="display:flex;flex-direction:column;gap:10px"></div>
-            </div>
-          </div>
-        </div>
 
         <div class="eyebrow" style="margin:22px 0 9px">6 · Journal d'évolution</div>
         <div id="soul-journal" style="display:flex;flex-direction:column;gap:9px"></div>
+      </div>
+    </section>
+
+    <!-- ÉCHANTILLONS §5 : choisir une édition -->
+    <section data-view="ech-editions">
+      <div class="pad">
+        <p class="muted" style="font:400 12.5px/1.5 var(--body);margin:0 0 14px">Choisis l'édition d'où provient la brève à promouvoir en échantillon de style (§5).</p>
+        <div id="ech-editions-list" style="display:flex;flex-direction:column;gap:9px"></div>
+      </div>
+    </section>
+
+    <!-- ÉCHANTILLONS §5 : choisir une brève -->
+    <section data-view="ech-breves">
+      <div class="pad">
+        <div id="ech-breves-head" class="faint" style="font:500 11px var(--mono);margin:0 0 12px"></div>
+        <div id="ech-breves-list" style="display:flex;flex-direction:column;gap:10px"></div>
       </div>
     </section>
 
