@@ -2,6 +2,7 @@ import { nextView, stepper, viewTitle } from '../lib/ui-state.mjs';
 import { dateLong, inlineMd, escapeHtml, soulVersionLabel } from '../lib/ui-format.mjs';
 import { applyEvent, applyResult, summary } from '../lib/checking-model.mjs';
 import { renderEditionHtml } from '../lib/edition-render.mjs';
+import { extractBreves } from '../lib/edition-breves.mjs';
 
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
@@ -344,18 +345,60 @@ function agentCard(a) {
 
 // ============ SOUL (structuré : §1-4 éditables, §5-6 display) ============
 const SOUL_FIELDS = ['quiParle', 'audience', 'voix', 'lignesRouges'];
+let echantillons = []; // état local de §5 jusqu'à l'enregistrement
+function renderEchantillons() {
+  const box = $('#soul-echantillons'); box.innerHTML = '';
+  $('#ech-count').textContent = String(echantillons.length);
+  if (!echantillons.length) box.appendChild(el('div', 'faint', 'Aucun échantillon. Ajoute jusqu’à 3 brèves depuis tes éditions.'));
+  echantillons.forEach((e, i) => {
+    const card = el('div', 'card');
+    card.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><span style="font:500 10.5px var(--mono);color:var(--accent)">${escapeHtml(dateLong(e.date))}${e.source ? ' · ' + escapeHtml(e.source) : ''}</span><button class="ech-del btn-ghost" style="margin-left:auto;padding:5px 10px;font-size:11px">Retirer</button></div><div style="font:400 12.5px/1.5 var(--body)">${inlineMd(e.texte)}</div>`;
+    card.querySelector('.ech-del').onclick = () => { echantillons.splice(i, 1); renderEchantillons(); };
+    box.appendChild(card);
+  });
+  $('#btn-ech-add').disabled = echantillons.length >= 3;
+}
+async function openEchPicker() {
+  const body = $('#ech-picker-body'); body.innerHTML = '';
+  const eds = state.dashboard?.editions || [];
+  if (!eds.length) { body.appendChild(el('div', 'faint', 'Aucune édition archivée.')); }
+  eds.forEach((ed) => {
+    const row = el('button', 'card'); row.style.cssText = 'display:block;width:100%;text-align:left';
+    row.textContent = `${dateLong(ed.date)}${ed.title ? ' · ' + ed.title : ''}`;
+    row.onclick = () => showEchBrevesOf(ed);
+    body.appendChild(row);
+  });
+  $('#ech-picker').hidden = false;
+}
+async function showEchBrevesOf(ed) {
+  const body = $('#ech-picker-body'); body.innerHTML = '';
+  const back = el('button', 'btn-ghost', '‹ éditions'); back.style.cssText = 'padding:6px 11px;margin-bottom:4px'; back.onclick = openEchPicker; body.appendChild(back);
+  const text = ed.file ? await window.breves.readEdition(ed.file) : '';
+  const breves = extractBreves(text || '');
+  if (!breves.length) { body.appendChild(el('div', 'faint', 'Aucune brève détectée.')); return; }
+  breves.forEach((b) => {
+    const card = el('div', 'card');
+    card.innerHTML = `<div style="font:400 12px/1.5 var(--body);margin-bottom:8px">${inlineMd(b.texte)}</div>`;
+    const add = el('button', 'btn-primary', 'Ajouter cet échantillon'); add.style.cssText = 'padding:7px 12px;font-size:12px';
+    add.onclick = () => {
+      if (echantillons.length >= 3) { toast('3 échantillons maximum.'); return; }
+      echantillons.push({ date: ed.date, source: b.source, texte: b.texte }); // ed.date = ISO de l'édition (format §5)
+      $('#ech-picker').hidden = true; renderEchantillons();
+    };
+    card.appendChild(add); body.appendChild(card);
+  });
+}
+async function saveEchantillons() {
+  const r = await window.breves.saveSoulEchantillons(echantillons);
+  toast(r && r.ok ? 'Échantillons §5 enregistrés' : 'Échec : ' + (r?.error || 'inconnu'));
+}
 async function renderSoul() {
   const s = await window.breves.getSoulStructured();
   if (!s) { $('#soul-view-version').textContent = '(SOUL introuvable)'; return; }
   $('#soul-view-version').textContent = s.version;
   for (const f of SOUL_FIELDS) $('#soul-' + f).value = s[f] || '';
-  const ech = $('#soul-echantillons'); ech.innerHTML = '';
-  (s.echantillons || []).forEach((e) => {
-    const card = el('div', 'card');
-    const pin = e.epingle ? ' <span class="badge-good">épinglé</span>' : '';
-    card.innerHTML = `<div style="font:500 10.5px var(--mono);color:var(--accent);margin-bottom:5px">${escapeHtml(e.date)}${pin}</div><div style="font:400 12.5px/1.5 var(--body)">${inlineMd(e.texte)}</div>`;
-    ech.appendChild(card);
-  });
+  echantillons = (s.echantillons || []).map((e) => ({ date: e.date, source: e.source || '', texte: e.texte }));
+  renderEchantillons();
   const jrn = $('#soul-journal'); jrn.innerHTML = '';
   if (!(s.journal || []).length) jrn.appendChild(el('div', 'faint', 'Aucune leçon enregistrée.'));
   (s.journal || []).forEach((l) => {
@@ -423,6 +466,9 @@ function wire() {
   $('#cta-new').onclick = () => { $('#raw-text').value = ''; renderDetected(); go('goCompose'); };
   $('#btn-soul').onclick = () => go('goSoul');
   $('#btn-soul-save').onclick = saveSoulFromUI;
+  $('#btn-ech-add').onclick = openEchPicker;
+  $('#btn-ech-save').onclick = saveEchantillons;
+  $('#ech-picker-close').onclick = () => { $('#ech-picker').hidden = true; };
   $('#btn-agents').onclick = () => go('goAgents');
   $('#btn-hist').onclick = () => go('goHist');
   $('#raw-text').addEventListener('input', renderDetected);
