@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parseSoul, replaceSoulSections } from '../lib/soul-model.mjs';
+import { parseSoul, replaceSoulSections, serializeEchantillons, replaceSoulEchantillons } from '../lib/soul-model.mjs';
 
 const RAW = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
@@ -17,10 +17,10 @@ test('parseSoul extrait §5 échantillons', () => {
   const s = parseSoul(RAW);
   assert.equal(s.echantillons.length, 2);
   assert.deepEqual(
-    { date: s.echantillons[0].date, seed: s.echantillons[0].seed, epingle: s.echantillons[0].epingle },
-    { date: '2026-06-24', seed: false, epingle: false },
+    { date: s.echantillons[0].date, source: s.echantillons[0].source },
+    { date: '2026-06-24', source: '' },
   );
-  assert.equal(s.echantillons[1].epingle, true);            // épinglé: oui
+  assert.equal(s.echantillons[1].source, '');               // ancien format : pas de source
   assert.match(s.echantillons[0].texte, /accroche en gras/);
 });
 test('parseSoul extrait §6 journal + version', () => {
@@ -49,4 +49,52 @@ test('replaceSoulSections réécrit §1-4 sans toucher §5/§6', () => {
   // §5 + §6 octet pour octet identiques
   const tail = (t) => t.slice(t.indexOf('## 5.'));
   assert.equal(tail(out), tail(RAW));
+});
+
+const SOUL = `# SOUL
+
+## 1. Qui parle
+Pierre.
+
+## 5. Échantillons vivants (fenêtre glissante)
+> ancien préambule
+### [2026-06-17] seed: false | épinglé: non
+**Vieux.** corps vieux.
+https://a.com/x
+
+## 6. Journal d'évolution
+> j
+- [2026-06-24] une leçon.`;
+
+test('parseEchantillons : nouveau shape {date,source,texte}, tolère l\'ancien format', () => {
+  const s = parseSoul(SOUL);
+  assert.equal(s.echantillons.length, 1);
+  assert.equal(s.echantillons[0].date, '2026-06-17');
+  assert.equal(s.echantillons[0].source, '');           // ancien format : pas de source
+  assert.match(s.echantillons[0].texte, /^\*\*Vieux\.\*\*/);
+  assert.equal(s.echantillons[0].seed, undefined);       // flags supprimés
+});
+test('serializeEchantillons : préambule + entrées, source omise si vide, cap 3', () => {
+  const out = serializeEchantillons([
+    { date: '2026-06-18', source: 'z.ai', texte: '**A.** corps a.' },
+    { date: '2026-06-18', source: '', texte: '**B.** corps b.' },
+    { date: '2026-06-18', source: 'c.com', texte: '**C.** corps c.' },
+    { date: '2026-06-18', source: 'd.com', texte: '**D.** corps d.' },
+  ]);
+  assert.match(out, /^> /);                               // préambule
+  assert.match(out, /### \[2026-06-18\] · z\.ai\n\*\*A\.\*\*/);
+  assert.match(out, /### \[2026-06-18\]\n\*\*B\.\*\*/);   // source vide → pas de « · »
+  assert.doesNotMatch(out, /\*\*D\.\*\*/);                // 4e ignoré (cap 3)
+});
+test('replaceSoulEchantillons : remplace §5, garde §1 et §6', () => {
+  const out = replaceSoulEchantillons(SOUL, [{ date: '2026-06-18', source: 'z.ai', texte: '**Neuf.** corps.' }]);
+  assert.match(out, /## 1\. Qui parle\nPierre\./);
+  assert.match(out, /## 6\. Journal[\s\S]*une leçon\./);
+  assert.match(out, /### \[2026-06-18\] · z\.ai\n\*\*Neuf\.\*\*/);
+  assert.doesNotMatch(out, /Vieux/);                      // ancien échantillon remplacé
+  assert.equal(parseSoul(out).echantillons.length, 1);
+});
+test('replaceSoulEchantillons : liste vide → préambule seul', () => {
+  const out = replaceSoulEchantillons(SOUL, []);
+  assert.equal(parseSoul(out).echantillons.length, 0);
 });
