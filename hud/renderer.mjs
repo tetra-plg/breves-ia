@@ -97,9 +97,10 @@ function launch() {
 // ============ SUIVI LIVE (checking + rédaction) ============
 let runTimer = null, runT0 = 0, runEls = null;
 function fmtClock(ms) { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
-function beginRun(prefix) {
-  runEls = { status: $(`#${prefix}-status`), clock: $(`#${prefix}-clock`), activity: $(`#${prefix}-activity`) };
+function beginRun(prefix, title) {
+  runEls = { status: $(`#${prefix}-status`), clock: $(`#${prefix}-clock`), activity: $(`#${prefix}-activity`), title: $(`#${prefix}-title`) };
   if (!runEls.status) { runEls = null; return; }
+  if (title && runEls.title) runEls.title.textContent = title;
   runEls.status.hidden = false;
   runEls.activity.textContent = 'Démarrage…';
   runEls.clock.textContent = '0:00';
@@ -270,8 +271,9 @@ async function runArchive() {
   const leconSOUL = (wantSoulLesson && draftValue.soulLessonProposee) || undefined;
   const inputs = { teamsText, topics: verifyValue.topics, sources: draftValue.sources };
   if (leconSOUL) inputs.leconSOUL = leconSOUL;
-  toast('Archivage + ingestion en cours…');
+  beginRun('draft', 'Archivage + ingestion en cours');
   const r = await window.breves.archive(inputs);   // archive (cwd repo) puis /ingest (cwd wiki)
+  endRun();
   if (!r.ok) { toast('Échec de l\'archivage : ' + r.error); return; }
   archiveValue = r.value;
   show('archived');
