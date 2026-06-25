@@ -14,14 +14,14 @@ Entrée : `INPUTS` JSON `{ "teamsText", "topics", "sources", "leconSOUL": "<opti
 - Un clipping par topic : `drop_to_raw('clippings', 'YYYY-MM-DD-<slug>.md', <contenu>)`.
   Si `fiabilite=non_verifie` ou repli épuisé : **ne clippe pas**, garde l'URL dans la note, signale-le.
   Le nombre de clippings archivés dans `archiveSteps[1].t` = nombre de topics dont `fiabilite ≠ non_verifie` ET source accessible (repli non épuisé).
-- **MAJ SOUL §5** : insère la/les brève(s) validée(s) en tête de la fenêtre glissante (FIFO 3 hors épinglés).
+- **Ne touche PAS au §5 Échantillons vivants** : il est curaté à la main depuis l'éditeur SOUL.
 - Si `leconSOUL` présent : ajoute une ligne datée `- (YYYY-MM-DD) <leconSOUL>` au **§6 Journal d'évolution**.
 - `soulVersion` se calcule ainsi : `v` + (1 + nombre de leçons datées présentes au §6 **après** la mise à jour).
 
 ## Garde-fous
 - `raw/` immutable : écris uniquement via `drop_to_raw`. La SOUL n'est jamais dans `raw/`.
 - Slugs kebab-case datés `YYYY-MM-DD-<slug>.md`.
-- MAJ SOUL §5 = fenêtre glissante FIFO 3 hors épinglés ; supprime les entrées `seed: true` une fois la fenêtre remplie.
+- Le §5 Échantillons vivants n'est jamais modifié par l'archivage (curation manuelle via l'UI).
 
 ## Sortie (UNIQUEMENT, en dernier)
 ```json

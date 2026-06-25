@@ -24,17 +24,8 @@ Mes collègues PM de Merim. Non-spécialistes de l'IA mais pas des débutants : 
 - Pas de remplissage, pas de longue intro.
 - Pas de jargon non explicité pour un PM.
 
-## 5. Échantillons vivants (fenêtre glissante)
-> Les ~3 dernières brèves VALIDÉES, verbatim, en FIFO. Les `seed: true` amorcent la plume et sortent dès que de vraies éditions validées remplissent la fenêtre. Les `épinglé: oui` ne vieillissent jamais. Max 3 hors épinglés.
-
-### [2026-06-24] seed: false | épinglé: non
-**OpenAI passe son offensive cybersécurité à la vitesse supérieure.** Le 22 juin, OpenAI a étendu Daybreak, son programme de cyberdéfense. Au menu : la version complète de GPT-5.5-Cyber (record sur le benchmark CyberGym, 85,6 % contre 81,8 % pour GPT-5.5), un plugin Codex Security qui découvre ET corrige les failles, et « Patch the Planet », un programme avec Trail of Bits et HackerOne pour patcher l'open source critique (cURL, Go, Python en sont). Le fil rouge : on ne se contente plus de trouver les vulnérabilités, on automatise le correctif. Le détail qui interpelle : OpenAI travaille main dans la main avec le gouvernement US (tests pré-déploiement avec le CAISI, mise en œuvre de l'Executive Order, accès cyber « de confiance » accordé à l'Australie, le Canada, la France, l'Allemagne, le Japon, la Corée, l'UE). Pendant ce temps, Anthropic a verrouillé son équivalent (projet Glasswing sur le modèle Mythos) et Fable 5 / Mythos viennent d'être coupés par les contrôles export US le 12 juin. (Coalition organisée pour enterrer Anthropic ? Rien ne le prouve. Mais le contraste est net : l'un ouvre et s'aligne avec Washington, l'autre se referme par prudence. La guerre de l'IA fait rage, et c'est le terrain cyber qui chauffe.)
-
-### [2026-06-24] seed: false | épinglé: non
-**Une startup du MIT refroidit les puces IA comme un réacteur nucléaire.** Ferveret (fondée en 2021 par deux chercheurs du MIT en génie nucléaire) immerge les serveurs dans un fluide à bas point d'ébullition et exploite l'ébullition sous-refroidie empruntée aux réacteurs : de minuscules bulles se détachent en continu et évacuent la chaleur bien plus vite que l'air, sans une goutte d'eau et sans les PFAS des immersions classiques. Résultat annoncé : +15 % d'efficacité de calcul face au refroidissement liquide de pointe, jusqu'à +35 % de tokens à énergie constante avec leur logiciel de pilotage. Pilotes en cours avec CleanSpark, FuriosaAI et Switch. (Et non, ce n'est pas Nvidia qui réagit à Ferveret comme on a pu le lire : le seul lien, c'est le programme Nvidia Inception qui héberge la startup. Quand on sait que les datacenters pourraient avaler jusqu'à 17 % de l'électricité américaine d'ici la fin de la décennie, ce genre d'avancée, j'aime.)
-
-### [2026-06-24] seed: false | épinglé: non
-**La France met l'IA au lycée… dès la rentrée 2027.** Sébastien Lecornu a annoncé à VivaTech une heure hebdomadaire d'enseignement de l'IA en classe de seconde, à partir de septembre 2027 : fonctionnement des modèles, usages, éthique, esprit critique face à la désinformation. Le hic : cette heure est prise sur le cours de SNT existant (1h30/semaine depuis 2019), donc zéro temps ajouté, et surtout aucun plan de formation des enseignants ni ressources pédagogiques annoncés. Former là-dessus 800 000 élèves de seconde par an suppose des milliers de profs formés. (L'intention est bonne, l'exécution reste à l'état d'effet d'annonce. On connaît la chanson.)
+## 5. Échantillons vivants
+> Jusqu'à 3 brèves validées, choisies à la main, verbatim. Elles donnent le ton de la plume : densité, rythme, structure. Curées depuis l'éditeur SOUL.
 
 ## 6. Journal d'évolution
 > Règles de style apprises au fil des éditions, datées, une ligne chacune. Alimenté par le gate « propose puis confirme » de `/breves-ia`.
