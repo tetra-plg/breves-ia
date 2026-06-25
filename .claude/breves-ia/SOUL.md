@@ -27,6 +27,18 @@ Mes collègues PM de Merim. Non-spécialistes de l'IA mais pas des débutants : 
 ## 5. Échantillons vivants
 > Jusqu'à 3 brèves validées, choisies à la main, verbatim. Elles donnent le ton de la plume : densité, rythme, structure. Curées depuis l'éditeur SOUL.
 
+### [2026-06-24] · franceinfo.fr
+**La France met l'IA au lycée… dès la rentrée 2027.** Sébastien Lecornu a annoncé à VivaTech une heure hebdomadaire d'enseignement de l'IA en classe de seconde, à partir de septembre 2027 : fonctionnement des modèles, usages, éthique, esprit critique face à la désinformation. Le hic : cette heure est prise sur le cours de SNT existant (1h30/semaine depuis 2019), donc zéro temps ajouté, et surtout aucun plan de formation des enseignants ni ressources pédagogiques annoncés. Former là-dessus 800 000 élèves de seconde par an suppose des milliers de profs formés. (L'intention est bonne, l'exécution reste à l'état d'effet d'annonce. On connaît la chanson.)
+https://www.franceinfo.fr/internet/intelligence-artificielle/le-premier-ministre-sebastien-lecornu-annonce-une-heure-hebdomadaire-d-enseignement-a-l-intelligence-artificielle-en-seconde-des-la-rentree-2027_8070638.html
+
+### [2026-06-24] · abondance.com
+**Les AI Overviews de Google arrivent (peut-être) en France.** Sébastien Missoffe, DG de Google France, a confirmé vouloir y lancer les résumés de recherche générés par IA. Attention au « peut-être » : il espère 2026 mais refuse de s'engager sur une date (le « fin d'année » qui circule, c'est la lecture des médias, pas la parole de Google). Le blocage n'est pas technique mais juridique : la loi de 2019 sur les droits voisins impose de rémunérer la presse, et Google s'est déjà pris 250 M€ d'amende en 2024 pour avoir entraîné Gemini sur des contenus de presse sans accord. À noter pour éviter la confusion : l'annonce porte sur les AI Overviews, pas sur l'AI Mode (lui déjà déployé dans 40+ pays d'Europe depuis octobre 2025, mais France explicitement exclue).
+https://www.abondance.com/20260623-2493011-ai-overviews-google-debarque-france.html
+
+### [2026-06-24] · sakana.ai
+**Sakana AI sort Fugu, un modèle dont le métier est d'orchestrer les autres.** Au lieu de répondre lui-même, Fugu (derrière une simple API compatible OpenAI) décompose la demande, choisit quels modèles frontières activer dans son pool (Opus 4.8, GPT-5.5, Gemini 3.1 Pro), distribue les sous-tâches, vérifie puis synthétise. Deux briques de recherche dessous : un coordinateur léger (~0,6B) obtenu par évolution façon Sakana, et un orchestrateur (~7B) entraîné par renforcement classique. Argument de vente assumé : ne plus dépendre d'un seul fournisseur (Fable 5 et Mythos ont justement été coupés par les contrôles export US le 12 juin). Les benchmarks annoncés sont spectaculaires (en tête sur 10 des 11 tests), mais ils sont publiés par Sakana et l'accueil de la communauté était plutôt sceptique le jour J : vraie orchestration ou simple surcouche de modèles existants ? (À suivre, mais l'idée d'un modèle chef d'orchestre me parle beaucoup.)
+https://sakana.ai/fugu/
+
 ## 6. Journal d'évolution
 > Règles de style apprises au fil des éditions, datées, une ligne chacune. Alimenté par le gate « propose puis confirme » de `/breves-ia`.
 
