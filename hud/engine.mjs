@@ -59,7 +59,7 @@ export function saveSoulSections(deps, edits) {
 // Lit le texte intégral d'une édition archivée. Nom de fichier strictement validé
 // (anti-traversal) : YYYY-MM-DD-breves-ia-merim.md, sous raw/notes/. Renvoie null sinon.
 export function readEdition(deps, file) {
-  if (!/^\d{4}-\d{2}-\d{2}-breves-ia-merim\.md$/.test(String(file))) return null;
+  if (!/^\d{4}-\d{2}-\d{2}-breves-ia-merim(-[a-z0-9-]+)?\.md$/.test(String(file))) return null;
   try { return deps.readFile(join(deps.bbDir, 'raw', 'notes', file)); } catch { return null; }
 }
 

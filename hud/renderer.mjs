@@ -381,7 +381,7 @@ function renderHistory() {
   if (!eds.length) box.appendChild(el('div', 'faint', 'Aucune édition archivée.'));
   eds.forEach((e) => {
     const b = el('button', 'card'); b.style.cssText = 'display:block;width:100%;text-align:left';
-    b.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px"><span style="font:600 14px var(--display)">${dateLong(e.date)}</span><span style="margin-left:auto;font:500 10px var(--body);color:var(--accent)">Lire &#8250;</span></div>
+    b.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px"><span style="font:600 14px var(--display)">${dateLong(e.date)}</span>${e.title ? `<span style="font:500 11px var(--body);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(e.title)}</span>` : ''}<span style="margin-left:auto;font:500 10px var(--body);color:var(--accent)">Lire &#8250;</span></div>
       <div style="display:flex;gap:16px;font:400 12px var(--body);color:var(--muted)"><span><b style="color:var(--text)">${e.count}</b> brèves</span><span><b style="color:var(--warn)">${e.corr}</b> corrections</span></div>`;
     b.onclick = () => openReader(e);
     box.appendChild(b);
@@ -389,7 +389,7 @@ function renderHistory() {
 }
 async function openReader(e) {
   state.readerLabel = dateLong(e.date);
-  $('#reader-sub').textContent = `${e.count} brèves · archivée`;
+  $('#reader-sub').textContent = `${e.title ? e.title + ' · ' : ''}${e.count} brèves · archivée`;
   $('#reader-text').textContent = 'Chargement…';
   state.returnTo = state.view;
   show('reader');
