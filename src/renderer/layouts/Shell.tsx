@@ -14,12 +14,23 @@ export function Shell({ children }: ShellProps) {
   const setView = useAppStore((s) => s.setView);
   const toggleTheme = useAppStore((s) => s.toggleTheme);
   const returnTo = useAppStore((s) => s.returnTo);
+  const setEchKeepLocal = useAppStore((s) => s.setEchKeepLocal);
 
   const isDash = view === 'dashboard';
   const st = stepper(view);
-  // Retour : depuis detail/reader on revient à la vue d'origine (returnTo), sinon dashboard.
-  const back = (): void =>
-    setView(view === 'detail' || view === 'reader' ? (returnTo ?? 'dashboard') : 'dashboard');
+  // Retour : detail/reader → vue d'origine ; sous-flux échantillons → écran précédent ; sinon dashboard.
+  const back = (): void => {
+    if (view === 'detail' || view === 'reader') {
+      setView(returnTo ?? 'dashboard');
+    } else if (view === 'ech-breves') {
+      setView('ech-editions');
+    } else if (view === 'ech-editions') {
+      setEchKeepLocal(true);
+      setView('soul');
+    } else {
+      setView('dashboard');
+    }
+  };
 
   return (
     <div className="win">
