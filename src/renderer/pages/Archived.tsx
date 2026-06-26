@@ -46,7 +46,6 @@ export function Archived() {
     if (!st.draftValue || !st.verifyValue) return;
     archivedOnce.current = true;
     void runArchive();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function copyNewsletter(): Promise<void> {
