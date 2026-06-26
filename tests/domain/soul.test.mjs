@@ -2,9 +2,9 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parseSoul, replaceSoulSections, serializeEchantillons, replaceSoulEchantillons } from '../lib/soul-model.mjs';
+import { parseSoul, replaceSoulSections, serializeEchantillons, replaceSoulEchantillons } from '@domain/soul';
 
-const RAW = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
+const RAW = readFileSync(new URL('../fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
 test('parseSoul extrait §1-4 (corps brut)', () => {
   const s = parseSoul(RAW);
