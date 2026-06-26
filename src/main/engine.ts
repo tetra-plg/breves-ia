@@ -6,6 +6,7 @@ import { readSoul as realReadSoul } from '@main/io/soul.io';
 import type { SoulSummary } from '@main/io/soul.io';
 import { listEditions as realListEditions } from '@main/io/editions.io';
 import type { EditionSummary } from '@main/io/editions.io';
+export type { EditionSummary };
 import { loadEngineConfig } from '@main/io/env';
 import type { WikiMcp } from '@main/io/env';
 import {
