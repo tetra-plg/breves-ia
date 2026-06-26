@@ -5,9 +5,18 @@ description: (interne, piloté par l'UI) Phase 2 des brèves IA — rédaction d
 # /breves-draft
 
 Tu exécutes la **Phase 2** (rédaction), en mode **non interactif**.
-Entrée : `INPUTS` JSON `{ "topics": [<résultats de /breves-verify>], "feedback": "<optionnel>" }`.
+Entrée : `INPUTS` JSON `{ "topics": [<résultats de /breves-verify>], "feedback": "<optionnel>", "redacteur": "on|off" }`.
 
-## Étapes
+## Aiguillage rédaction (selon `INPUTS.redacteur` : on | off ; défaut off si absent)
+
+Lis d'abord `.claude/breves-ia/SOUL.md`.
+
+- **`on`** : dispatche **un** `Task` avec `subagent_type: "redacteur"`. Donne-lui dans le prompt : la **voix** (SOUL §3 Voix & tics + §4 Lignes rouges), les **échantillons** (§5 verbatim), le bloc **`topics`** (JSON fourni en INPUTS) et le **`feedback`** s'il existe. Le brief est le prompt système de l'agent : ne le répète pas. Récupère sa réponse JSON `{ teamsText, soulLessonProposee }` et utilise-la telle quelle.
+- **`off`** : rédige toi-même `teamsText` et `soulLessonProposee` en suivant les étapes 1-3 ci-dessous.
+
+Dans les deux cas, tu assembles ensuite `corrections[]` et `sources[]` depuis les `topics` (étape 4) et tu émets le bloc JSON final.
+
+## Étapes (mode `off` : rédaction directe)
 
 ### 1. Incarne la SOUL
 Lis `.claude/breves-ia/SOUL.md` intégralement. Incarne :
