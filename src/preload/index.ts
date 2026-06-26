@@ -5,7 +5,11 @@ import type { Api } from '@shared/types/api';
 const api: Api = {
   sendCommand: (skill, inputs) => ipcRenderer.invoke(IPC.sendCommand, { skill, inputs }),
   onCommandEvent: (cb) => {
-    ipcRenderer.on(IPC.commandEvent, (_e, ev) => cb(ev));
+    const listener = (_e: Electron.IpcRendererEvent, ev: unknown): void => cb(ev);
+    ipcRenderer.on(IPC.commandEvent, listener);
+    return () => {
+      ipcRenderer.removeListener(IPC.commandEvent, listener);
+    };
   },
   getDashboard: () => ipcRenderer.invoke(IPC.getDashboard),
   readEdition: (file) => ipcRenderer.invoke(IPC.readEdition, file),
