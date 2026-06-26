@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { nextView } from '@domain/navigation';
-import type { Dashboard } from '@main/engine';
+import type { Dashboard, EditionSummary } from '@main/engine';
 import type { Card } from '@domain/checking';
-import type { Echantillon } from '@domain/soul';
+import type { Echantillon, JournalEntry, Soul } from '@domain/soul';
 import { applyEvent, applyResult } from '@domain/checking';
 import type { TopicEvent } from '@domain/events';
 import type { VerifyOutput, DraftOutput, ArchiveOutput } from '@shared/schemas/outputs';
@@ -25,6 +25,15 @@ export function fmtClock(ms: number): string {
 
 const RUN_IDLE: RunStatus = { active: false, title: '', t0: 0, clock: '0:00', activity: '' };
 
+export interface SoulForm {
+  quiParle: string;
+  audience: string;
+  voix: string;
+  lignesRouges: string;
+}
+
+const SOUL_FORM_EMPTY: SoulForm = { quiParle: '', audience: '', voix: '', lignesRouges: '' };
+
 export interface AppState {
   view: string;
   theme: Theme;
@@ -37,6 +46,11 @@ export interface AppState {
   teamsText: string;
   readerText: string;
   echantillons: Echantillon[];
+  soulForm: SoulForm;
+  soulVersion: string;
+  soulJournal: JournalEntry[];
+  echEdition: EditionSummary | null;
+  echKeepLocal: boolean;
   editorMode: EditorMode;
   wantSoulLesson: boolean;
   toast: string | null;
@@ -65,6 +79,12 @@ export interface AppState {
   setEditorMode: (m: EditorMode) => void;
   setWantSoulLesson: (v: boolean) => void;
   setEchantillons: (e: Echantillon[]) => void;
+  loadSoul: (s: Soul) => void;
+  setSoulField: (field: keyof SoulForm, value: string) => void;
+  setEchEdition: (ed: EditionSummary | null) => void;
+  setEchKeepLocal: (v: boolean) => void;
+  addEchantillon: (e: Echantillon) => void;
+  removeEchantillon: (index: number) => void;
   setDrawerKey: (key: string | null) => void;
 }
 
@@ -80,6 +100,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   teamsText: '',
   readerText: '',
   echantillons: [],
+  soulForm: SOUL_FORM_EMPTY,
+  soulVersion: '',
+  soulJournal: [],
+  echEdition: null,
+  echKeepLocal: false,
   editorMode: 'preview',
   wantSoulLesson: true,
   toast: null,
@@ -110,6 +135,18 @@ export const useAppStore = create<AppState>((set, get) => ({
   setEditorMode: (editorMode) => set({ editorMode }),
   setWantSoulLesson: (wantSoulLesson) => set({ wantSoulLesson }),
   setEchantillons: (echantillons) => set({ echantillons }),
+  loadSoul: (s) =>
+    set({
+      soulForm: { quiParle: s.quiParle, audience: s.audience, voix: s.voix, lignesRouges: s.lignesRouges },
+      soulVersion: s.version,
+      soulJournal: s.journal,
+      echantillons: s.echantillons.map((e) => ({ date: e.date, source: e.source || '', texte: e.texte })),
+    }),
+  setSoulField: (field, value) => set((st) => ({ soulForm: { ...st.soulForm, [field]: value } })),
+  setEchEdition: (echEdition) => set({ echEdition }),
+  setEchKeepLocal: (echKeepLocal) => set({ echKeepLocal }),
+  addEchantillon: (e) => set((st) => (st.echantillons.length >= 3 ? {} : { echantillons: [...st.echantillons, e] })),
+  removeEchantillon: (index) => set((st) => ({ echantillons: st.echantillons.filter((_, i) => i !== index) })),
   setDrawerKey: (drawerKey) => set({ drawerKey }),
   setReturnTo: (returnTo) => set({ returnTo }),
 }));
