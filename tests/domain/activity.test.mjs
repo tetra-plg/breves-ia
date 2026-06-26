@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { labelForTool, activityFromMessage } from '../lib/activity.mjs';
+import { labelForTool, activityFromMessage } from '@domain/agents';
 
 test('labelForTool : Task enquêteur / sceptique', () => {
   assert.equal(labelForTool('Task', { subagent_type: 'enqueteur', description: 'GLM 5.2 open source' }), 'Enquêteur : GLM 5.2 open source');

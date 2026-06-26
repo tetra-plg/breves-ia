@@ -1,9 +1,9 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parseAgent, toAgentDefinition, serializeAgent } from '../lib/agent-file.mjs';
+import { parseAgent, toAgentDefinition, serializeAgent } from '@domain/agents';
 
-const RAW = readFileSync(new URL('./fixtures/agent.sample.md', import.meta.url), 'utf8');
+const RAW = readFileSync(new URL('../fixtures/agent.sample.md', import.meta.url), 'utf8');
 
 test('parseAgent : frontmatter + corps', () => {
   const a = parseAgent(RAW);
