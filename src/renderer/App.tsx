@@ -8,6 +8,7 @@ import { Checking } from '@renderer/pages/Checking';
 import { Detail } from '@renderer/pages/Detail';
 import { Editor } from '@renderer/pages/Editor';
 import { Archived } from '@renderer/pages/Archived';
+import { Soul } from '@renderer/pages/Soul';
 import { useCommandStream } from '@renderer/hooks/useCommandStream';
 
 // Registry des vues. Les vues non encore portées tombent sur Placeholder (Phases 3b-2/3/4).
@@ -18,6 +19,7 @@ const VIEWS: Record<string, ComponentType> = {
   detail: Detail,
   editor: Editor,
   archived: Archived,
+  soul: Soul,
 };
 
 function Placeholder() {

@@ -1,0 +1,129 @@
+import { useEffect } from 'react';
+import { useAppStore } from '@renderer/store/app.store';
+import type { SoulForm } from '@renderer/store/app.store';
+import { EchantillonCard } from '@renderer/components/EchantillonCard';
+
+const SOUL_FIELDS: { key: keyof SoulForm; label: string; mono: boolean; minHeight: number }[] = [
+  { key: 'quiParle', label: '1 · Qui parle', mono: false, minHeight: 70 },
+  { key: 'audience', label: '2 · Audience', mono: false, minHeight: 70 },
+  { key: 'voix', label: '3 · Voix & tics', mono: true, minHeight: 110 },
+  { key: 'lignesRouges', label: '4 · Lignes rouges', mono: true, minHeight: 90 },
+];
+
+export function Soul() {
+  const soulForm = useAppStore((s) => s.soulForm);
+  const soulVersion = useAppStore((s) => s.soulVersion);
+  const soulJournal = useAppStore((s) => s.soulJournal);
+  const echantillons = useAppStore((s) => s.echantillons);
+  const setSoulField = useAppStore((s) => s.setSoulField);
+  const removeEchantillon = useAppStore((s) => s.removeEchantillon);
+  const setView = useAppStore((s) => s.setView);
+  const showToast = useAppStore((s) => s.showToast);
+  const setDashboard = useAppStore((s) => s.setDashboard);
+
+  // Chargement de la SOUL au montage — sauf retour du sous-flux échantillons (port de echKeepLocal).
+  useEffect(() => {
+    const st = useAppStore.getState();
+    if (st.echKeepLocal) {
+      st.setEchKeepLocal(false);
+      return;
+    }
+    void window.api.getSoulStructured().then((s) => {
+      if (s) useAppStore.getState().loadSoul(s);
+      else useAppStore.getState().showToast('SOUL introuvable.');
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function saveSections(): Promise<void> {
+    const f = useAppStore.getState().soulForm;
+    const edits = {
+      quiParle: f.quiParle.trim(),
+      audience: f.audience.trim(),
+      voix: f.voix.trim(),
+      lignesRouges: f.lignesRouges.trim(),
+    };
+    if (!edits.quiParle || !edits.audience || !edits.voix || !edits.lignesRouges) {
+      showToast('Les 4 sections doivent être remplies.');
+      return;
+    }
+    const r = await window.api.saveSoulSections(edits);
+    if (!r.ok) {
+      showToast("Échec de l'enregistrement : " + (r.error ?? 'inconnu'));
+      return;
+    }
+    showToast('SOUL enregistrée');
+    const d = await window.api.getDashboard();
+    setDashboard(d);
+  }
+
+  async function saveEchantillons(): Promise<void> {
+    const r = await window.api.saveSoulEchantillons(useAppStore.getState().echantillons);
+    showToast(r.ok ? 'Échantillons §5 enregistrés' : 'Échec : ' + (r.error ?? 'inconnu'));
+  }
+
+  return (
+    <section>
+      <div className="pad">
+        <p className="muted" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 6px' }}>
+          La voix de Pierre. Édite les 4 premières sections, puis enregistre.{' '}
+          <span style={{ color: 'var(--accent)' }}>{soulVersion}</span>
+        </p>
+        {SOUL_FIELDS.map((field) => (
+          <div key={field.key}>
+            <label className="eyebrow" style={{ display: 'block', margin: '14px 0 5px' }}>
+              {field.label}
+            </label>
+            <textarea
+              spellCheck={false}
+              value={soulForm[field.key]}
+              onChange={(e) => setSoulField(field.key, e.target.value)}
+              style={{ minHeight: field.minHeight, font: `400 12.5px/1.55 var(--${field.mono ? 'mono' : 'body'})` }}
+            />
+          </div>
+        ))}
+        <button className="btn-primary" style={{ marginTop: 12 }} onClick={() => void saveSections()}>
+          Enregistrer
+        </button>
+
+        <div className="eyebrow" style={{ margin: '22px 0 9px' }}>
+          5 · Échantillons vivants{' '}
+          <span className="faint" style={{ font: '400 10px var(--mono)' }}>
+            ({echantillons.length}/3, choisis à la main)
+          </span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
+          {echantillons.length === 0 ? (
+            <div className="faint">Aucun échantillon. Ajoute jusqu'à 3 brèves depuis tes éditions.</div>
+          ) : (
+            echantillons.map((e, i) => <EchantillonCard key={i} echantillon={e} onRemove={() => removeEchantillon(i)} />)
+          )}
+        </div>
+        <div className="row" style={{ marginTop: 9 }}>
+          <button className="btn-ghost" style={{ flex: 1 }} disabled={echantillons.length >= 3} onClick={() => setView('ech-editions')}>
+            + Ajouter depuis une édition
+          </button>
+          <button className="btn-primary" style={{ flex: 1 }} onClick={() => void saveEchantillons()}>
+            Enregistrer §5
+          </button>
+        </div>
+
+        <div className="eyebrow" style={{ margin: '22px 0 9px' }}>
+          6 · Journal d'évolution
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
+          {soulJournal.length === 0 ? (
+            <div className="faint">Aucune leçon enregistrée.</div>
+          ) : (
+            soulJournal.map((l, i) => (
+              <div key={i} className="card">
+                <div style={{ font: '500 10.5px var(--mono)', color: 'var(--accent)', marginBottom: 5 }}>{l.date}</div>
+                <div style={{ font: '400 12.5px/1.5 var(--body)' }}>{l.texte}</div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
