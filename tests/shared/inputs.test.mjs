@@ -1,7 +1,8 @@
 // test/command-inputs.test.mjs
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { validateInputs, buildPrompt } from '../lib/command-inputs.mjs';
+import { validateInputs } from '@shared/schemas/inputs';
+import { buildPrompt } from '@shared/skills';
 
 test('verify accepte un texte multi-lignes borné', () => {
   assert.deepEqual(validateInputs('breves-verify', { sujets: 'GLM 5.2\nMidjourney scan' }), { ok: true });
