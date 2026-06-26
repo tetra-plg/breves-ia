@@ -9,8 +9,8 @@
 
 La Phase 1 a posé la toolchain (Vitest, TS strict, ESLint/Prettier, Electron Forge + Vite) et
 le squelette `src/`, sans toucher au code métier `.mjs`. La Phase 2 convertit le **domaine pur**
-et le **cœur Electron** en TypeScript, introduit Zod sur la frontière IPC, et rebranche la vraie
-UI vanilla sur la preload typée — **sans changer le comportement fonctionnel**.
+et le **cœur Electron** en TypeScript, introduit Zod sur la frontière IPC, et expose `window.api`
+typé — **sans changer le comportement fonctionnel**. Le renderer (React) est traité en Phase 3.
 
 ## Risque n°1 (bloquant) : le Claude Agent SDK sous Electron
 
@@ -33,14 +33,14 @@ avant de figer le cœur Electron.**
 - **`domain/` regroupé par thème** (moins de fichiers, frontières claires).
 - **`window.api` typé + alias rétro-compatible `window.breves`** (le temps que le renderer reste vanilla, Phase 3).
 - **Zod = source de vérité** : schémas dans `shared/schemas`, types inférés (`z.infer`), validation à la frontière IPC **et** sur les sorties SDK. Remplace `contracts.mjs` + `command-inputs.mjs`.
-- **Rebrancher la vraie UI vanilla dans Forge dès la Phase 2** (chaque phase = app fonctionnelle sur la nouvelle stack) ; Phase 3 échangera vanilla→React.
+- **Renderer reporté en Phase 3** (révision 2026-06-26) : rebrancher le renderer vanilla dans Forge serait du travail jetable (Phase 3 le remplace par React). La 2.2 livre donc le cœur Electron typé **sans UI** (fenêtre Forge = placeholder) ; le moteur reste exerçable via le CLI `npm run breves` (node nu) et les tests headless. Phase 3 amène React directement sur la preload typée.
 
 ## Séquencement
 
 ```text
 2.0  SPIKE SDK (de-risk, systematic-debugging)            ← gating
 2.1  domain/ + shared/schemas (TS pur + Zod, tests verts) ← zéro Electron, faible risque
-2.2  Cœur Electron (main/preload/io/services/ipc) + rebranchement renderer vanilla
+2.2  Cœur Electron (main/preload/io/services/ipc) — SANS renderer (placeholder conservé)
 ```
 
 ### 2.0 — Spike SDK (gating)
@@ -128,9 +128,10 @@ schémas repris de `contracts.test`/`command-inputs.test`. Suite verte à chaque
 Chaque handler `ipcMain.handle` **parse son entrée via Zod** avant traitement ; échec → résultat
 `{ ok:false, error }` typé. Validation des **sorties SDK** via les schémas `outputs.ts`.
 
-**Rebranchement renderer (vanilla)** : le placeholder Forge est remplacé par `companion.html` +
-`renderer.mjs` servis par Vite. `renderer.mjs` importe les 5 modules `domain/*.ts` (au lieu de
-`../lib`) ; ses appels `window.breves.*` passent par l'alias. Phase 3 échangera vanilla→React.
+**Pas de renderer en 2.2** (révision) : la fenêtre Forge garde le placeholder Phase 1. Les
+handlers IPC et `window.api` sont implémentés et **prêts pour Phase 3** (React les consommera),
+mais aucun renderer ne les appelle encore en 2.2. Seul test « Electron réel » : un **smoke de
+boot** confirmant que le SDK se charge dans le main Forge sans crash (pas d'appel réseau).
 
 ## Erreurs & logging
 
@@ -160,5 +161,5 @@ Chaque handler `ipcMain.handle` **parse son entrée via Zod** avant traitement ;
 - `domain/` pur en TS, zéro dépendance Electron/React/fs, testable seul.
 - `shared/schemas` Zod = source de vérité ; types via `z.infer` ; validation systématique à la frontière IPC + sorties SDK.
 - `main/`+`preload/` typés ; `window.api` exposé (+ alias `window.breves`) ; handlers IPC par domaine.
-- L'app Forge (`npm start`) sert la vraie UI vanilla, fonctionnelle, sur le cœur TS.
+- L'app Forge (`npm start`) boote sur le cœur TS sans crash (placeholder ; UI réelle = Phase 3) ; le CLI `npm run breves` reste fonctionnel.
 - `npm run typecheck`/`lint`/`test` verts ; comportement identique à l'avant-Phase 2.
