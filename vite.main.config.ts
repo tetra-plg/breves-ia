@@ -6,6 +6,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config
 export default defineConfig({
+  build: {
+    // Force output filename to "main.js" regardless of entry basename ("index").
+    // The Forge plugin-vite sets build.lib only when the user hasn't — providing it
+    // here takes precedence (mergeConfig applies userConfig last).
+    lib: {
+      entry: 'src/main/index.ts',
+      fileName: () => 'main.js',
+      formats: ['cjs'],
+    },
+  },
   resolve: {
     alias: {
       '@main': path.resolve(__dirname, 'src/main'),
