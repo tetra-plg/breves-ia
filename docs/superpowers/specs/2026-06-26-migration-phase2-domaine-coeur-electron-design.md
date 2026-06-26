@@ -163,3 +163,19 @@ boot** confirmant que le SDK se charge dans le main Forge sans crash (pas d'appe
 - `main/`+`preload/` typés ; `window.api` exposé (+ alias `window.breves`) ; handlers IPC par domaine.
 - L'app Forge (`npm start`) boote sur le cœur TS sans crash (placeholder ; UI réelle = Phase 3) ; le CLI `npm run breves` reste fonctionnel.
 - `npm run typecheck`/`lint`/`test` verts ; comportement identique à l'avant-Phase 2.
+
+## Détail Phase 2.2b — Wiring Electron (ajout 2026-06-26)
+
+Sous-étape finale de la Phase 2 (après 2.2a). Rend le main Forge backend-fonctionnel ;
+l'UI réelle reste Phase 3 (React). Composants :
+
+- `shared/types/ipc.ts` (union des canaux + payload/result) ; `shared/types/api.ts` (interface `Api` = forme de `window.api`).
+- `main/ipc/{command,dashboard,soul,agents,system}.handlers.ts` : `registerXHandlers(ipc, deps, send)` par domaine, **Zod sur les entrées**, `onEvent` → `send('command-event', ev)`. `main/ipc/index.ts` = `registerAllHandlers`.
+- `main/index.ts` : remplace le placeholder Phase 1 — fenêtre (config portée de hud/main.mjs : `frame:false`, DevTools, dims) + `loadEnvFile` + `defaultDeps` + register handlers ; charge toujours le placeholder renderer.
+- `preload/index.ts` : `contextBridge` → `window.api` typé **+ alias `window.breves`** (même objet).
+- `vite.main.config.ts` : externalise le SDK (`rollupOptions.external`) pour l'`import()` dynamique au runtime.
+- `scripts/smoke-boot.mjs` + script npm `smoke` : boote le main Forge, vérifie le chargement SDK, tue le process.
+
+**Test** : handlers enregistrés via `ipc` injecté (`{ handle(channel, listener) }`) + `send` injecté → tests Vitest **headless** (canaux enregistrés, routage moteur via deps mockées, Zod rejette les entrées invalides). `npm test` reste headless ; `npm run smoke` couvre le boot SDK réel.
+
+**Différé Phase 5** : résolution robuste de `repoDir` en app packagée (2.2b = dev via `process.cwd()` ; seam `BREVES_REPO_DIR` en place).
