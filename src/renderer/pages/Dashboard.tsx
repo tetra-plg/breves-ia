@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import { EditionRow } from '@renderer/components/EditionRow';
-import { dateLong, soulVersionLabel } from '@domain/format';
+import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
 
 export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
   const setDashboard = useAppStore((s) => s.setDashboard);
+  const go = useAppStore((s) => s.go);
 
   useEffect(() => {
     void window.api.getDashboard().then(setDashboard);
@@ -27,6 +28,24 @@ export function Dashboard() {
         <p className="muted" style={{ margin: '0 0 18px' }}>
           Prêt à compiler les prochaines brèves IA ?
         </p>
+
+        <button className="cta" style={{ marginBottom: 18 }} onClick={() => go('goCompose')}>
+          <span className="plus">+</span>
+          <span style={{ flex: 1 }}>
+            <span style={{ display: 'block', font: '600 16px var(--display)' }}>Nouvelle édition</span>
+            <span
+              style={{
+                display: 'block',
+                font: '400 12.5px var(--body)',
+                color: 'var(--muted)',
+                marginTop: 1,
+              }}
+            >
+              Jette tes sujets en vrac.
+            </span>
+          </span>
+          <span style={{ fontSize: 18, color: 'var(--accent)' }}>→</span>
+        </button>
 
         <div className="card" style={{ marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -51,7 +70,7 @@ export function Dashboard() {
         </div>
 
         <div className="eyebrow" style={{ margin: '0 0 9px' }}>
-          Éditions récentes · SOUL {soulVersionLabel(dashboard?.soul?.version)}
+          Éditions récentes
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {editions.length === 0 && <div className="faint">Aucune édition archivée pour l'instant.</div>}
