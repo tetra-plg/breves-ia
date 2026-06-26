@@ -63,6 +63,7 @@ export interface AppState {
   tickClock: (nowMs: number) => void;
   setTeamsText: (t: string) => void;
   setEditorMode: (m: EditorMode) => void;
+  setWantSoulLesson: (v: boolean) => void;
   setEchantillons: (e: Echantillon[]) => void;
   setDrawerKey: (key: string | null) => void;
 }
@@ -107,6 +108,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   tickClock: (nowMs) => set((s) => ({ runStatus: { ...s.runStatus, clock: fmtClock(nowMs - s.runStatus.t0) } })),
   setTeamsText: (teamsText) => set({ teamsText }),
   setEditorMode: (editorMode) => set({ editorMode }),
+  setWantSoulLesson: (wantSoulLesson) => set({ wantSoulLesson }),
   setEchantillons: (echantillons) => set({ echantillons }),
   setDrawerKey: (drawerKey) => set({ drawerKey }),
   setReturnTo: (returnTo) => set({ returnTo }),
