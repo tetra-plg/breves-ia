@@ -10,7 +10,7 @@
     "test:watch": "vitest",
     "breves": "node scripts/breves-cli.mjs",
     "hud": "electron hud/main.mjs",
-    "typecheck": "tsc --noEmit 2>&1 | (grep -v 'error TS18003' || true) | (grep -c 'error TS' | (read n; exit $n))",
+    "typecheck": "node scripts/typecheck.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
