@@ -1,7 +1,7 @@
 // test/ui-state.test.mjs
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { nextView, stepper, viewTitle, FLOW } from '../lib/ui-state.mjs';
+import { nextView, stepper, viewTitle, FLOW } from '@domain/navigation';
 
 test('transitions du flux', () => {
   assert.equal(nextView('dashboard', 'goCompose'), 'compose');
