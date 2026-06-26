@@ -16,7 +16,8 @@
     "hud": "electron hud/main.mjs",
     "typecheck": "node scripts/typecheck.mjs",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "smoke": "node scripts/smoke-boot.mjs"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.3.181",
