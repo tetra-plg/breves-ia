@@ -59,6 +59,24 @@ Critère de sortie : un smoke qui **initie une `query` SDK depuis le main Electr
 tokens et requiert l'auth). **Effet de bord attendu : `npm run hud` refonctionne.** Livrable
 documentaire : l'approche retenue + pourquoi, consignée dans le build log et reprise par 2.2.
 
+#### ✅ Conclusion du spike (2026-06-26) — RÉSOLU
+
+**Cause racine** (systematic-debugging) : le crash n'était **pas** le SDK mais l'`import … from
+'electron'` **en ESM** dans le process main d'Electron 33 (le builtin ESM d'Electron échoue au
+pré-parse CJS : `cjsPreparseModuleExports` → `module.exports` undefined). Preuves :
+
+- Le SDK se charge **sous node nu** (20.18.0) et sous `ELECTRON_RUN_AS_NODE` (node 20.18.3) : OK.
+- Un main ESM minimal qui n'importe **que** `electron` (zéro SDK) crashe à l'identique → c'est l'import ESM d'`electron`, pas le SDK.
+- Le legacy `hud/main.mjs` est ESM → crash. Le main Forge est **CJS** (`require('electron')`) → pas de crash (d'où `npm start` fonctionnel).
+- Test réel : SDK **externalisé** du bundle Vite + `import()` dynamique dans le main CJS Forge → `SPIKE_SDK: OK exports=25`.
+
+**Approche retenue pour 2.2** :
+
+1. Externaliser le SDK du bundle main : `vite.main.config.ts` → `build.rollupOptions.external: ['@anthropic-ai/claude-agent-sdk']` (binaires natifs, non bundlables).
+2. `main/services/llm.service.ts` charge le SDK en **`import()` dynamique** (main CJS + SDK ESM : pas de `require` statique). Le `runSkill`/`runRaw` deviennent async sur le chargement paresseux du SDK (le `query` est déjà injectable — l'injection de test reste mockée).
+3. **Pas d'`utilityProcess`** (réservé à une optim de perf éventuelle, pas nécessaire pour la correctness).
+4. `npm run hud` (ESM) reste cassé jusqu'à son retrait (Phase 4) ; le main fonctionnel est désormais le CJS de Forge.
+
 ### 2.1 — Domaine pur + schémas (TS, zéro Electron/fs)
 
 `domain/` (regroupé par thème) :
