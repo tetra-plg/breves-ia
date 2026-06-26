@@ -1,25 +1,35 @@
 import { useEffect } from 'react';
+import type { ComponentType } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import { Shell } from '@renderer/layouts/Shell';
 import { Dashboard } from '@renderer/pages/Dashboard';
+
+// Registry des vues. Les vues non encore portées tombent sur Placeholder (Phases 3b-2/3/4).
+const VIEWS: Record<string, ComponentType> = {
+  dashboard: Dashboard,
+};
+
+function Placeholder() {
+  const view = useAppStore((s) => s.view);
+  return (
+    <div className="pad">
+      <p className="muted">Vue « {view} » — à venir.</p>
+    </div>
+  );
+}
 
 export function App() {
   const view = useAppStore((s) => s.view);
   const theme = useAppStore((s) => s.theme);
 
-  // Applique le thème sur <body> (parité avec body.dark du CSS).
   useEffect(() => {
     document.body.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
-  return <Shell>{view === 'dashboard' ? <Dashboard /> : <Placeholder view={view} />}</Shell>;
-}
-
-// Les autres vues arrivent en Phase 3b.
-function Placeholder({ view }: { view: string }) {
+  const Page = VIEWS[view] ?? Placeholder;
   return (
-    <div className="pad">
-      <p className="muted">Vue « {view} » — à venir en Phase 3b.</p>
-    </div>
+    <Shell>
+      <Page />
+    </Shell>
   );
 }
