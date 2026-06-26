@@ -1,7 +1,7 @@
 // test/runner.test.mjs
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { runSkill, runRaw } from '../lib/runner.mjs';
+import { runSkill, runRaw } from '@main/services/llm.service';
 
 // Fabrique un faux query() du SDK : émet des messages assistant puis un result.
 function fakeQuery(messages) {
