@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import type { SoulForm } from '@renderer/store/app.store';
 import { EchantillonCard } from '@renderer/components/EchantillonCard';
@@ -21,8 +21,12 @@ export function Soul() {
   const showToast = useAppStore((s) => s.showToast);
   const setDashboard = useAppStore((s) => s.setDashboard);
 
+  const loaded = useRef(false);
+
   // Chargement de la SOUL au montage — sauf retour du sous-flux échantillons (port de echKeepLocal).
   useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
     const st = useAppStore.getState();
     if (st.echKeepLocal) {
       st.setEchKeepLocal(false);
@@ -32,7 +36,6 @@ export function Soul() {
       if (s) useAppStore.getState().loadSoul(s);
       else useAppStore.getState().showToast('SOUL introuvable.');
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function saveSections(): Promise<void> {
@@ -94,7 +97,7 @@ export function Soul() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {echantillons.length === 0 ? (
-            <div className="faint">Aucun échantillon. Ajoute jusqu'à 3 brèves depuis tes éditions.</div>
+            <div className="faint">Aucun échantillon. Ajoute jusqu’à 3 brèves depuis tes éditions.</div>
           ) : (
             echantillons.map((e, i) => <EchantillonCard key={i} echantillon={e} onRemove={() => removeEchantillon(i)} />)
           )}
