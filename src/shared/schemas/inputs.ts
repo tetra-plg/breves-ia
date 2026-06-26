@@ -6,6 +6,8 @@ import { ALLOWED_SKILLS } from '@shared/skills';
 const freeString = z
   .string()
   .max(280)
+  // détection volontaire de caractères de contrôle (anti-injection)
+  // eslint-disable-next-line no-control-regex
   .refine((v) => !/[\u0000-\u001f\u007f-\u009f]/.test(v), 'caractère de contrôle interdit');
 
 // texte « sujets en vrac » : multi-lignes (saut de ligne) autorisé, borné, sans autres contrôles
@@ -15,6 +17,7 @@ const bulkText = z
   .max(8000)
   .refine((v) => v.trim().length > 0, 'texte vide')
   .refine(
+    // eslint-disable-next-line no-control-regex
     (v) => !/[\u0000-\u0009\u000b\u000c\u000e-\u001f\u007f-\u009f]/.test(v),
     'caractère de contrôle interdit (hors saut de ligne)',
   );
