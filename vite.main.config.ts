@@ -12,7 +12,7 @@ export default defineConfig({
     // here takes precedence (mergeConfig applies userConfig last).
     lib: {
       entry: 'src/main/index.ts',
-      fileName: () => 'main.js',
+      fileName: () => 'main.cjs',
       formats: ['cjs'],
     },
   },

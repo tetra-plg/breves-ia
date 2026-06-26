@@ -12,7 +12,7 @@ export default defineConfig({
     // overriding entryFileNames here (merged last via mergeConfig) renames the output.
     rollupOptions: {
       output: {
-        entryFileNames: 'preload.js',
+        entryFileNames: 'preload.cjs',
       },
     },
   },

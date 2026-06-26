@@ -1,10 +1,11 @@
 {
   "name": "breves-ia-companion",
   "version": "0.1.0",
+  "type": "module",
   "engines": {
     "node": ">=20"
   },
-  "main": ".vite/build/main.js",
+  "main": ".vite/build/main.cjs",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
