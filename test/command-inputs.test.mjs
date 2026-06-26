@@ -40,3 +40,11 @@ test('verify accepte un mode sceptique valide et refuse un invalide', () => {
   assert.equal(validateInputs('breves-verify', { sujets: 'x', sceptique: 'ciblé' }).ok, true);
   assert.equal(validateInputs('breves-verify', { sujets: 'x', sceptique: 'bidon' }).ok, false);
 });
+
+test('breves-draft : redacteur on/off accepté, autre valeur rejetée', () => {
+  assert.equal(validateInputs('breves-draft', { topics: [], redacteur: 'on' }).ok, true);
+  assert.equal(validateInputs('breves-draft', { topics: [], redacteur: 'off' }).ok, true);
+  assert.equal(validateInputs('breves-draft', { topics: [] }).ok, true); // optionnel
+  assert.equal(validateInputs('breves-draft', { topics: [], redacteur: 'bidon' }).ok, false);
+  assert.equal(validateInputs('breves-draft', { topics: [], autre: 1 }).ok, false); // clé inattendue
+});
