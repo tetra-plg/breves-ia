@@ -6,6 +6,10 @@ test('labelForTool : Task enquêteur / sceptique', () => {
   assert.equal(labelForTool('Task', { subagent_type: 'enqueteur', description: 'GLM 5.2 open source' }), 'Enquêteur : GLM 5.2 open source');
   assert.equal(labelForTool('Task', { subagent_type: 'sceptique', description: 'réfuter le superlatif' }), 'Sceptique : réfuter le superlatif');
 });
+test('labelForTool : l’outil Agent (dispatch sous-agent SDK) est étiqueté comme Task', () => {
+  assert.equal(labelForTool('Agent', { subagent_type: 'redacteur', description: 'rédige les brèves' }), 'Rédacteur : rédige les brèves');
+  assert.equal(labelForTool('Agent', { subagent_type: 'enqueteur', description: 'vérifie GLM' }), 'Enquêteur : vérifie GLM');
+});
 test('labelForTool : WebSearch et WebFetch', () => {
   assert.equal(labelForTool('WebSearch', { query: 'GLM 5.2 benchmark' }), 'Recherche web : GLM 5.2 benchmark');
   assert.equal(labelForTool('WebFetch', { url: 'https://www.example.com/article/x' }), 'Lecture : example.com');
