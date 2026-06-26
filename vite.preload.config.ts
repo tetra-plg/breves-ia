@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vitejs.dev/config
 export default defineConfig({
   build: {
-    // Force output filename to "preload.js" regardless of entry basename ("index").
+    // Force output filename to "preload.cjs" regardless of entry basename ("index").
     // The Forge plugin-vite preload path uses rollupOptions.input + entryFileNames;
     // overriding entryFileNames here (merged last via mergeConfig) renames the output.
     rollupOptions: {
