@@ -11,6 +11,7 @@ import { Archived } from '@renderer/pages/Archived';
 import { Soul } from '@renderer/pages/Soul';
 import { EchEditions } from '@renderer/pages/EchEditions';
 import { EchBreves } from '@renderer/pages/EchBreves';
+import { Agents } from '@renderer/pages/Agents';
 import { useCommandStream } from '@renderer/hooks/useCommandStream';
 
 // Registry des vues. Les vues non encore portées tombent sur Placeholder (Phases 3b-2/3/4).
@@ -24,6 +25,7 @@ const VIEWS: Record<string, ComponentType> = {
   soul: Soul,
   'ech-editions': EchEditions,
   'ech-breves': EchBreves,
+  agents: Agents,
 };
 
 function Placeholder() {
