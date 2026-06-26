@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { validateVerifyOutput, validateDraftOutput, validateArchiveOutput } from '../lib/contracts.mjs';
+import { validateVerifyOutput, validateDraftOutput, validateArchiveOutput } from '@shared/schemas/outputs';
 
 const topic = {
   key: 'glm', sujet: 'GLM-5.2', date_reelle: '2026-06-13', fiabilite: 'confirme',
