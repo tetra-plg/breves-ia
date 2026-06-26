@@ -180,3 +180,24 @@ test('saveSoulEchantillons refuse > 3 et texte vide, sans écrire', () => {
   assert.equal(saveSoulEchantillons(deps, [{ date: '2026-06-18', source: '', texte: '   ' }]).ok, false);
   assert.equal(called, false);
 });
+
+test('dispatch breves-draft : redacteur on si agent activé, off sinon', async () => {
+  const files = { 'redacteur.md': '---\nname: redacteur\nmodel: opus\nbreves_enabled: true\n---\nprompt' };
+  let seen = null;
+  const deps = { repoDir: '/repo', readdir: () => Object.keys(files), readFile: (p) => files[p.split('/').pop()],
+    runSkill: async (a) => { seen = a; return { ok: true, value: { teamsText: 'x', corrections: [], sources: [], soulLessonProposee: null } }; } };
+  await dispatch({ skill: 'breves-draft', inputs: { topics: [] }, onEvent() {} }, deps);
+  assert.equal(seen.inputs.redacteur, 'on');
+
+  const filesOff = { 'redacteur.md': '---\nname: redacteur\nbreves_enabled: false\n---\nprompt' };
+  const depsOff = { ...deps, readdir: () => Object.keys(filesOff), readFile: (p) => filesOff[p.split('/').pop()] };
+  await dispatch({ skill: 'breves-draft', inputs: { topics: [] }, onEvent() {} }, depsOff);
+  assert.equal(seen.inputs.redacteur, 'off');
+});
+test("dispatch breves-draft : n'écrase pas un redacteur explicite", async () => {
+  let seen = null;
+  const deps = { repoDir: '/repo', readdir: () => [], readFile: () => '',
+    runSkill: async (a) => { seen = a; return { ok: true, value: { teamsText: 'x', corrections: [], sources: [], soulLessonProposee: null } }; } };
+  await dispatch({ skill: 'breves-draft', inputs: { topics: [], redacteur: 'off' }, onEvent() {} }, deps);
+  assert.equal(seen.inputs.redacteur, 'off');
+});

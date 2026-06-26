@@ -80,6 +80,10 @@ export async function dispatch({ skill, inputs, onEvent }, deps) {
     const s = byName.sceptique;
     finalInputs.sceptique = (s && s.enabled && s.mode) ? s.mode : 'off';
   }
+  if (skill === 'breves-draft' && finalInputs.redacteur == null) {
+    const r = byName.redacteur;
+    finalInputs.redacteur = (r && r.enabled) ? 'on' : 'off';
+  }
   return deps.runSkill({
     skill,
     inputs: finalInputs,
