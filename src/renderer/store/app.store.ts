@@ -41,8 +41,10 @@ export interface AppState {
   wantSoulLesson: boolean;
   toast: string | null;
   drawerKey: string | null;
+  returnTo: string | null;
 
   go: (action: string) => void;
+  setReturnTo: (view: string | null) => void;
   setView: (view: string) => void;
   toggleTheme: () => void;
   setDashboard: (d: Dashboard | null) => void;
@@ -81,6 +83,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   wantSoulLesson: true,
   toast: null,
   drawerKey: null,
+  returnTo: null,
 
   go: (action) => set({ view: nextView(get().view, action) }),
   setView: (view) => set({ view }),
@@ -106,4 +109,5 @@ export const useAppStore = create<AppState>((set, get) => ({
   setEditorMode: (editorMode) => set({ editorMode }),
   setEchantillons: (echantillons) => set({ echantillons }),
   setDrawerKey: (drawerKey) => set({ drawerKey }),
+  setReturnTo: (returnTo) => set({ returnTo }),
 }));

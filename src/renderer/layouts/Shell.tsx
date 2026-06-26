@@ -13,15 +13,19 @@ export function Shell({ children }: ShellProps) {
   const go = useAppStore((s) => s.go);
   const setView = useAppStore((s) => s.setView);
   const toggleTheme = useAppStore((s) => s.toggleTheme);
+  const returnTo = useAppStore((s) => s.returnTo);
 
   const isDash = view === 'dashboard';
   const st = stepper(view);
+  // Retour : depuis detail/reader on revient à la vue d'origine (returnTo), sinon dashboard.
+  const back = (): void =>
+    setView(view === 'detail' || view === 'reader' ? (returnTo ?? 'dashboard') : 'dashboard');
 
   return (
     <div className="win">
       <div className="head">
         {!isDash && (
-          <button className="iconbtn" title="Retour" onClick={() => setView('dashboard')}>
+          <button className="iconbtn" title="Retour" onClick={back}>
             ←
           </button>
         )}

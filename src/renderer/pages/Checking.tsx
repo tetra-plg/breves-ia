@@ -10,11 +10,13 @@ export function Checking() {
   const go = useAppStore((s) => s.go);
   const setView = useAppStore((s) => s.setView);
   const setDrawerKey = useAppStore((s) => s.setDrawerKey);
+  const setReturnTo = useAppStore((s) => s.setReturnTo);
 
   const done = !runStatus.active && cards.length > 0 && !!verifyValue;
   const sum = done ? summary(cards) : null;
   const openDrawer = verifyValue
     ? (key: string): void => {
+        setReturnTo('checking');
         setDrawerKey(key);
         setView('detail');
       }
