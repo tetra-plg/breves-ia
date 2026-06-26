@@ -40,6 +40,7 @@ export interface AppState {
   editorMode: EditorMode;
   wantSoulLesson: boolean;
   toast: string | null;
+  drawerKey: string | null;
 
   go: (action: string) => void;
   setView: (view: string) => void;
@@ -61,6 +62,7 @@ export interface AppState {
   setTeamsText: (t: string) => void;
   setEditorMode: (m: EditorMode) => void;
   setEchantillons: (e: Echantillon[]) => void;
+  setDrawerKey: (key: string | null) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -78,6 +80,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   editorMode: 'preview',
   wantSoulLesson: true,
   toast: null,
+  drawerKey: null,
 
   go: (action) => set({ view: nextView(get().view, action) }),
   setView: (view) => set({ view }),
@@ -102,4 +105,5 @@ export const useAppStore = create<AppState>((set, get) => ({
   setTeamsText: (teamsText) => set({ teamsText }),
   setEditorMode: (editorMode) => set({ editorMode }),
   setEchantillons: (echantillons) => set({ echantillons }),
+  setDrawerKey: (drawerKey) => set({ drawerKey }),
 }));

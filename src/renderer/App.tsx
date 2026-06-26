@@ -4,11 +4,16 @@ import { useAppStore } from '@renderer/store/app.store';
 import { Shell } from '@renderer/layouts/Shell';
 import { Dashboard } from '@renderer/pages/Dashboard';
 import { Compose } from '@renderer/pages/Compose';
+import { Checking } from '@renderer/pages/Checking';
+import { Detail } from '@renderer/pages/Detail';
+import { useCommandStream } from '@renderer/hooks/useCommandStream';
 
 // Registry des vues. Les vues non encore portées tombent sur Placeholder (Phases 3b-2/3/4).
 const VIEWS: Record<string, ComponentType> = {
   dashboard: Dashboard,
   compose: Compose,
+  checking: Checking,
+  detail: Detail,
 };
 
 function Placeholder() {
@@ -23,10 +28,20 @@ function Placeholder() {
 export function App() {
   const view = useAppStore((s) => s.view);
   const theme = useAppStore((s) => s.theme);
+  const runActive = useAppStore((s) => s.runStatus.active);
+  const tickClock = useAppStore((s) => s.tickClock);
+
+  useCommandStream();
 
   useEffect(() => {
     document.body.classList.toggle('dark', theme === 'dark');
   }, [theme]);
+
+  useEffect(() => {
+    if (!runActive) return;
+    const id = setInterval(() => tickClock(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [runActive, tickClock]);
 
   const Page = VIEWS[view] ?? Placeholder;
   return (
