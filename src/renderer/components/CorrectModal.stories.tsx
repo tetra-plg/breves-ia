@@ -1,0 +1,9 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { CorrectModal } from './CorrectModal';
+
+const meta: Meta<typeof CorrectModal> = { component: CorrectModal, title: 'CorrectModal' };
+export default meta;
+
+export const Ouverte: StoryObj<typeof CorrectModal> = {
+  args: { initialWantSoulLesson: true, onCancel: () => {}, onSend: () => {} },
+};
