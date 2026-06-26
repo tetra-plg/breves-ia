@@ -24,7 +24,7 @@
 - `npm test` (Vitest) : ✅ **17 fichiers / 121 tests** (16 portés + `alias.test.mjs`), parité avec l'ancien `node --test` (120).
 - `npm run typecheck` : ✅ exit 0.
 - `npm run lint` : ✅ exit 0.
-- `npm start` (Forge) : ✅ build `.vite/build/main.cjs` + `preload.cjs`, process Electron vivant, **aucune** erreur `require is not defined` / `Cannot find module`. ⚠️ **Rendu visuel de la fenêtre NON vérifié** (environnement headless) — à confirmer par l'utilisateur via `npm start`.
+- `npm start` (Forge) : ✅ build `.vite/build/main.cjs` + `preload.cjs`, process Electron vivant, **aucune** erreur `require is not defined` / `Cannot find module`. **Rendu visuel de la fenêtre placeholder confirmé par l'utilisateur** (2026-06-26).
 - `npm run hud` (legacy) : 🔴 **cassé — bug ANTÉRIEUR à la migration**, prouvé par un worktree `main` propre (`npm ci` neuf) qui crashe à l'identique. Cause : interop ESM/CJS Electron 33 + Node 20.18.3 au chargement de `@anthropic-ai/claude-agent-sdk`. Hors périmètre Phase 1.
 
 ## Gotchas de la passe
