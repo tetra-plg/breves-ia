@@ -15,6 +15,7 @@ export default defineConfig({
       fileName: () => 'main.cjs',
       formats: ['cjs'],
     },
+    rollupOptions: { external: ['@anthropic-ai/claude-agent-sdk'] },
   },
   resolve: {
     alias: {
