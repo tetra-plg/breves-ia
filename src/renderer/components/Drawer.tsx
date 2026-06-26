@@ -1,12 +1,6 @@
 import { dateLong } from '@domain/format';
+import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 import type { VerifyOutput } from '@shared/schemas/outputs';
-
-const niveauColor = (n: string): string =>
-  n === 'corrigé' ? 'var(--warn)' : n === 'nuance' ? 'var(--nuance)' : 'var(--accent)';
-const niveauSoft = (n: string): string =>
-  n === 'corrigé' ? 'var(--warnSoft)' : n === 'nuance' ? 'var(--nuanceSoft)' : 'var(--accentSoft)';
-const niveauLabel = (n: string): string =>
-  n === 'corrigé' ? 'Fait corrigé' : n === 'nuance' ? 'Nuance' : 'Date';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -15,15 +9,7 @@ interface DrawerProps {
 }
 
 export function Drawer({ topic }: DrawerProps) {
-  const t = topic as Topic & {
-    sujet?: string;
-    raw?: string;
-    date_reelle?: string;
-    alerte?: { niveau: string; texte: string } | null;
-    faits?: string[];
-    url_citee?: string;
-    clipping_contenu?: string;
-  };
+  const t = topic as Topic & { raw?: string };
   return (
     <div className="pad">
       <h2 style={{ font: '600 18px/1.3 var(--display)', margin: '0 0 7px' }}>{t.sujet || t.key}</h2>
@@ -68,7 +54,7 @@ export function Drawer({ topic }: DrawerProps) {
         {(t.faits ?? []).map((f, i) => (
           <div key={i} style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
             <span className="dot done">✓</span>
-            <span style={{ font: '400 13px/1.5 var(--body)' }}>{String(f)}</span>
+            <span style={{ font: '400 13px/1.5 var(--body)' }}>{f}</span>
           </div>
         ))}
       </div>

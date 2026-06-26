@@ -1,11 +1,5 @@
 import type { Card } from '@domain/checking';
-
-const niveauColor = (n: string): string =>
-  n === 'corrigé' ? 'var(--warn)' : n === 'nuance' ? 'var(--nuance)' : 'var(--accent)';
-const niveauSoft = (n: string): string =>
-  n === 'corrigé' ? 'var(--warnSoft)' : n === 'nuance' ? 'var(--nuanceSoft)' : 'var(--accentSoft)';
-const niveauLabel = (n: string): string =>
-  n === 'corrigé' ? 'Fait corrigé' : n === 'nuance' ? 'Nuance' : 'Date';
+import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 
 interface EnqCardProps {
   card: Card;

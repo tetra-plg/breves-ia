@@ -2,7 +2,12 @@ import { useEffect } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import type { TopicEvent } from '@domain/events';
 
-const TOPIC_TYPES = ['topic-detected', 'topic-progress', 'topic-done', 'topic-error'];
+const TOPIC_TYPES: ReadonlyArray<TopicEvent['type']> = [
+  'topic-detected',
+  'topic-progress',
+  'topic-done',
+  'topic-error',
+];
 
 // Routage pur d'un évènement de flux vers le store (testable sans React).
 export function handleStreamEvent(ev: unknown): void {
@@ -12,7 +17,7 @@ export function handleStreamEvent(ev: unknown): void {
     if (e.label) store.setRunActivity(e.label);
     return;
   }
-  if (e?.type && TOPIC_TYPES.includes(e.type)) {
+  if (e?.type && (TOPIC_TYPES as ReadonlyArray<string>).includes(e.type)) {
     store.applyCardEvent(ev as TopicEvent);
   }
 }

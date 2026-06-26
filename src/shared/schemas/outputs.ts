@@ -22,7 +22,7 @@ export const topicSchema = z
     url_clippee: z.string().min(1),
     slug: z.string().min(1),
     clipping_contenu: z.string().min(1),
-    faits: z.array(z.unknown()),
+    faits: z.array(z.string()),
     alerte: alerteSchema.nullish(),
   })
   .passthrough();

@@ -4,7 +4,16 @@ import type { VerifyOutput } from '@shared/schemas/outputs';
 
 export function Compose() {
   const [raw, setRaw] = useState('');
-  const store = useAppStore();
+  const showToast = useAppStore((s) => s.showToast);
+  const resetCards = useAppStore((s) => s.resetCards);
+  const setVerifyValue = useAppStore((s) => s.setVerifyValue);
+  const setDraftValue = useAppStore((s) => s.setDraftValue);
+  const setArchiveValue = useAppStore((s) => s.setArchiveValue);
+  const setView = useAppStore((s) => s.setView);
+  const beginRun = useAppStore((s) => s.beginRun);
+  const endRun = useAppStore((s) => s.endRun);
+  const applyResultCards = useAppStore((s) => s.applyResultCards);
+  const runActive = useAppStore((s) => s.runStatus.active);
 
   const chips = raw
     .split('\n')
@@ -16,22 +25,24 @@ export function Compose() {
   async function launch(): Promise<void> {
     const sujets = raw.trim();
     if (!sujets) {
-      store.showToast('Donne au moins un sujet.');
+      showToast('Donne au moins un sujet.');
       return;
     }
-    store.resetCards();
-    store.setVerifyValue(null);
-    store.setView('checking');
-    store.beginRun('Vérification en cours');
+    resetCards();
+    setVerifyValue(null);
+    setDraftValue(null);
+    setArchiveValue(null);
+    setView('checking');
+    beginRun('Vérification en cours');
     const r = await window.api.sendCommand('breves-verify', { sujets });
-    store.endRun();
+    endRun();
     if (!r.ok) {
-      store.showToast('Échec de la vérification : ' + r.error);
+      showToast('Échec de la vérification : ' + r.error);
       return;
     }
     const value = r.value as VerifyOutput;
-    store.setVerifyValue(value);
-    store.applyResultCards(value);
+    setVerifyValue(value);
+    applyResultCards(value);
   }
 
   return (
@@ -60,7 +71,7 @@ export function Compose() {
         <button
           className="btn-primary"
           style={{ marginTop: 18, fontSize: 15 }}
-          disabled={store.runStatus.active}
+          disabled={runActive}
           onClick={() => void launch()}
         >
           Lancer l'enquête <span style={{ fontSize: 16 }}>→</span>
