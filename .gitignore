@@ -144,3 +144,7 @@ vite.config.ts.timestamp-*
 
 # superpowers scratch (sdd ledgers, brainstorm mockups)
 .superpowers/
+
+# Storybook build output and cache
+storybook-static/
+.storybook/.cache/

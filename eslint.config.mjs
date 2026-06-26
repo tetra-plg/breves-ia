@@ -6,7 +6,7 @@ import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['node_modules', '.vite', 'src/**/.vite', 'out', 'dist', 'lib', 'hud', 'scripts', 'tests', 'vitest.config.mjs', '*.config.ts', '*.config.mjs'] },
+  { ignores: ['node_modules', '.vite', 'src/**/.vite', 'out', 'dist', 'lib', 'hud', 'scripts', 'tests', 'storybook-static', '.storybook', 'vitest.config.mjs', '*.config.ts', '*.config.mjs'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
