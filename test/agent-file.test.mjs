@@ -30,7 +30,7 @@ test('toAgentDefinition : forme SDK', () => {
   const def = toAgentDefinition({ description: 'd', systemPrompt: 'p', tools: ['WebSearch'], model: 'sonnet' });
   assert.deepEqual(def, { description: 'd', prompt: 'p', tools: ['WebSearch'], model: 'sonnet' });
   const def2 = toAgentDefinition({ description: 'd', systemPrompt: 'p', tools: [], model: '' });
-  assert.deepEqual(def2, { description: 'd', prompt: 'p' });   // tools/model omis si vides
+  assert.deepEqual(def2, { description: 'd', prompt: 'p', tools: [] });   // tools toujours présent ([] = aucun outil) ; model omis si vide
 });
 test('serializeAgent → parseAgent : round-trip des champs', () => {
   const a = { name: 'sceptique', description: 'Réfute.', tools: ['WebSearch', 'WebFetch'], model: 'sonnet', enabled: true, mode: 'ciblé', systemPrompt: 'Ton job: réfuter.' };
