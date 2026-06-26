@@ -4,12 +4,12 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { readSoul } from '../lib/soul.mjs';
+import { readSoul } from '@main/io/soul.io';
 
 function bbWithSoul(content) {
   const bb = mkdtempSync(join(tmpdir(), 'bb-'));
   mkdirSync(join(bb, '.claude', 'breves-ia'), { recursive: true });
-  if (content == null) copyFileSync(new URL('./fixtures/SOUL.sample.md', import.meta.url), join(bb, '.claude', 'breves-ia', 'SOUL.md'));
+  if (content == null) copyFileSync(new URL('../fixtures/SOUL.sample.md', import.meta.url), join(bb, '.claude', 'breves-ia', 'SOUL.md'));
   else writeFileSync(join(bb, '.claude', 'breves-ia', 'SOUL.md'), content);
   return bb;
 }
