@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { EditionRow } from './EditionRow';
 
 const meta: Meta<typeof EditionRow> = { component: EditionRow, title: 'EditionRow' };
