@@ -3,10 +3,12 @@ import type { ComponentType } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import { Shell } from '@renderer/layouts/Shell';
 import { Dashboard } from '@renderer/pages/Dashboard';
+import { Compose } from '@renderer/pages/Compose';
 
 // Registry des vues. Les vues non encore portées tombent sur Placeholder (Phases 3b-2/3/4).
 const VIEWS: Record<string, ComponentType> = {
   dashboard: Dashboard,
+  compose: Compose,
 };
 
 function Placeholder() {
