@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { extractJsonBlock, parseSentinels } from '../lib/parse-result.mjs';
+import { extractJsonBlock, parseSentinels } from '@domain/edition';
 
 test('extrait le dernier bloc json fencé', () => {
   const t = 'blabla\n```json\n{"a":1}\n```\ntexte\n```json\n{"topics":[]}\n```\n';

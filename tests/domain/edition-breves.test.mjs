@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { extractBreves } from '../lib/edition-breves.mjs';
+import { extractBreves } from '@domain/edition';
 
 const NOTE = `# Brèves IA — édition Merim (PM)
 Un mot d'intro qui n'est pas une brève.

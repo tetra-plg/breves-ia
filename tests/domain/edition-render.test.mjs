@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { renderEditionHtml } from '../lib/edition-render.mjs';
+import { renderEditionHtml } from '@domain/edition';
 
 const ED = `📰 Brèves IA
 Voici quelques nouvelles.
