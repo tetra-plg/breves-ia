@@ -6,7 +6,9 @@
 
 **Architecture:** On ajoute la chaîne moderne *à côté* du code `.mjs` existant. Les 16 tests sont portés vers Vitest en important toujours les modules `.mjs` (preuve de parité avant toute conversion). Forge+Vite ouvre une fenêtre placeholder ; l'UI réelle reste lançable via `npm run hud` (conservé jusqu'en Phase 4). Aucune ligne de `lib/` ni de `hud/` n'est convertie ici.
 
-**Tech Stack:** Electron Forge 7 + plugin Vite, TypeScript 5 (strict), React 18 (deps installées, non utilisées avant Phase 3), Zustand, Zod, Vitest, ESLint 9 (flat config) + Prettier.
+**Tech Stack:** Electron Forge 7 + plugin Vite, TypeScript (strict), React (deps installées, non utilisées avant Phase 3), Zustand, Zod, Vitest, ESLint 9 (flat config) + Prettier.
+
+> **Note (post-implémentation) :** les ranges `^` ont fait monter les versions au-delà de la cible évoquée au départ — réalité installée en Phase 1 : **TypeScript 6.0.3**, **React 19.2**, Vite 6, Vitest 4, @types/node 26. Tout est vert (typecheck/lint/tests). À garder en tête pour la Phase 2 (TS 6 a des défauts stricts plus agressifs — cf. retrait de `baseUrl`/`ignoreDeprecations` au commit `8a8cc94`).
 
 ## Global Constraints
 
