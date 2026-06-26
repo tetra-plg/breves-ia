@@ -45,6 +45,7 @@ export interface AppState {
   runStatus: RunStatus;
   teamsText: string;
   readerText: string;
+  readerEdition: EditionSummary | null;
   echantillons: Echantillon[];
   soulForm: SoulForm;
   soulVersion: string;
@@ -75,6 +76,8 @@ export interface AppState {
   endRun: () => void;
   setRunActivity: (label: string) => void;
   tickClock: (nowMs: number) => void;
+  setReaderText: (t: string) => void;
+  openReader: (edition: EditionSummary, from: string) => void;
   setTeamsText: (t: string) => void;
   setEditorMode: (m: EditorMode) => void;
   setWantSoulLesson: (v: boolean) => void;
@@ -99,6 +102,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   runStatus: RUN_IDLE,
   teamsText: '',
   readerText: '',
+  readerEdition: null,
   echantillons: [],
   soulForm: SOUL_FORM_EMPTY,
   soulVersion: '',
@@ -131,6 +135,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   endRun: () => set((s) => ({ runStatus: { ...s.runStatus, active: false } })),
   setRunActivity: (activity) => set((s) => ({ runStatus: { ...s.runStatus, activity } })),
   tickClock: (nowMs) => set((s) => ({ runStatus: { ...s.runStatus, clock: fmtClock(nowMs - s.runStatus.t0) } })),
+  setReaderText: (readerText) => set({ readerText }),
+  openReader: (edition, from) => set({ readerEdition: edition, returnTo: from, readerText: '', view: 'reader' }),
   setTeamsText: (teamsText) => set({ teamsText }),
   setEditorMode: (editorMode) => set({ editorMode }),
   setWantSoulLesson: (wantSoulLesson) => set({ wantSoulLesson }),
