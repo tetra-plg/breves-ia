@@ -1,7 +1,7 @@
 // test/checking-model.test.mjs
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { initCard, applyEvent, applyResult, summary, STEPS } from '../lib/checking-model.mjs';
+import { initCard, applyEvent, applyResult, summary, STEPS } from '@domain/checking';
 
 const states = (card) => card.steps.map((s) => s.state);
 
