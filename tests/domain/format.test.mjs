@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { escapeHtml, inlineMd, dateLong, soulVersionLabel } from '../lib/ui-format.mjs';
+import { escapeHtml, inlineMd, dateLong, soulVersionLabel } from '@domain/format';
 
 test('escapeHtml', () => assert.equal(escapeHtml('a<b>&c'), 'a&lt;b&gt;&amp;c'));
 test('inlineMd gras et code', () => {
