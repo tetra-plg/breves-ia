@@ -1,9 +1,9 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent } from '../hud/engine.mjs';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent } from '@main/engine';
 
-const SOUL_FIXTURE = readFileSync(new URL('./fixtures/SOUL.full.md', import.meta.url), 'utf8');
+const SOUL_FIXTURE = readFileSync(new URL('../fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
 test('dispatch passe les bons arguments à runSkill', async () => {
   let seen = null;
