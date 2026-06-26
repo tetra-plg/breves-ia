@@ -1,5 +1,5 @@
 // test/soul-model.test.mjs
-import { test } from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseSoul, replaceSoulSections, serializeEchantillons, replaceSoulEchantillons } from '../lib/soul-model.mjs';

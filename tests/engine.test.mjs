@@ -1,4 +1,4 @@
-import { test } from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent } from '../hud/engine.mjs';

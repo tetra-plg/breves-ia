@@ -1,5 +1,5 @@
 // test/checking-model.test.mjs
-import { test } from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { initCard, applyEvent, applyResult, summary, STEPS } from '../lib/checking-model.mjs';
 
