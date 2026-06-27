@@ -35,6 +35,8 @@ export function Archived() {
     if (r.ingest && !r.ingest.ok) {
       st.showToast("Déposé dans raw/, mais l'ingestion a échoué : relance /ingest côté wiki");
     }
+    // Rafraîchit le dashboard : la nouvelle édition apparaît dans l'historique sans redémarrage.
+    st.setDashboard(await window.api.getDashboard());
   }
 
   // Au montage : archive si pas encore fait (port du `show('archived')` déclenché par runArchive). Une seule fois.
