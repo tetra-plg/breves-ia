@@ -46,19 +46,22 @@ export function Shell({ children }: ShellProps) {
         {isDash && <span className="diamond" />}
         <div className="h-titles">
           <div className="h-title">{viewTitle(view)}</div>
-          {isDash && <div className="h-sub">rédacteur en chef · /breves-ia</div>}
+          {isDash && <div className="h-sub">rédacteur en chef</div>}
         </div>
         <Button variant="icon" title="SOUL — le style" onClick={() => go('goSoul')}>
           ✦
         </Button>
-        <Button variant="icon" title="Historique" onClick={() => go('goHist')}>
-          ⏱
-        </Button>
         <Button variant="icon" title="Agents" onClick={() => go('goAgents')}>
           ⚙
         </Button>
+        <Button variant="icon" title="Réglages" onClick={() => go('goSettings')}>
+          ⛭
+        </Button>
         <Button variant="icon" title="Thème" onClick={() => toggleTheme()}>
           ◑
+        </Button>
+        <Button variant="icon" title="Quitter" onClick={() => void window.api.quitApp()}>
+          ✕
         </Button>
       </div>
 
