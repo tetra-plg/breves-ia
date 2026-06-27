@@ -1,6 +1,7 @@
 import type { Dashboard, AgentEdits } from '@main/engine';
 import type { Soul, Echantillon, SoulSectionEdits } from '@domain/soul';
 import type { Agent } from '@domain/agents';
+import type { Command, CommandEdits } from '@domain/commands';
 
 // Résultat générique des commandes/écritures (le flag {ok} est 1:1 ; cf. carry-over 2.1).
 export type ApiResult<T = unknown> = { ok: true; value: T } | { ok: false; error: string };
@@ -24,6 +25,8 @@ export interface Api {
   saveSoulEchantillons(entries: Echantillon[]): Promise<SaveResult>;
   getAgents(): Promise<Agent[]>;
   saveAgent(name: string, edits: AgentEdits): Promise<SaveResult>;
+  getCommands(): Promise<Command[]>;
+  saveCommand(name: string, edits: CommandEdits): Promise<SaveResult>;
   copy(text: string): Promise<boolean>;
   openExternal(url: string): Promise<void>;
   hideWindow(): Promise<void>;

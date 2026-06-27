@@ -9,6 +9,8 @@ export const IPC = {
   saveSoulEchantillons: 'save-soul-echantillons',
   getAgents: 'get-agents',
   saveAgent: 'save-agent',
+  getCommands: 'get-commands',
+  saveCommand: 'save-command',
   copy: 'copy',
   openExternal: 'open-external',
   hideWindow: 'hide-window',
