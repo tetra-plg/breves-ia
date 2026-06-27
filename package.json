@@ -20,7 +20,8 @@
     "smoke": "node scripts/smoke-boot.mjs",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "chromatic": "npx chromatic --project-token=chpt_f51b66fabad55ed --package-manager npm"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.3.181",
@@ -42,6 +43,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.7.0",
+    "chromatic": "^17.7.2",
     "electron": "^33.4.11",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
