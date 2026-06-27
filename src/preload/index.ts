@@ -32,5 +32,3 @@ const api: Api = {
 };
 
 contextBridge.exposeInMainWorld('api', api);
-// Alias rétro-compatible le temps que le renderer reste vanilla/migre (retiré en Phase 4).
-contextBridge.exposeInMainWorld('breves', api);

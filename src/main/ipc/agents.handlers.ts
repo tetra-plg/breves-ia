@@ -1,10 +1,12 @@
-import { getAgents, saveAgent, type EngineDeps, type AgentEdits } from '@main/engine';
+import { getAgents, saveAgent, type EngineDeps } from '@main/engine';
+import { parseAgentSave } from '@shared/schemas/edits';
 import { IPC, type IpcLike } from '@shared/types/ipc';
 
 export function registerAgentsHandlers(ipc: IpcLike, deps: EngineDeps): void {
   ipc.handle(IPC.getAgents, () => getAgents(deps));
   ipc.handle(IPC.saveAgent, (_e, payload: unknown) => {
-    const { name, edits } = (payload ?? {}) as { name: string; edits: AgentEdits };
-    return saveAgent(deps, name, edits);
+    const parsed = parseAgentSave(payload);
+    if (!parsed.ok) return { ok: false, error: parsed.error };
+    return saveAgent(deps, parsed.value.name, parsed.value.edits);
   });
 }

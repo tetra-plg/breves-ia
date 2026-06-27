@@ -13,7 +13,7 @@ export interface SettingField { value: string; source: SettingSource; valid: boo
 export type SettingsState = Record<SettingKey, SettingField>;
 export type SettingsPatch = Partial<Record<SettingKey, string>>;
 
-// Forme exposée par le preload sous window.api (et l'alias window.breves).
+// Forme exposée par le preload sous window.api.
 export interface Api {
   sendCommand(skill: string, inputs: unknown): Promise<ApiResult>;
   onCommandEvent(cb: (ev: unknown) => void): () => void;

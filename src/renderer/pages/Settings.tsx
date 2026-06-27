@@ -17,13 +17,19 @@ export function Settings() {
   const showToast = useAppStore((s) => s.showToast);
   const setDashboard = useAppStore((s) => s.setDashboard);
   const [state, setState] = useState<SettingsState | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     let alive = true;
-    void window.api.getSettings().then((s) => {
-      if (alive) setState(s);
-    });
+    window.api
+      .getSettings()
+      .then((s) => {
+        if (alive) setState(s);
+      })
+      .catch(() => {
+        if (alive) setError('Impossible de charger les réglages.');
+      });
     return () => {
       alive = false;
     };
@@ -54,7 +60,7 @@ export function Settings() {
     return (
       <section>
         <div className="pad">
-          <Text tone="faint" as="div">Chargement…</Text>
+          <Text tone="faint" as="div">{error ?? 'Chargement…'}</Text>
         </div>
       </section>
     );

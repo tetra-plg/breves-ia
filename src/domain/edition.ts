@@ -1,4 +1,5 @@
-import { escapeHtml, inlineMd } from '@domain/format';
+import { escapeHtml, escapeAttr, inlineMd } from '@domain/format';
+import { STEPS } from '@domain/checking';
 import type { TopicEvent } from '@domain/events';
 
 // ---------- rendu d'une édition archivée (← edition-render) ----------
@@ -19,7 +20,7 @@ function srcLink(url: string): string {
   } catch {
     /* garde l'url */
   }
-  return `<a class="ed-src" data-url="${escapeHtml(url)}">${escapeHtml(domaine)} →</a>`;
+  return `<a class="ed-src" data-url="${escapeAttr(url)}">${escapeHtml(domaine)} →</a>`;
 }
 
 export function renderEditionHtml(markdown: string): string {
@@ -191,7 +192,8 @@ export function extractBreves(noteText: string): Breve[] {
 
 // ---------- parsing du flux SDK (← parse-result) ----------
 
-const SENTINEL_STEPS = ['recherche', 'faits', 'date', 'source', 'article'];
+// Étapes de jalon reconnues dans les sentinelles « step » — source unique : checking.STEPS.
+const SENTINEL_STEPS: readonly string[] = STEPS;
 
 export function extractJsonBlock(text: string): unknown {
   const s = String(text);

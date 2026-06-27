@@ -3,6 +3,30 @@
 > Registre des zones d'ombre rencontrées pendant la cartographie. **Non comblées par hypothèse** :
 > chacune attend un arbitrage. `type` ∈ {intention, divergence, dead-code, config, edge-case, sécurité}.
 
+## Journal de résolution (2026-06-27)
+
+Passe de correction du code (branche `docs/reverse-documentation`) — vérifiée par la suite de tests
+(49 fichiers, 216 tests verts) :
+
+| # | Statut | Résolution |
+|---|---|---|
+| GAP-03 | ✅ **résolu** | Alias `window.breves` retiré (`preload/index.ts`, `window.d.ts`, `api.ts`) — il n'était consommé nulle part. |
+| GAP-07 | ✅ **résolu** | `SENTINEL_STEPS` réutilise désormais `checking.STEPS` (`edition.ts`) — plus de duplication. |
+| GAP-13 | ✅ **résolu** | DevTools (F12 / Cmd-Alt-I) câblés uniquement si `!app.isPackaged` (`index.ts`). |
+| GAP-14 | ✅ **résolu** | `srcLink` utilise un nouvel `escapeAttr` (échappe aussi `"`/`'`) pour `data-url` (`format.ts`, `edition.ts`) + test. |
+| GAP-15 | ✅ **résolu** | `webPreferences` explicites : `nodeIntegration:false`, `sandbox:true` (défauts sécurisés rendus explicites). *Smoke visuel `npm start` recommandé avant release.* |
+| GAP-19 | ⛔ **faux positif** | Le sélecteur de thème existe bien (`Shell.tsx:63`, appelle `toggleTheme`). L'agent UX ne l'avait pas vu. |
+| GAP-23 | ⛔ **faux positif** | Le bouton **Quitter** existe dans le header (`Shell.tsx:66`), pas dans Settings — l'agent module n'avait regardé que `Settings.tsx`. |
+| GAP-24 | ✅ **résolu** | Payloads `save-agent`/`save-command` validés par Zod (`shared/schemas/edits.ts`) avant le moteur + tests. |
+| GAP-25 | ✅ **résolu** | Vues Agents/Commands/Settings gèrent un état d'erreur de chargement (`.catch`) au lieu d'un « Chargement… » infini. |
+
+**Restent ouverts** (décisions produit ou changements à plus fort risque, non traités dans cette passe) :
+GAP-01, GAP-02, GAP-05, GAP-06, GAP-08, GAP-09, GAP-10, GAP-11, GAP-12 (CSP — risque de casser les polices/`dangerouslySetInnerHTML`),
+GAP-16 (CI/couverture), GAP-17 (onboarding 1er lancement), GAP-18 (accessibilité), GAP-20 (doc alignée ; reste : afficher ou retirer la SOUL du dashboard),
+GAP-21 (refactor double modèle SOUL), GAP-22 (persistance échantillon).
+
+---
+
 | # | type | observation | localisation | hypothèse (non validée) | à trancher par |
 |---|---|---|---|---|---|
 | GAP-01 | config | Les **défauts de chemins sont hardcodés** sur la machine de Pierre (`/Users/pleguern/...`) — non portables pour un autre utilisateur ; idem chemins du MCP wiki (venv Python + script). | `src/main/io/env.ts:20-24,47-48` | Acceptable car app perso mono-utilisateur ; un autre poste passe par `.env`/Settings. | PM (produit) |

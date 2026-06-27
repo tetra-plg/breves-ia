@@ -33,3 +33,17 @@ test('save-command écrit puis get-commands reflète', async () => {
   assert.equal(c.description, 'P1b');
   assert.equal(c.body, 'Maj.');
 });
+
+test('save-command rejette un payload sans body (validation Zod)', async () => {
+  const { ipc, h } = fakeIpc();
+  registerCommandsHandlers(ipc, depsWithCommand());
+  const r = await h['save-command'](null, { name: 'breves-verify', edits: { description: 'x' } });
+  assert.equal(r.ok, false);
+});
+
+test('save-command rejette un name manquant (validation Zod)', async () => {
+  const { ipc, h } = fakeIpc();
+  registerCommandsHandlers(ipc, depsWithCommand());
+  const r = await h['save-command'](null, { edits: { body: 'x' } });
+  assert.equal(r.ok, false);
+});

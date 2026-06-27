@@ -21,6 +21,8 @@ function createWindow(): void {
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true,
     },
   });
 
@@ -31,14 +33,16 @@ function createWindow(): void {
   }
   win.once('ready-to-show', () => win?.show());
 
-  // DevTools : Cmd/Ctrl+Alt+I ou F12
-  win.webContents.on('before-input-event', (_e, input) => {
-    if (input.type !== 'keyDown') return;
-    const key = (input.key || '').toLowerCase();
-    if (key === 'f12' || ((input.meta || input.control) && input.alt && key === 'i')) {
-      win?.webContents.toggleDevTools();
-    }
-  });
+  // DevTools : Cmd/Ctrl+Alt+I ou F12 — uniquement hors application packagée.
+  if (!app.isPackaged) {
+    win.webContents.on('before-input-event', (_e, input) => {
+      if (input.type !== 'keyDown') return;
+      const key = (input.key || '').toLowerCase();
+      if (key === 'f12' || ((input.meta || input.control) && input.alt && key === 'i')) {
+        win?.webContents.toggleDevTools();
+      }
+    });
+  }
 }
 
 app.whenReady().then(() => {

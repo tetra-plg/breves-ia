@@ -8,12 +8,18 @@ import { Text } from '@renderer/components/ui/Text';
 export function Agents() {
   const showToast = useAppStore((s) => s.showToast);
   const [agents, setAgents] = useState<Agent[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
-    void window.api.getAgents().then((a) => {
-      if (alive) setAgents(a);
-    });
+    window.api
+      .getAgents()
+      .then((a) => {
+        if (alive) setAgents(a);
+      })
+      .catch(() => {
+        if (alive) setError('Impossible de charger les agents.');
+      });
     return () => {
       alive = false;
     };
@@ -28,7 +34,9 @@ export function Agents() {
     <section>
       <div className="pad">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {agents === null ? (
+          {error !== null ? (
+            <Text tone="faint" as="div">{error}</Text>
+          ) : agents === null ? (
             <Text tone="faint" as="div">Chargement…</Text>
           ) : agents.length === 0 ? (
             <Text tone="faint" as="div">Aucun agent dans .claude/agents/.</Text>

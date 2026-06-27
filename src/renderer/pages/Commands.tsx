@@ -7,12 +7,18 @@ import { Text } from '@renderer/components/ui/Text';
 export function Commands() {
   const showToast = useAppStore((s) => s.showToast);
   const [commands, setCommands] = useState<Command[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
-    void window.api.getCommands().then((c) => {
-      if (alive) setCommands(c);
-    });
+    window.api
+      .getCommands()
+      .then((c) => {
+        if (alive) setCommands(c);
+      })
+      .catch(() => {
+        if (alive) setError('Impossible de charger les commandes.');
+      });
     return () => {
       alive = false;
     };
@@ -27,7 +33,9 @@ export function Commands() {
     <section>
       <div className="pad">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {commands === null ? (
+          {error !== null ? (
+            <Text tone="faint" as="div">{error}</Text>
+          ) : commands === null ? (
             <Text tone="faint" as="div">Chargement…</Text>
           ) : commands.length === 0 ? (
             <Text tone="faint" as="div">Aucune commande dans .claude/commands/.</Text>

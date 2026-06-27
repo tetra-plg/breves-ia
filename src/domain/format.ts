@@ -4,6 +4,14 @@ export function escapeHtml(s: unknown): string {
   return String(s).replace(/[&<>]/g, (c) => ENTITIES[c]);
 }
 
+const ATTR_ENTITIES: Record<string, string> = { ...ENTITIES, '"': '&quot;', "'": '&#39;' };
+
+// Échappement pour un contexte d'attribut HTML : en plus de &<>, neutralise les guillemets
+// qui pourraient casser l'attribut (ex. URL contenant `"` injectée dans data-url).
+export function escapeAttr(s: unknown): string {
+  return String(s).replace(/[&<>"']/g, (c) => ATTR_ENTITIES[c]);
+}
+
 export function inlineMd(s: string): string {
   return escapeHtml(s)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
