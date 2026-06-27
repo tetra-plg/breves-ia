@@ -2,6 +2,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import { summary } from '@domain/checking';
 import { EnqCard } from '@renderer/components/EnqCard';
 import { RunStatus } from '@renderer/components/RunStatus';
+import { Text } from '@renderer/components/ui/Text';
 
 export function Checking() {
   const cards = useAppStore((s) => s.cards);
@@ -25,10 +26,10 @@ export function Checking() {
   return (
     <section>
       <div className="pad">
-        <p className="muted" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 16px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 16px' }}>
           Chacun vérifie les faits, la date, la source et l'article. <b style={{ color: 'var(--text)' }}>Il n'invente jamais</b> :
           un fait non confirmé est signalé.
-        </p>
+        </Text>
         <RunStatus status={runStatus} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {cards.map((c) => (
@@ -40,9 +41,9 @@ export function Checking() {
             <div style={{ font: '600 14px var(--display)' }}>
               {sum.verifies} vérifiés · {sum.corriges} corrigés · {sum.nuances} nuancés
             </div>
-            <div className="muted" style={{ font: '400 12px var(--body)', margin: '2px 0 12px' }}>
+            <Text tone="muted" as="div" style={{ font: '400 12px var(--body)', margin: '2px 0 12px' }}>
               Tout est sourcé. On passe à la rédaction.
-            </div>
+            </Text>
             <button className="btn-primary" onClick={() => go('toEditor')}>
               Rédiger les brèves →
             </button>

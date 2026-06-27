@@ -1,6 +1,7 @@
 import { useAppStore } from '@renderer/store/app.store';
 import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
+import { Text } from '@renderer/components/ui/Text';
 
 export function EchEditions() {
   const editions = useAppStore((s) => s.dashboard?.editions ?? []);
@@ -15,12 +16,12 @@ export function EchEditions() {
   return (
     <section>
       <div className="pad">
-        <p className="muted" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 14px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 14px' }}>
           Choisis l'édition d'où provient la brève à promouvoir en échantillon de style (§5).
-        </p>
+        </Text>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {editions.length === 0 ? (
-            <div className="faint">Aucune édition archivée.</div>
+            <Text tone="faint" as="div">Aucune édition archivée.</Text>
           ) : (
             editions.map((ed) => (
               <button key={ed.file} className="card" style={{ display: 'block', width: '100%', textAlign: 'left' }} onClick={() => pick(ed)}>

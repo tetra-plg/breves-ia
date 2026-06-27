@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import type { VerifyOutput } from '@shared/schemas/outputs';
+import { Text } from '@renderer/components/ui/Text';
 
 export function Compose() {
   const [raw, setRaw] = useState('');
@@ -49,9 +50,9 @@ export function Compose() {
     <section>
       <div className="pad">
         <h1 style={{ font: '600 20px/1.15 var(--display)', margin: '0 0 4px' }}>Sujets en vrac</h1>
-        <p className="muted" style={{ font: '400 13px/1.5 var(--body)', margin: '0 0 16px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 13px/1.5 var(--body)', margin: '0 0 16px' }}>
           Un sujet par ligne. Pas besoin de dates ni de liens : chaque enquêteur les trouve seul.
-        </p>
+        </Text>
         <textarea
           spellCheck={false}
           value={raw}
@@ -76,9 +77,9 @@ export function Compose() {
         >
           Lancer l'enquête <span style={{ fontSize: 16 }}>→</span>
         </button>
-        <p className="faint" style={{ font: '400 12px var(--body)', textAlign: 'center', margin: '10px 0 0' }}>
+        <Text tone="faint" as="p" style={{ font: '400 12px var(--body)', textAlign: 'center', margin: '10px 0 0' }}>
           Les enquêteurs partiront en parallèle sur le web.
-        </p>
+        </Text>
       </div>
     </section>
   );

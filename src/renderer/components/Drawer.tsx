@@ -2,6 +2,7 @@ import { dateLong } from '@domain/format';
 import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 import type { VerifyOutput } from '@shared/schemas/outputs';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -18,7 +19,7 @@ export function Drawer({ topic }: DrawerProps) {
         <span className="pill" style={{ color: 'var(--accent)', background: 'var(--accentSoft)' }}>
           {dateLong(t.date_reelle ?? '')}
         </span>
-        {t.raw && <span className="faint" style={{ font: '400 11.5px var(--body)' }}>saisi : « {t.raw} »</span>}
+        {t.raw && <Text tone="faint" style={{ font: '400 11.5px var(--body)' }}>saisi : « {t.raw} »</Text>}
       </div>
       {t.alerte && (
         <div

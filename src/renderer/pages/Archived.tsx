@@ -4,6 +4,7 @@ import { renderEditionHtml } from '@domain/edition';
 import { RunStatus } from '@renderer/components/RunStatus';
 import { ArchiveStep } from '@renderer/components/ArchiveStep';
 import type { ArchiveOutput } from '@shared/schemas/outputs';
+import { Text } from '@renderer/components/ui/Text';
 
 export function Archived() {
   const archiveValue = useAppStore((s) => s.archiveValue);
@@ -80,9 +81,9 @@ export function Archived() {
               ✓
             </div>
             <h1 style={{ font: '600 21px/1.2 var(--display)', margin: '0 0 5px' }}>Validée et archivée</h1>
-            <p className="muted" style={{ font: '400 13px var(--body)', margin: '0 0 20px' }}>
+            <Text tone="muted" as="p" style={{ font: '400 13px var(--body)', margin: '0 0 20px' }}>
               Tout est rangé et relié dans ton wiki personnel.
-            </p>
+            </Text>
             <div className="card" style={{ padding: 0, textAlign: 'left', overflow: 'hidden' }}>
               <div>
                 {(archiveValue.archiveSteps ?? []).map((s, i) => (

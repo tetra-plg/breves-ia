@@ -4,6 +4,7 @@ import { dateLong } from '@domain/format';
 import { extractBreves } from '@domain/edition';
 import type { Breve } from '@domain/edition';
 import { BreveCard } from '@renderer/components/BreveCard';
+import { Text } from '@renderer/components/ui/Text';
 
 export function EchBreves() {
   const echEdition = useAppStore((s) => s.echEdition);
@@ -50,15 +51,15 @@ export function EchBreves() {
   return (
     <section>
       <div className="pad">
-        <div className="faint" style={{ font: '500 11px var(--mono)', margin: '0 0 12px' }}>
+        <Text tone="faint" as="div" style={{ font: '500 11px var(--mono)', margin: '0 0 12px' }}>
           {dateLong(echEdition.date)}
           {echEdition.title ? ' · ' + echEdition.title : ''}
-        </div>
+        </Text>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {breves === null ? (
-            <div className="faint">Chargement…</div>
+            <Text tone="faint" as="div">Chargement…</Text>
           ) : breves.length === 0 ? (
-            <div className="faint">Aucune brève détectée dans cette édition.</div>
+            <Text tone="faint" as="div">Aucune brève détectée dans cette édition.</Text>
           ) : (
             breves.map((b, i) => <BreveCard key={i} texte={b.texte} disabled={full} onAdd={() => add(b)} />)
           )}

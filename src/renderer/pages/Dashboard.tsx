@@ -4,6 +4,7 @@ import { EditionRow } from '@renderer/components/EditionRow';
 import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
 
 export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
@@ -25,9 +26,9 @@ export function Dashboard() {
       <div className="pad">
         <Eyebrow>{today}</Eyebrow>
         <h1 className="hello">Bonjour Pierre.</h1>
-        <p className="muted" style={{ margin: '0 0 18px' }}>
+        <Text tone="muted" as="p" style={{ margin: '0 0 18px' }}>
           Prêt à compiler les prochaines brèves IA ?
-        </p>
+        </Text>
 
         <button className="cta" style={{ marginBottom: 18 }} onClick={() => go('goCompose')}>
           <span className="plus">+</span>
@@ -73,7 +74,7 @@ export function Dashboard() {
           Éditions récentes
         </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-          {editions.length === 0 && <div className="faint">Aucune édition archivée pour l'instant.</div>}
+          {editions.length === 0 && <Text tone="faint" as="div">Aucune édition archivée pour l'instant.</Text>}
           {editions.slice(0, 4).map((e) => (
             <EditionRow key={e.file} edition={e} onOpen={onOpen} />
           ))}

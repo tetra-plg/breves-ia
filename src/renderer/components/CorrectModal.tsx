@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Text } from '@renderer/components/ui/Text';
 
 interface CorrectModalProps {
   initialWantSoulLesson: boolean;
@@ -13,9 +14,9 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
     <div className="overlay" style={{ zIndex: 50, padding: 16 }}>
       <div className="modal">
         <h2 style={{ font: '600 17px var(--display)', margin: '0 0 4px' }}>Demander une correction</h2>
-        <p className="muted" style={{ font: '400 12.5px var(--body)', margin: '0 0 14px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px var(--body)', margin: '0 0 14px' }}>
           Dis ce qui ne va pas : la commande ajuste les brèves.
-        </p>
+        </Text>
         <textarea
           spellCheck={false}
           value={text}

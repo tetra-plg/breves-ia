@@ -3,6 +3,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import type { SoulForm } from '@renderer/store/app.store';
 import { EchantillonCard } from '@renderer/components/EchantillonCard';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
 
 const SOUL_FIELDS: { key: keyof SoulForm; label: string; mono: boolean; minHeight: number }[] = [
   { key: 'quiParle', label: '1 · Qui parle', mono: false, minHeight: 70 },
@@ -69,10 +70,10 @@ export function Soul() {
   return (
     <section>
       <div className="pad">
-        <p className="muted" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 6px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 6px' }}>
           La voix de Pierre. Édite les 4 premières sections, puis enregistre.{' '}
           <span style={{ color: 'var(--accent)' }}>{soulVersion}</span>
-        </p>
+        </Text>
         {SOUL_FIELDS.map((field) => (
           <div key={field.key}>
             <Eyebrow style={{ margin: '14px 0 5px' }}>
@@ -92,13 +93,13 @@ export function Soul() {
 
         <Eyebrow style={{ margin: '22px 0 9px' }}>
           5 · Échantillons vivants{' '}
-          <span className="faint" style={{ font: '400 10px var(--mono)' }}>
+          <Text tone="faint" style={{ font: '400 10px var(--mono)' }}>
             ({echantillons.length}/3, choisis à la main)
-          </span>
+          </Text>
         </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {echantillons.length === 0 ? (
-            <div className="faint">Aucun échantillon. Ajoute jusqu’à 3 brèves depuis tes éditions.</div>
+            <Text tone="faint" as="div">Aucun échantillon. Ajoute jusqu’à 3 brèves depuis tes éditions.</Text>
           ) : (
             echantillons.map((e, i) => <EchantillonCard key={i} echantillon={e} onRemove={() => removeEchantillon(i)} />)
           )}
@@ -117,7 +118,7 @@ export function Soul() {
         </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {soulJournal.length === 0 ? (
-            <div className="faint">Aucune leçon enregistrée.</div>
+            <Text tone="faint" as="div">Aucune leçon enregistrée.</Text>
           ) : (
             soulJournal.map((l, i) => (
               <div key={i} className="card">

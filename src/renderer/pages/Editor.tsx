@@ -7,6 +7,7 @@ import { SourceRow } from '@renderer/components/SourceRow';
 import { CorrectModal } from '@renderer/components/CorrectModal';
 import type { DraftOutput } from '@shared/schemas/outputs';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
 
 export function Editor() {
   const draftValue = useAppStore((s) => s.draftValue);
@@ -61,9 +62,9 @@ export function Editor() {
   return (
     <section>
       <div className="pad">
-        <p className="muted" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 14px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 14px' }}>
           Version prête à coller dans Teams. Édite le texte directement, puis valide ou corrige.
-        </p>
+        </Text>
         <RunStatus status={runStatus} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ font: '500 11px var(--mono)', color: 'var(--muted)' }}>prêt-à-coller · Teams</span>
@@ -98,7 +99,7 @@ export function Editor() {
             {draftValue?.corrections?.length ? (
               draftValue.corrections.map((c, i) => <CorrectionRow key={i} correction={c} />)
             ) : (
-              <div className="faint">Aucune correction.</div>
+              <Text tone="faint" as="div">Aucune correction.</Text>
             )}
           </div>
         </div>
