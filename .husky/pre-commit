@@ -1,0 +1,5 @@
+# Charge nvm si présent pour rester sur Node 22 (.nvmrc) ; sinon poursuit avec le Node courant.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use >/dev/null 2>&1
+
+npm run typecheck && npm run lint && npm test
