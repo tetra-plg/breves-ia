@@ -1,8 +1,9 @@
-import { Fragment, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { viewTitle, stepper } from '@domain/navigation';
 import { useAppStore } from '@renderer/store/app.store';
 import { Toast } from '@renderer/components/Toast';
 import { Button } from '@renderer/components/ui/Button';
+import { Stepper } from '@renderer/components/ui/Stepper';
 
 interface ShellProps {
   children: ReactNode;
@@ -60,19 +61,7 @@ export function Shell({ children }: ShellProps) {
         </Button>
       </div>
 
-      {st.steps.length > 0 && (
-        <div className="stepper">
-          <div className="steps">
-            {st.steps.map((s, i) => (
-              <Fragment key={i}>
-                <span className={`step ${s.state}`}>{s.state === 'done' ? '✓' : s.n}</span>
-                {i < st.steps.length - 1 && <span className="step-bar" />}
-              </Fragment>
-            ))}
-          </div>
-          <span className="step-line">{st.line}</span>
-        </div>
-      )}
+      {st.steps.length > 0 && <Stepper steps={st.steps} line={st.line} />}
 
       <div className="content">{children}</div>
 
