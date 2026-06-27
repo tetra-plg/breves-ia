@@ -17,8 +17,6 @@ export function Reader() {
       return;
     }
     let alive = true;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
     void window.api.readEdition(ed.file).then((t) => {
       if (!alive) return;
       useAppStore.getState().setReaderText(t ?? '');
