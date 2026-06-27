@@ -1,1 +1,1 @@
-.root{width:15px;height:15px;flex:none;border-radius:50%;border:2px solid var(--accent);border-top-color:transparent;animation:spin .7s linear infinite}
+.root{display:inline-block;width:15px;height:15px;flex:none;border-radius:50%;border:2px solid var(--accent);border-top-color:transparent;animation:spin .7s linear infinite}
