@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import type { VerifyOutput } from '@shared/schemas/outputs';
 import { Text } from '@renderer/components/ui/Text';
+import { Pill } from '@renderer/components/ui/Pill';
 
 export function Compose() {
   const [raw, setRaw] = useState('');
@@ -63,9 +64,9 @@ export function Compose() {
           <span style={{ font: '500 11px var(--mono)', color: 'var(--faint)' }}>DÉTECTÉS</span>
           <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {chips.map((c, i) => (
-              <span key={i} className="pill">
+              <Pill key={i}>
                 {c}
-              </span>
+              </Pill>
             ))}
           </span>
         </div>

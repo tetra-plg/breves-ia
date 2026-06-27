@@ -3,6 +3,7 @@ import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/nivea
 import type { VerifyOutput } from '@shared/schemas/outputs';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
+import { Pill } from '@renderer/components/ui/Pill';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -16,9 +17,9 @@ export function Drawer({ topic }: DrawerProps) {
     <div className="pad">
       <h2 style={{ font: '600 18px/1.3 var(--display)', margin: '0 0 7px' }}>{t.sujet || t.key}</h2>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 18, flexWrap: 'wrap' }}>
-        <span className="pill" style={{ color: 'var(--accent)', background: 'var(--accentSoft)' }}>
+        <Pill style={{ color: 'var(--accent)', background: 'var(--accentSoft)' }}>
           {dateLong(t.date_reelle ?? '')}
-        </span>
+        </Pill>
         {t.raw && <Text tone="faint" style={{ font: '400 11.5px var(--body)' }}>saisi : « {t.raw} »</Text>}
       </div>
       {t.alerte && (

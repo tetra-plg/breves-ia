@@ -8,6 +8,7 @@ import { CorrectModal } from '@renderer/components/CorrectModal';
 import type { DraftOutput } from '@shared/schemas/outputs';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
+import { Pill } from '@renderer/components/ui/Pill';
 
 export function Editor() {
   const draftValue = useAppStore((s) => s.draftValue);
@@ -68,9 +69,9 @@ export function Editor() {
         <RunStatus status={runStatus} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ font: '500 11px var(--mono)', color: 'var(--muted)' }}>prêt-à-coller · Teams</span>
-          <button className="pill" style={{ marginLeft: 'auto', cursor: 'pointer', border: 'none' }} onClick={toggleEditor}>
+          <Pill as="button" style={{ marginLeft: 'auto', cursor: 'pointer', border: 'none' }} onClick={toggleEditor}>
             {editorMode === 'preview' ? 'Éditer' : 'Aperçu'}
-          </button>
+          </Pill>
         </div>
         {editorMode === 'preview' ? (
           <div dangerouslySetInnerHTML={{ __html: renderEditionHtml(teamsText) }} />
