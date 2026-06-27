@@ -1,5 +1,6 @@
 import type { Card } from '@domain/checking';
 import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 
 interface EnqCardProps {
   card: Card;
@@ -20,7 +21,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
             animation: card.done ? undefined : 'pulse 1.1s ease-in-out infinite',
           }}
         />
-        <span className="eyebrow">Enquêteur</span>
+        <Eyebrow as="span">Enquêteur</Eyebrow>
         <span style={{ marginLeft: 'auto', font: '500 10.5px var(--mono)', color: statusColor }}>
           {card.status}
         </span>

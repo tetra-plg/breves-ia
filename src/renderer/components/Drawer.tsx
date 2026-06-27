@@ -1,6 +1,7 @@
 import { dateLong } from '@domain/format';
 import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 import type { VerifyOutput } from '@shared/schemas/outputs';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -47,9 +48,9 @@ export function Drawer({ topic }: DrawerProps) {
           </div>
         </div>
       )}
-      <div className="eyebrow" style={{ marginBottom: 10 }}>
+      <Eyebrow style={{ marginBottom: 10 }}>
         Faits vérifiés
-      </div>
+      </Eyebrow>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
         {(t.faits ?? []).map((f, i) => (
           <div key={i} style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
@@ -58,9 +59,9 @@ export function Drawer({ topic }: DrawerProps) {
           </div>
         ))}
       </div>
-      <div className="eyebrow" style={{ marginBottom: 10 }}>
+      <Eyebrow style={{ marginBottom: 10 }}>
         Source retenue
-      </div>
+      </Eyebrow>
       <div className="card" style={{ borderRadius: 'var(--radiusSm)', marginBottom: 18 }}>
         <div style={{ font: '600 13px var(--body)' }}>{t.source ?? ''}</div>
         <div
@@ -69,9 +70,9 @@ export function Drawer({ topic }: DrawerProps) {
           {t.url_citee ?? ''}
         </div>
       </div>
-      <div className="eyebrow" style={{ marginBottom: 10 }}>
+      <Eyebrow style={{ marginBottom: 10 }}>
         Extrait (clipping)
-      </div>
+      </Eyebrow>
       <div
         style={{
           background: 'var(--panel2)',

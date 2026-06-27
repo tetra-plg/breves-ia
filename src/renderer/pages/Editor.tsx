@@ -6,6 +6,7 @@ import { CorrectionRow } from '@renderer/components/CorrectionRow';
 import { SourceRow } from '@renderer/components/SourceRow';
 import { CorrectModal } from '@renderer/components/CorrectModal';
 import type { DraftOutput } from '@shared/schemas/outputs';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 
 export function Editor() {
   const draftValue = useAppStore((s) => s.draftValue);
@@ -90,9 +91,9 @@ export function Editor() {
           </button>
         </div>
         <div className="card" style={{ marginTop: 16 }}>
-          <div className="eyebrow" style={{ marginBottom: 11 }}>
+          <Eyebrow style={{ marginBottom: 11 }}>
             Corrections apportées
-          </div>
+          </Eyebrow>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
             {draftValue?.corrections?.length ? (
               draftValue.corrections.map((c, i) => <CorrectionRow key={i} correction={c} />)
@@ -102,9 +103,9 @@ export function Editor() {
           </div>
         </div>
         <div className="card" style={{ marginTop: 12 }}>
-          <div className="eyebrow" style={{ marginBottom: 11 }}>
+          <Eyebrow style={{ marginBottom: 11 }}>
             Sources &amp; clippings
-          </div>
+          </Eyebrow>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
             {(draftValue?.sources ?? []).map((s, i) => (
               <SourceRow key={i} source={s} />

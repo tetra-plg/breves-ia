@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import type { SoulForm } from '@renderer/store/app.store';
 import { EchantillonCard } from '@renderer/components/EchantillonCard';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 
 const SOUL_FIELDS: { key: keyof SoulForm; label: string; mono: boolean; minHeight: number }[] = [
   { key: 'quiParle', label: '1 · Qui parle', mono: false, minHeight: 70 },
@@ -74,9 +75,9 @@ export function Soul() {
         </p>
         {SOUL_FIELDS.map((field) => (
           <div key={field.key}>
-            <label className="eyebrow" style={{ display: 'block', margin: '14px 0 5px' }}>
+            <Eyebrow style={{ margin: '14px 0 5px' }}>
               {field.label}
-            </label>
+            </Eyebrow>
             <textarea
               spellCheck={false}
               value={soulForm[field.key]}
@@ -89,12 +90,12 @@ export function Soul() {
           Enregistrer
         </button>
 
-        <div className="eyebrow" style={{ margin: '22px 0 9px' }}>
+        <Eyebrow style={{ margin: '22px 0 9px' }}>
           5 · Échantillons vivants{' '}
           <span className="faint" style={{ font: '400 10px var(--mono)' }}>
             ({echantillons.length}/3, choisis à la main)
           </span>
-        </div>
+        </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {echantillons.length === 0 ? (
             <div className="faint">Aucun échantillon. Ajoute jusqu’à 3 brèves depuis tes éditions.</div>
@@ -111,9 +112,9 @@ export function Soul() {
           </button>
         </div>
 
-        <div className="eyebrow" style={{ margin: '22px 0 9px' }}>
+        <Eyebrow style={{ margin: '22px 0 9px' }}>
           6 · Journal d'évolution
-        </div>
+        </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {soulJournal.length === 0 ? (
             <div className="faint">Aucune leçon enregistrée.</div>

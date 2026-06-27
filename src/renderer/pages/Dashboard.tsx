@@ -3,6 +3,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import { EditionRow } from '@renderer/components/EditionRow';
 import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 
 export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
@@ -22,7 +23,7 @@ export function Dashboard() {
   return (
     <section>
       <div className="pad">
-        <div className="eyebrow">{today}</div>
+        <Eyebrow>{today}</Eyebrow>
         <h1 className="hello">Bonjour Pierre.</h1>
         <p className="muted" style={{ margin: '0 0 18px' }}>
           Prêt à compiler les prochaines brèves IA ?
@@ -48,9 +49,9 @@ export function Dashboard() {
 
         <div className="card" style={{ marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div className="eyebrow" style={{ fontSize: 10 }}>
+            <Eyebrow style={{ fontSize: 10 }}>
               Dernière édition
-            </div>
+            </Eyebrow>
             <span style={{ marginLeft: 'auto', font: '500 11px var(--mono)', color: 'var(--text)' }}>
               {last ? dateLong(last.date) : '—'}
             </span>
@@ -68,9 +69,9 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="eyebrow" style={{ margin: '0 0 9px' }}>
+        <Eyebrow style={{ margin: '0 0 9px' }}>
           Éditions récentes
-        </div>
+        </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {editions.length === 0 && <div className="faint">Aucune édition archivée pour l'instant.</div>}
           {editions.slice(0, 4).map((e) => (
