@@ -1,0 +1,2 @@
+.root{width:100%;border:1px solid var(--line);padding:9px 12px;font:400 12.5px var(--mono);color:var(--text);background:var(--panel);border-radius:var(--radius)}
+.root:disabled{opacity:.55;cursor:not-allowed}
