@@ -29,7 +29,6 @@ body.dark{
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--win);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow:hidden}
-@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
