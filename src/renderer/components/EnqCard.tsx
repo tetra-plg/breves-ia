@@ -1,6 +1,7 @@
 import type { Card } from '@domain/checking';
 import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Badge } from '@renderer/components/ui/Badge';
 
 interface EnqCardProps {
   card: Card;
@@ -42,7 +43,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
       {card.done && !card.error && (
         <div style={{ marginTop: 12, paddingTop: 11, borderTop: '1px solid var(--line)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 8, flexWrap: 'wrap' }}>
-            <span className="badge-good">Source</span>
+            <Badge tone="good">Source</Badge>
             <span style={{ font: '500 11px var(--mono)', color: 'var(--muted)' }}>{card.source ?? ''}</span>
           </div>
           {card.alerte && (

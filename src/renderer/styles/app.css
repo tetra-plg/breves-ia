@@ -29,7 +29,6 @@
 .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text);font:600 13px var(--body);padding:11px 16px;border-radius:var(--radiusSm)}
 .row{display:flex;gap:9px}
 .pill{font:500 11px var(--body);color:var(--muted);background:var(--panel2);border:1px solid var(--line);padding:4px 9px;border-radius:20px}
-.badge-good{font:500 10px var(--body);color:var(--good);background:var(--goodSoft);padding:3px 7px;border-radius:20px}
 
 /* rendu stylisé des éditions (Direction A) */
 .ed-title{font:700 18px var(--display);letter-spacing:-.01em;margin:0 0 2px}
