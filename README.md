@@ -7,7 +7,7 @@ puis elle archive (clip + note + SOUL + ingest) dans le wiki personnel.
 
 ## Prérequis
 
-- **Node ≥ 20**
+- **Node ≥ 22** (voir `.nvmrc` ; `nvm use`)
 - **Auth Claude locale** : l'app utilise le Claude Agent SDK avec les identifiants de
   Claude Code déjà présents sur la machine.
 - **Repo BoilingBrain** accessible. Par défaut `/Users/pleguern/Workspace/BoilingBrain` ;
@@ -29,6 +29,31 @@ npm start
 
 Une fenêtre compagnon (400×760) s'ouvre. Parcours : Dashboard → Nouvelle édition
 (sujets en vrac) → Vérification → Rédaction (éditable) → Valider / Corriger → Archivé.
+
+Vues de configuration accessibles depuis l'en-tête : **SOUL** (la plume), **Agents**
+(modèle/outils/prompt des sous-agents), **Commandes** (slash-commands), **Historique**
+(relecture des éditions archivées).
+
+## Construire l'app macOS (.dmg)
+
+```bash
+npm run make
+```
+
+Produit `out/make/Brèves IA-<version>-arm64.dmg` (Apple Silicon), avec l'icône de l'app.
+L'app est **signée ad-hoc** (pas de Developer ID / notarisation) : au 1er lancement,
+**clic-droit sur l'app → Ouvrir** pour passer Gatekeeper. Installation : monter le `.dmg`
+et glisser « Brèves IA » dans Applications.
+
+## Développement
+
+```bash
+npm run storybook       # design system + primitives (Storybook)
+npm run typecheck       # tsc --noEmit
+npm run lint            # eslint
+```
+
+Un hook **pre-commit** (Husky) rejoue `typecheck + lint + test` à chaque commit.
 
 ## Moteur en ligne de commande (sans UI)
 

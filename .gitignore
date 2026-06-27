@@ -148,3 +148,6 @@ vite.config.ts.timestamp-*
 # Storybook build output and cache
 storybook-static/
 .storybook/.cache/
+
+# macOS
+.DS_Store
