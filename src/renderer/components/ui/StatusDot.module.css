@@ -1,5 +1,6 @@
 .root{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;flex:none}
 .done{background:var(--good);color:#fff;font-size:9px}
+.error{background:var(--warn);color:#fff;font-size:9px}
 .active{border:2px solid var(--accent);border-top-color:transparent;animation:spin .7s linear infinite}
 .todo{border:1.5px solid var(--line)}
 /* Keyframe locale (cf. Spinner) : `animation:spin` est scopé par CSS Modules. */
