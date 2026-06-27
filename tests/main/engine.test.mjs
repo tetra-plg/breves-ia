@@ -246,6 +246,37 @@ test('saveCommand: refuse corps vide, écrit sinon, name figé', () => {
   assert.equal(c.description, 'D');
 });
 
+function spyWriteDeps(repo) {
+  const writes = [];
+  const deps = {
+    repoDir: repo,
+    readFile: (p) => readFileSync(p, 'utf8'),
+    writeFile: (p, t) => { writes.push(p); writeFileSync(p, t, 'utf8'); },
+    readdir: (p) => readdirSync(p),
+  };
+  return { deps, writes };
+}
+
+test('saveCommand: refuse un nom traversant (aucune écriture)', () => {
+  const repo = mkdtempSync(join(tmpdir(), 'repo-'));
+  mkdirSync(join(repo, '.claude', 'commands'), { recursive: true });
+  const { deps, writes } = spyWriteDeps(repo);
+  for (const bad of ['../evil', '..', 'a/b', 'a\\b']) {
+    assert.equal(saveCommand(deps, bad, { description: 'd', body: 'b' }).ok, false, bad);
+  }
+  assert.deepEqual(writes, []);
+});
+
+test('saveAgent: refuse un nom traversant (n\'écrase pas un fichier hors agents/)', () => {
+  const repo = mkdtempSync(join(tmpdir(), 'repo-'));
+  mkdirSync(join(repo, '.claude', 'agents'), { recursive: true });
+  // cible traversante existante et valide (un cran au-dessus de agents/)
+  writeFileSync(join(repo, '.claude', 'evil.md'), '---\nname: evil\n---\nx');
+  const { deps, writes } = spyWriteDeps(repo);
+  assert.equal(saveAgent(deps, '../evil', { systemPrompt: 'pwn', tools: [], model: '', enabled: true }).ok, false);
+  assert.deepEqual(writes, []);
+});
+
 test('applyConfig mute les champs fournis et recompute wikiMcp depuis bbDir', () => {
   const deps = {
     bbDir: '/old', repoDir: '/r', claudeBin: '/c',

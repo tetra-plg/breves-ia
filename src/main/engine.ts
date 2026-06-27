@@ -190,9 +190,15 @@ export interface AgentEdits {
   description?: string;
 }
 
+// Rejette un nom qui sortirait du dossier cible (séparateurs ou `..`) — anti path-traversal.
+function isSafeName(name: string): boolean {
+  return !!name && !/[\\/]/.test(name) && !name.includes('..');
+}
+
 export function saveAgent(deps: EngineDeps, name: string, edits: AgentEdits): { ok: boolean; error?: string } {
-  if (!name || typeof edits?.systemPrompt !== 'string' || !edits.systemPrompt.trim()) {
-    return { ok: false, error: 'nom ou prompt vide' };
+  if (!isSafeName(name)) return { ok: false, error: 'nom invalide' };
+  if (typeof edits?.systemPrompt !== 'string' || !edits.systemPrompt.trim()) {
+    return { ok: false, error: 'prompt vide' };
   }
   const path = join(deps.repoDir, '.claude', 'agents', `${name}.md`);
   try {
@@ -234,8 +240,9 @@ export function getCommands(deps: EngineDeps): Command[] {
 }
 
 export function saveCommand(deps: EngineDeps, name: string, edits: CommandEdits): { ok: boolean; error?: string } {
-  if (!name || typeof edits?.body !== 'string' || !edits.body.trim()) {
-    return { ok: false, error: 'nom ou corps vide' };
+  if (!isSafeName(name)) return { ok: false, error: 'nom invalide' };
+  if (typeof edits?.body !== 'string' || !edits.body.trim()) {
+    return { ok: false, error: 'corps vide' };
   }
   const path = join(deps.repoDir, '.claude', 'commands', `${name}.md`);
   try {
