@@ -19,6 +19,8 @@ import {
   type SoulSectionEdits,
 } from '@domain/soul';
 import { parseAgent, toAgentDefinition, serializeAgent, type Agent, type AgentDefinition } from '@domain/agents';
+import { parseCommand, serializeCommand, type Command, type CommandEdits } from '@domain/commands';
+export type { CommandEdits };
 
 const SOUL_PARTS = ['.claude', 'breves-ia', 'SOUL.md'];
 
@@ -205,6 +207,39 @@ export function saveAgent(deps: EngineDeps, name: string, edits: AgentEdits): { 
       description: edits.description ?? current.description,
     };
     deps.writeFile(path, serializeAgent(merged));
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export function loadCommands(deps: EngineDeps): Command[] {
+  const dir = join(deps.repoDir, '.claude', 'commands');
+  let files: string[] = [];
+  try {
+    files = deps.readdir(dir);
+  } catch {
+    return [];
+  }
+  const out: Command[] = [];
+  for (const f of files.filter((x) => x.endsWith('.md'))) {
+    const { description, body } = parseCommand(deps.readFile(join(dir, f)));
+    out.push({ name: f.replace(/\.md$/, ''), description, body });
+  }
+  return out;
+}
+
+export function getCommands(deps: EngineDeps): Command[] {
+  return loadCommands(deps).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function saveCommand(deps: EngineDeps, name: string, edits: CommandEdits): { ok: boolean; error?: string } {
+  if (!name || typeof edits?.body !== 'string' || !edits.body.trim()) {
+    return { ok: false, error: 'nom ou corps vide' };
+  }
+  const path = join(deps.repoDir, '.claude', 'commands', `${name}.md`);
+  try {
+    deps.writeFile(path, serializeCommand({ description: edits.description ?? '', body: edits.body }));
     return { ok: true };
   } catch (e) {
     return { ok: false, error: (e as Error).message };

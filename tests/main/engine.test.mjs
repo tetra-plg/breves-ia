@@ -1,7 +1,10 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent, applyConfig } from '@main/engine';
+import { readFileSync, mkdirSync, writeFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent, applyConfig, getCommands, saveCommand } from '@main/engine';
 
 const SOUL_FIXTURE = readFileSync(new URL('../fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
@@ -200,6 +203,47 @@ test("dispatch breves-draft : n'écrase pas un redacteur explicite", async () =>
     runSkill: async (a) => { seen = a; return { ok: true, value: { teamsText: 'x', corrections: [], sources: [], soulLessonProposee: null } }; } };
   await dispatch({ skill: 'breves-draft', inputs: { topics: [], redacteur: 'off' }, onEvent() {} }, deps);
   assert.equal(seen.inputs.redacteur, 'off');
+});
+
+// --- Commands ---
+
+function repoWithCommands() {
+  const repo = mkdtempSync(join(tmpdir(), 'repo-'));
+  mkdirSync(join(repo, '.claude', 'commands'), { recursive: true });
+  writeFileSync(join(repo, '.claude', 'commands', 'breves-verify.md'), '---\ndescription: P1\n---\n\nCorps V.');
+  writeFileSync(join(repo, '.claude', 'commands', 'breves-archive.md'), '---\ndescription: P3\n---\n\nCorps A.');
+  return repo;
+}
+const depsFor = (repo) => ({
+  repoDir: repo,
+  readdir: (p) => readdirSync(p),
+  readFile: (p) => readFileSync(p, 'utf8'),
+  writeFile: (p, t) => writeFileSync(p, t, 'utf8'),
+});
+
+test('getCommands: liste triée, name = filename', () => {
+  const deps = depsFor(repoWithCommands());
+  const cmds = getCommands(deps);
+  assert.equal(cmds.length, 2);
+  assert.equal(cmds[0].name, 'breves-archive'); // trié alpha
+  assert.equal(cmds[0].description, 'P3');
+  assert.equal(cmds[1].name, 'breves-verify');
+  assert.equal(cmds[1].body, 'Corps V.');
+});
+
+test('getCommands: dossier absent → []', () => {
+  const deps = depsFor(mkdtempSync(join(tmpdir(), 'empty-')));
+  assert.deepEqual(getCommands(deps), []);
+});
+
+test('saveCommand: refuse corps vide, écrit sinon, name figé', () => {
+  const deps = depsFor(repoWithCommands());
+  assert.equal(saveCommand(deps, 'breves-verify', { description: 'D', body: '' }).ok, false);
+  const r = saveCommand(deps, 'breves-verify', { description: 'D', body: 'Nouveau corps.' });
+  assert.equal(r.ok, true);
+  const c = getCommands(deps).find((x) => x.name === 'breves-verify');
+  assert.equal(c.body, 'Nouveau corps.');
+  assert.equal(c.description, 'D');
 });
 
 test('applyConfig mute les champs fournis et recompute wikiMcp depuis bbDir', () => {
