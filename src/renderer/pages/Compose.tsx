@@ -4,6 +4,7 @@ import type { VerifyOutput } from '@shared/schemas/outputs';
 import { Text } from '@renderer/components/ui/Text';
 import { Pill } from '@renderer/components/ui/Pill';
 import { Button } from '@renderer/components/ui/Button';
+import { Textarea } from '@renderer/components/ui/Textarea';
 
 export function Compose() {
   const [raw, setRaw] = useState('');
@@ -55,7 +56,7 @@ export function Compose() {
         <Text tone="muted" as="p" style={{ font: '400 13px/1.5 var(--body)', margin: '0 0 16px' }}>
           Un sujet par ligne. Pas besoin de dates ni de liens : chaque enquêteur les trouve seul.
         </Text>
-        <textarea
+        <Textarea
           spellCheck={false}
           value={raw}
           onChange={(e) => setRaw(e.target.value)}

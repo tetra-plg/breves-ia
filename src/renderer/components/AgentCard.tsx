@@ -5,6 +5,7 @@ import type { AgentEdits } from '@main/engine';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Button } from '@renderer/components/ui/Button';
 import { Card } from '@renderer/components/ui/Card';
+import { Textarea } from '@renderer/components/ui/Textarea';
 
 const MODELES: [string, string][] = [['', 'Hériter'], ['opus', 'Opus'], ['sonnet', 'Sonnet'], ['haiku', 'Haiku']];
 const MODES = ['off', 'ciblé', 'toujours'];
@@ -75,7 +76,7 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
         style={{ width: '100%', padding: 8, border: '1px solid var(--line)', borderRadius: 'var(--radiusSm)', background: 'var(--panel)', color: 'var(--text)', font: '400 12px var(--mono)', marginBottom: 10 }}
       />
       <Eyebrow style={{ marginBottom: 4 }}>Prompt système</Eyebrow>
-      <textarea spellCheck={false} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} style={{ minHeight: 160, font: '400 12px/1.55 var(--mono)' }} />
+      <Textarea spellCheck={false} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} style={{ minHeight: 160, font: '400 12px/1.55 var(--mono)' }} />
       <Button variant="primary" style={{ marginTop: 10 }} onClick={save}>
         Enregistrer
       </Button>

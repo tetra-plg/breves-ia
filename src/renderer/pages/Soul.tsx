@@ -6,6 +6,7 @@ import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
 import { Card } from '@renderer/components/ui/Card';
+import { Textarea } from '@renderer/components/ui/Textarea';
 
 const SOUL_FIELDS: { key: keyof SoulForm; label: string; mono: boolean; minHeight: number }[] = [
   { key: 'quiParle', label: '1 · Qui parle', mono: false, minHeight: 70 },
@@ -81,7 +82,7 @@ export function Soul() {
             <Eyebrow style={{ margin: '14px 0 5px' }}>
               {field.label}
             </Eyebrow>
-            <textarea
+            <Textarea
               spellCheck={false}
               value={soulForm[field.key]}
               onChange={(e) => setSoulField(field.key, e.target.value)}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
+import { Textarea } from '@renderer/components/ui/Textarea';
 
 interface CorrectModalProps {
   initialWantSoulLesson: boolean;
@@ -18,7 +19,7 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
         <Text tone="muted" as="p" style={{ font: '400 12.5px var(--body)', margin: '0 0 14px' }}>
           Dis ce qui ne va pas : la commande ajuste les brèves.
         </Text>
-        <textarea
+        <Textarea
           spellCheck={false}
           value={text}
           onChange={(e) => setText(e.target.value)}
