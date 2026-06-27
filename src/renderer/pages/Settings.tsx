@@ -9,7 +9,7 @@ import { PathField } from '@renderer/components/PathField';
 type Kind = 'directory' | 'file';
 const FIELDS: { key: SettingKey; label: string; kind: Kind }[] = [
   { key: 'bbDir', label: 'BoilingBrain (dossier)', kind: 'directory' },
-  { key: 'repoDir', label: 'Repo SOUL / agents (dossier)', kind: 'directory' },
+  { key: 'repoDir', label: 'Repo Brèves', kind: 'directory' },
   { key: 'claudeBin', label: 'Binaire claude (fichier)', kind: 'file' },
 ];
 

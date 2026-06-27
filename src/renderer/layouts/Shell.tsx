@@ -54,6 +54,9 @@ export function Shell({ children }: ShellProps) {
         <Button variant="icon" title="Agents" onClick={() => go('goAgents')}>
           ⚙
         </Button>
+        <Button variant="icon" title="Commandes" onClick={() => go('goCommands')}>
+          ⌘
+        </Button>
         <Button variant="icon" title="Réglages" onClick={() => go('goSettings')}>
           ⛭
         </Button>
