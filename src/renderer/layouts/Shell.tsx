@@ -12,6 +12,7 @@ interface ShellProps {
 export function Shell({ children }: ShellProps) {
   const view = useAppStore((s) => s.view);
   const toast = useAppStore((s) => s.toast);
+  const clearToast = useAppStore((s) => s.clearToast);
   const go = useAppStore((s) => s.go);
   const setView = useAppStore((s) => s.setView);
   const toggleTheme = useAppStore((s) => s.toggleTheme);
@@ -65,7 +66,7 @@ export function Shell({ children }: ShellProps) {
 
       <div className="content">{children}</div>
 
-      <Toast message={toast} />
+      <Toast message={toast} onClose={clearToast} />
     </div>
   );
 }

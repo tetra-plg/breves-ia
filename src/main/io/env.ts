@@ -10,6 +10,7 @@ export interface WikiMcp {
 export interface EngineConfig {
   bbDir: string;
   repoDir: string;
+  claudeBin: string;
   wikiMcp: WikiMcp;
 }
 
@@ -17,8 +18,12 @@ export function loadEngineConfig(env: NodeJS.ProcessEnv = process.env): EngineCo
   const bbDir = env.BREVES_BB_DIR || '/Users/pleguern/Workspace/BoilingBrain';
   return {
     bbDir,
-    // import.meta.url indisponible dans le bundle CJS du main → cwd (racine du repo en dev/CLI/Forge)
-    repoDir: env.BREVES_REPO_DIR || process.cwd(),
+    // Défaut absolu en dur (symétrique de bbDir) : en app packagée, process.cwd()
+    // vaut '/' → SOUL/agents introuvables. Surcharge possible via BREVES_REPO_DIR.
+    repoDir: env.BREVES_REPO_DIR || '/Users/pleguern/Workspace/breves-ia',
+    // Binaire natif Claude Code que le SDK exécute. Non bundlé (216 Mo) : on pointe
+    // le claude installé. En app packagée, PATH est minimal → chemin absolu requis.
+    claudeBin: env.BREVES_CLAUDE_BIN || '/Users/pleguern/.local/bin/claude',
     wikiMcp: {
       type: 'stdio',
       command: env.BREVES_WIKI_PY || '/Users/pleguern/.local/pipx/venvs/fastmcp/bin/python',

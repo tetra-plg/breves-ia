@@ -37,10 +37,29 @@ const VALIDATORS: Record<string, (obj: unknown) => { ok: true; value: unknown } 
 };
 
 let cachedQuery: QueryFn | null = null;
+
+// Résout le spécifieur d'import du SDK. En app packagée, node_modules est absent
+// (le plugin Forge-Vite le supprime) et le SDK est livré via extraResource dans
+// Contents/Resources/claude-agent-sdk → on l'importe par chemin absolu (file://).
+// En dev/CLI/tests, résolution normale par nom de package depuis node_modules.
+async function resolveSdkSpecifier(): Promise<string> {
+  try {
+    const { app } = await import('electron');
+    if (app.isPackaged) {
+      const { pathToFileURL } = await import('node:url');
+      const { join } = await import('node:path');
+      return pathToFileURL(join(process.resourcesPath, 'claude-agent-sdk', 'sdk.mjs')).href;
+    }
+  } catch {
+    // Hors contexte Electron (tests, breves-cli via tsx) → nom de package.
+  }
+  return '@anthropic-ai/claude-agent-sdk';
+}
+
 // Chargement paresseux du SDK (ESM) depuis le main CJS : import() dynamique uniquement en prod.
 async function loadSdkQuery(): Promise<QueryFn> {
   if (!cachedQuery) {
-    const sdk = (await import('@anthropic-ai/claude-agent-sdk')) as { query: QueryFn };
+    const sdk = (await import(await resolveSdkSpecifier())) as { query: QueryFn };
     cachedQuery = sdk.query;
   }
   return cachedQuery;
@@ -61,6 +80,7 @@ export interface RunSkillArgs {
   skill: string;
   inputs: unknown;
   bbDir: string;
+  pathToClaudeCodeExecutable?: string;
   onEvent?: (ev: StreamEvent) => void;
   query?: QueryFn;
   mcpServers?: Record<string, unknown>;
@@ -71,6 +91,7 @@ export async function runSkill({
   skill,
   inputs,
   bbDir,
+  pathToClaudeCodeExecutable,
   onEvent = () => {},
   query,
   mcpServers,
@@ -94,6 +115,7 @@ export async function runSkill({
     permissionMode: 'bypassPermissions',
     allowDangerouslySkipPermissions: true,
   };
+  if (pathToClaudeCodeExecutable) options.pathToClaudeCodeExecutable = pathToClaudeCodeExecutable;
   if (mcpServers) options.mcpServers = mcpServers;
   if (agents) options.agents = agents;
   try {
@@ -131,6 +153,7 @@ export async function runSkill({
 export interface RunRawArgs {
   prompt: string;
   cwd: string;
+  pathToClaudeCodeExecutable?: string;
   onEvent?: (ev: StreamEvent) => void;
   query?: QueryFn;
   mcpServers?: Record<string, unknown>;
@@ -140,6 +163,7 @@ export interface RunRawArgs {
 export async function runRaw({
   prompt,
   cwd,
+  pathToClaudeCodeExecutable,
   onEvent = () => {},
   query,
   mcpServers,
@@ -151,6 +175,7 @@ export async function runRaw({
     permissionMode: 'bypassPermissions',
     allowDangerouslySkipPermissions: true,
   };
+  if (pathToClaudeCodeExecutable) options.pathToClaudeCodeExecutable = pathToClaudeCodeExecutable;
   if (mcpServers) options.mcpServers = mcpServers;
   if (agents) options.agents = agents;
   let text = '';

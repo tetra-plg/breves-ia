@@ -24,6 +24,7 @@ const SOUL_PARTS = ['.claude', 'breves-ia', 'SOUL.md'];
 export interface EngineDeps {
   bbDir: string;
   repoDir: string;
+  claudeBin: string;
   wikiMcp?: WikiMcp;
   runSkill: typeof realRunSkill;
   runRaw: typeof realRunRaw;
@@ -35,10 +36,11 @@ export interface EngineDeps {
 }
 
 export function defaultDeps(env: NodeJS.ProcessEnv = process.env): EngineDeps {
-  const { bbDir, repoDir, wikiMcp } = loadEngineConfig(env);
+  const { bbDir, repoDir, claudeBin, wikiMcp } = loadEngineConfig(env);
   return {
     bbDir,
     repoDir,
+    claudeBin,
     wikiMcp,
     runSkill: realRunSkill,
     runRaw: realRunRaw,
@@ -136,6 +138,7 @@ export async function dispatch({ skill, inputs, onEvent }: DispatchArgs, deps: E
     skill,
     inputs: finalInputs,
     bbDir: deps.repoDir,
+    pathToClaudeCodeExecutable: deps.claudeBin,
     mcpServers: deps.wikiMcp ? { 'boiling-brain-wiki': deps.wikiMcp } : undefined,
     agents: Object.keys(defs).length ? defs : undefined,
     onEvent,
@@ -220,6 +223,7 @@ export async function archiveAndIngest(
   const ingest = await deps.runRaw({
     prompt: '/ingest',
     cwd: deps.bbDir,
+    pathToClaudeCodeExecutable: deps.claudeBin,
     mcpServers: deps.wikiMcp ? { 'boiling-brain-wiki': deps.wikiMcp } : undefined,
     onEvent,
   });
