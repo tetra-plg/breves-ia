@@ -4,6 +4,7 @@ import type { Agent } from '@domain/agents';
 import type { AgentEdits } from '@main/engine';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 const MODELES: [string, string][] = [['', 'Hériter'], ['opus', 'Opus'], ['sonnet', 'Sonnet'], ['haiku', 'Haiku']];
 const MODES = ['off', 'ciblé', 'toujours'];
@@ -43,7 +44,7 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
   }
 
   return (
-    <div className="card">
+    <Card>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
         <span style={{ font: '600 14px var(--display)' }}>{agent.name}</span>
         <label style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, font: '500 11px var(--body)', color: 'var(--muted)' }}>
@@ -78,6 +79,6 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
       <Button variant="primary" style={{ marginTop: 10 }} onClick={save}>
         Enregistrer
       </Button>
-    </div>
+    </Card>
   );
 }

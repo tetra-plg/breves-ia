@@ -21,7 +21,6 @@
 .pad{padding:18px 18px 22px}
 
 /* cartes & blocs génériques */
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px}
 .row{display:flex;gap:9px}
 
 /* rendu stylisé des éditions (Direction A) */

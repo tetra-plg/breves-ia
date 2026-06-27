@@ -6,6 +6,7 @@ import { ArchiveStep } from '@renderer/components/ArchiveStep';
 import type { ArchiveOutput } from '@shared/schemas/outputs';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 export function Archived() {
   const archiveValue = useAppStore((s) => s.archiveValue);
@@ -85,13 +86,13 @@ export function Archived() {
             <Text tone="muted" as="p" style={{ font: '400 13px var(--body)', margin: '0 0 20px' }}>
               Tout est rangé et relié dans ton wiki personnel.
             </Text>
-            <div className="card" style={{ padding: 0, textAlign: 'left', overflow: 'hidden' }}>
+            <Card style={{ padding: 0, textAlign: 'left', overflow: 'hidden' }}>
               <div>
                 {(archiveValue.archiveSteps ?? []).map((s, i) => (
                   <ArchiveStep key={i} step={s} />
                 ))}
               </div>
-            </div>
+            </Card>
             <Button variant="primary" style={{ marginTop: 18 }} onClick={() => void copyNewsletter()}>
               Copier les brèves (prêt à coller)
             </Button>

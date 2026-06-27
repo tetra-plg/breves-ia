@@ -1,5 +1,6 @@
 import type { RunStatus as RunStatusModel } from '@renderer/store/app.store';
 import { Spinner } from './ui/Spinner';
+import { Card } from './ui/Card';
 
 interface RunStatusProps {
   status: RunStatusModel;
@@ -8,8 +9,7 @@ interface RunStatusProps {
 export function RunStatus({ status }: RunStatusProps) {
   if (!status.active) return null;
   return (
-    <div
-      className="card"
+    <Card
       style={{
         margin: '0 0 14px',
         display: 'flex',
@@ -36,6 +36,6 @@ export function RunStatus({ status }: RunStatusProps) {
           {status.activity}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

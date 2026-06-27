@@ -5,6 +5,7 @@ import { EchantillonCard } from '@renderer/components/EchantillonCard';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 const SOUL_FIELDS: { key: keyof SoulForm; label: string; mono: boolean; minHeight: number }[] = [
   { key: 'quiParle', label: '1 · Qui parle', mono: false, minHeight: 70 },
@@ -122,10 +123,10 @@ export function Soul() {
             <Text tone="faint" as="div">Aucune leçon enregistrée.</Text>
           ) : (
             soulJournal.map((l, i) => (
-              <div key={i} className="card">
+              <Card key={i}>
                 <div style={{ font: '500 10.5px var(--mono)', color: 'var(--accent)', marginBottom: 5 }}>{l.date}</div>
                 <div style={{ font: '400 12.5px/1.5 var(--body)' }}>{l.texte}</div>
-              </div>
+              </Card>
             ))
           )}
         </div>

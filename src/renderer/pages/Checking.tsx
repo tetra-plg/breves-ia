@@ -4,6 +4,7 @@ import { EnqCard } from '@renderer/components/EnqCard';
 import { RunStatus } from '@renderer/components/RunStatus';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 export function Checking() {
   const cards = useAppStore((s) => s.cards);
@@ -38,7 +39,7 @@ export function Checking() {
           ))}
         </div>
         {sum && (
-          <div className="card" style={{ marginTop: 16, background: 'var(--accentSoft)', borderColor: 'var(--accent)' }}>
+          <Card style={{ marginTop: 16, background: 'var(--accentSoft)', borderColor: 'var(--accent)' }}>
             <div style={{ font: '600 14px var(--display)' }}>
               {sum.verifies} vérifiés · {sum.corriges} corrigés · {sum.nuances} nuancés
             </div>
@@ -48,7 +49,7 @@ export function Checking() {
             <Button variant="primary" onClick={() => go('toEditor')}>
               Rédiger les brèves →
             </Button>
-          </div>
+          </Card>
         )}
       </div>
     </section>

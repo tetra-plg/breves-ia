@@ -5,6 +5,7 @@ import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Pill } from '@renderer/components/ui/Pill';
 import { StatusDot } from '@renderer/components/ui/StatusDot';
+import { Card } from '@renderer/components/ui/Card';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -65,14 +66,14 @@ export function Drawer({ topic }: DrawerProps) {
       <Eyebrow style={{ marginBottom: 10 }}>
         Source retenue
       </Eyebrow>
-      <div className="card" style={{ borderRadius: 'var(--radiusSm)', marginBottom: 18 }}>
+      <Card style={{ borderRadius: 'var(--radiusSm)', marginBottom: 18 }}>
         <div style={{ font: '600 13px var(--body)' }}>{t.source ?? ''}</div>
         <div
           style={{ font: '400 11px var(--mono)', color: 'var(--accent)', wordBreak: 'break-all', marginTop: 5 }}
         >
           {t.url_citee ?? ''}
         </div>
-      </div>
+      </Card>
       <Eyebrow style={{ marginBottom: 10 }}>
         Extrait (clipping)
       </Eyebrow>

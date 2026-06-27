@@ -1,6 +1,7 @@
 import { inlineMd, dateLong } from '@domain/format';
 import type { Echantillon } from '@domain/soul';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 interface EchantillonCardProps {
   echantillon: Echantillon;
@@ -9,7 +10,7 @@ interface EchantillonCardProps {
 
 export function EchantillonCard({ echantillon, onRemove }: EchantillonCardProps) {
   return (
-    <div className="card">
+    <Card>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
         <span style={{ font: '500 10.5px var(--mono)', color: 'var(--accent)' }}>
           {dateLong(echantillon.date)}
@@ -20,6 +21,6 @@ export function EchantillonCard({ echantillon, onRemove }: EchantillonCardProps)
         </Button>
       </div>
       <div style={{ font: '400 12.5px/1.5 var(--body)' }} dangerouslySetInnerHTML={{ __html: inlineMd(echantillon.texte) }} />
-    </div>
+    </Card>
   );
 }

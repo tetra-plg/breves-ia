@@ -10,6 +10,7 @@ import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Pill } from '@renderer/components/ui/Pill';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 export function Editor() {
   const draftValue = useAppStore((s) => s.draftValue);
@@ -77,9 +78,9 @@ export function Editor() {
         {editorMode === 'preview' ? (
           <div dangerouslySetInnerHTML={{ __html: renderEditionHtml(teamsText) }} />
         ) : (
-          <textarea
+          <Card<'textarea'>
+            as="textarea"
             spellCheck={false}
-            className="card"
             style={{ width: '100%', minHeight: 300, padding: '14px 15px', font: '400 13px/1.6 var(--mono)', color: 'var(--text)', background: 'var(--panel)', resize: 'vertical' }}
             value={teamsText}
             onChange={(e) => setTeamsText(e.target.value)}
@@ -93,7 +94,7 @@ export function Editor() {
             Valider &amp; archiver →
           </Button>
         </div>
-        <div className="card" style={{ marginTop: 16 }}>
+        <Card style={{ marginTop: 16 }}>
           <Eyebrow style={{ marginBottom: 11 }}>
             Corrections apportées
           </Eyebrow>
@@ -104,8 +105,8 @@ export function Editor() {
               <Text tone="faint" as="div">Aucune correction.</Text>
             )}
           </div>
-        </div>
-        <div className="card" style={{ marginTop: 12 }}>
+        </Card>
+        <Card style={{ marginTop: 12 }}>
           <Eyebrow style={{ marginBottom: 11 }}>
             Sources &amp; clippings
           </Eyebrow>
@@ -114,7 +115,7 @@ export function Editor() {
               <SourceRow key={i} source={s} />
             ))}
           </div>
-        </div>
+        </Card>
       </div>
       {correctOpen && (
         <CorrectModal

@@ -2,6 +2,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
 import { Text } from '@renderer/components/ui/Text';
+import { Card } from '@renderer/components/ui/Card';
 
 export function EchEditions() {
   const editions = useAppStore((s) => s.dashboard?.editions ?? []);
@@ -24,12 +25,12 @@ export function EchEditions() {
             <Text tone="faint" as="div">Aucune édition archivée.</Text>
           ) : (
             editions.map((ed) => (
-              <button key={ed.file} className="card" style={{ display: 'block', width: '100%', textAlign: 'left' }} onClick={() => pick(ed)}>
+              <Card key={ed.file} as="button" style={{ display: 'block', width: '100%', textAlign: 'left' }} onClick={() => pick(ed)}>
                 <div style={{ font: '600 13px var(--display)' }}>{dateLong(ed.date)}</div>
                 {ed.title && (
                   <div style={{ font: '400 11.5px var(--body)', color: 'var(--muted)', marginTop: 2 }}>{ed.title}</div>
                 )}
-              </button>
+              </Card>
             ))
           )}
         </div>

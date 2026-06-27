@@ -6,6 +6,7 @@ import type { EditionSummary } from '@main/engine';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
@@ -49,7 +50,7 @@ export function Dashboard() {
           <span style={{ fontSize: 18, color: 'var(--accent)' }}>→</span>
         </Button>
 
-        <div className="card" style={{ marginBottom: 18 }}>
+        <Card style={{ marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <Eyebrow style={{ fontSize: 10 }}>
               Dernière édition
@@ -69,7 +70,7 @@ export function Dashboard() {
               <b style={{ color: 'var(--text)' }}>{last ? last.count : 0}</b> sources
             </span>
           </div>
-        </div>
+        </Card>
 
         <Eyebrow style={{ margin: '0 0 9px' }}>
           Éditions récentes
