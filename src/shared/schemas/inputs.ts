@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { ALLOWED_SKILLS } from '@shared/skills';
 
 // chaîne libre courte mono-ligne (anti-injection) : <=280, sans caractère de contrôle
-// (échappements unicode IDENTIQUES à lib/command-inputs.mjs)
 const freeString = z
   .string()
   .max(280)

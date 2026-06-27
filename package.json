@@ -13,7 +13,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "breves": "tsx scripts/breves-cli.ts",
-    "hud": "electron hud/main.mjs",
     "typecheck": "node scripts/typecheck.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",

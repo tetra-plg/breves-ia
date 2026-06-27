@@ -24,7 +24,7 @@ npm install
 ## Lancer l'app
 
 ```bash
-npm run hud
+npm start
 ```
 
 Une fenêtre compagnon (400×760) s'ouvre. Parcours : Dashboard → Nouvelle édition
@@ -33,9 +33,9 @@ Une fenêtre compagnon (400×760) s'ouvre. Parcours : Dashboard → Nouvelle éd
 ## Moteur en ligne de commande (sans UI)
 
 ```bash
-node scripts/breves-cli.mjs verify "GLM 5.2, modèle chinois open source 753B"
-node scripts/breves-cli.mjs draft  < verify-output.json
-node scripts/breves-cli.mjs archive < draft-output.json   # écrit dans le wiki
+npm run breves verify "GLM 5.2, modèle chinois open source 753B"
+npm run breves draft  < verify-output.json
+npm run breves archive < draft-output.json   # écrit dans le wiki
 ```
 
 ## Tests
