@@ -117,7 +117,27 @@ Réglages transverses (`.storybook/`) :
 - Les **pages applicatives** (Dashboard, Compose…) ne sont PAS mises en Storybook
   (dépendances store/IPC Electron) — hors-scope.
 
-### 4. Plan d'adoption (migration complète, jamais d'état cassé)
+### 4. Audit de couverture (Phase 0, avant extraction)
+
+Avant de toucher aux primitives, auditer le catalogue existant pour garantir
+complétude et cadrage — et en faire un invariant vérifié, pas un acquis :
+
+- **Complétude** : chaque composant React de `src/renderer/components/*.tsx`
+  (hors `*.stories.tsx`) a une story associée. Aujourd'hui 13/13 ; la vérif doit
+  rester verte à chaque ajout de composant.
+- **Cadrage** : chaque story couvre les **états/variants pertinents** du composant,
+  pas seulement un cas « happy path » (ex. `BreveCard` → `Ajoutable` ET `Pleine` ;
+  un composant à états a une story par état significatif). Lister les manques et
+  les compléter.
+- **Conformité taxonomie** : titres rangés sous `Composants/…`, `tags: ['autodocs']`
+  présent, `argTypes` cohérents avec les props.
+- **Filet anti-régression** : `build-storybook` liste bien toutes les entrées
+  attendues (script ou test léger qui compare composants ↔ stories).
+
+Cette phase produit la liste des stories à enrichir, traitée avant (ou en parallèle
+de) l'extraction des primitives.
+
+### 5. Plan d'adoption (migration complète, jamais d'état cassé)
 
 Pour chaque primitive :
 
@@ -136,8 +156,10 @@ En fin de passe, `app.css` ne contient plus que les styles **spécifiques au
 domaine** (`.ed-*`, layouts `.win/.head/.content`, dashboard `.edition/.cta`…). La
 frontière « primitive réutilisable » vs « style applicatif » devient nette.
 
-### 5. Vérification
+### 6. Vérification
 
+- **Couverture catalogue** : tout composant de `components/` a une story (invariant
+  Phase 0) ; aucune story orpheline ; états/variants pertinents présents.
 - **TypeScript** : `tsc --noEmit` vert.
 - **Tests** : `vitest run` reste vert ; ajout de tests de rendu légers sur les
   primitives à variants (Button, Badge, Alert).
@@ -156,6 +178,8 @@ frontière « primitive réutilisable » vs « style applicatif » devient nette
 
 - Storybook avec arbo Fondations / Primitives / Composants, switch thème,
   autodocs et contrôles sur tout.
+- Couverture catalogue vérifiée : chaque composant a une story bien cadrée
+  (états/variants pertinents), invariant outillé contre la régression.
 - 12 primitives React + CSS Modules, branchées sur `tokens.css`, utilisées par
   l'app (plus aucun consommateur des classes legacy correspondantes).
 - `app.css` réduit à ses styles de domaine.
