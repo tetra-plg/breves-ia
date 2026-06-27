@@ -1,5 +1,6 @@
 import type { Card } from '@domain/checking';
-import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
+import { niveauColor, niveauLabel, niveauTone } from '@renderer/components/niveau';
+import { Alert } from '@renderer/components/ui/Alert';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Badge } from '@renderer/components/ui/Badge';
 import { StatusDot } from '@renderer/components/ui/StatusDot';
@@ -46,7 +47,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
             <span style={{ font: '500 11px var(--mono)', color: 'var(--muted)' }}>{card.source ?? ''}</span>
           </div>
           {card.alerte && (
-            <div className="alert" style={{ background: niveauSoft(card.alerte.niveau) }}>
+            <Alert tone={niveauTone(card.alerte.niveau)}>
               <span
                 style={{
                   font: '600 10px var(--body)',
@@ -58,7 +59,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
                 {niveauLabel(card.alerte.niveau)}
               </span>
               <span style={{ font: '400 11.5px/1.4 var(--body)', color: 'var(--text)' }}>{card.alerte.texte}</span>
-            </div>
+            </Alert>
           )}
         </div>
       )}

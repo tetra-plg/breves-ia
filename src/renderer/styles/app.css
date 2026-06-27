@@ -52,7 +52,6 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
 /* checking */
 .enq{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
 .enq-step{display:flex;align-items:center;gap:8px;font:400 12.5px var(--body)}
-.alert{display:flex;flex-direction:column;gap:3px;border-radius:var(--radiusSm);padding:8px 10px}
 
 /* editor */
 .editable{padding:18px;font:400 13.5px/1.68 var(--body);color:var(--text)}
