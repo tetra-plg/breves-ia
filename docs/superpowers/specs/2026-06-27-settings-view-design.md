@@ -91,7 +91,8 @@ Câblage : `IPC` ([ipc.ts](../../../src/shared/types/ipc.ts)), `BridgeApi` ([api
 ### Renderer
 
 - **Navigation** : ajouter `'settings'` à `VIEWS`, action `goSettings: 'settings'`, cas `viewTitle('settings') = 'Réglages'`.
-- **Page** `src/renderer/pages/Settings.tsx` : 3 lignes (label · champ texte · « Parcourir… » · pastille).
+- **Design system** : tout nouveau composant a sa story (`X.tsx` + `.module.css` + `.stories.tsx`, CSF3). On ajoute une primitive `Input` (il n'en existe pas), on étend `StatusDot` d'un état `error` (rouge) pour la pastille, et un composite présentationnel `PathField` (label · pastille · `Input` · bouton « Parcourir… »). Pas de style inline ; tokens de `styles/tokens.css`.
+- **Page** `src/renderer/pages/Settings.tsx` : compose `PathField` ×3 + bouton « Enregistrer ».
   Charge via `getSettings()`. À chaque changement (saisie ou pick) → `validatePath` pour la pastille.
   Bouton **« Enregistrer »** → `saveSettings` → toast + rafraîchit dashboard/soul/agents. Champs `source:'env'` désactivés.
 - **Store** ([app.store.ts](../../../src/renderer/store/app.store.ts)) : intégrer la vue `settings` au routage de page.
