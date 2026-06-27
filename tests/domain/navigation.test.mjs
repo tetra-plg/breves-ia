@@ -42,3 +42,12 @@ test('viewTitle(settings) = Réglages', () => {
 test('VIEWS contient settings', () => {
   assert.ok((VIEWS).includes('settings'));
 });
+test('goCommands → commands', () => {
+  assert.equal(nextView('dashboard', 'goCommands'), 'commands');
+});
+test('viewTitle(commands) = Commandes', () => {
+  assert.equal(viewTitle('commands'), 'Commandes');
+});
+test('VIEWS contient commands', () => {
+  assert.ok(VIEWS.includes('commands'));
+});
