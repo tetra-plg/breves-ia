@@ -14,6 +14,7 @@ import { EchBreves } from '@renderer/pages/EchBreves';
 import { Agents } from '@renderer/pages/Agents';
 import { History } from '@renderer/pages/History';
 import { Reader } from '@renderer/pages/Reader';
+import { Settings } from '@renderer/pages/Settings';
 import { useCommandStream } from '@renderer/hooks/useCommandStream';
 
 // Registry des vues. Les vues non encore portées tombent sur Placeholder (Phases 3b-2/3/4).
@@ -30,6 +31,7 @@ const VIEWS: Record<string, ComponentType> = {
   agents: Agents,
   history: History,
   reader: Reader,
+  settings: Settings,
 };
 
 function Placeholder() {
