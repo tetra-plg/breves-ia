@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { loadEngineConfig, parseEnv, loadEnvFile } from '@main/io/env';
+import { loadEngineConfig, parseEnv, loadEnvFile, resolveSetting, buildWikiMcp } from '@main/io/env';
 
 test('bbDir par défaut', () => {
   assert.equal(loadEngineConfig({}).bbDir, '/Users/pleguern/Workspace/BoilingBrain');
@@ -36,4 +36,22 @@ test('loadEnvFile n\'écrase pas une variable déjà définie', () => {
   const applied = loadEnvFile('/chemin/inexistant/.env', env);
   assert.deepEqual(applied, {}); // fichier absent -> no-op
   assert.equal(env.A, 'déjà');
+});
+
+test('resolveSetting: env > file > défaut', () => {
+  assert.equal(resolveSetting('bbDir', { BREVES_BB_DIR: '/env' }, { bbDir: '/file' }).source, 'env');
+  assert.equal(resolveSetting('bbDir', { BREVES_BB_DIR: '/env' }, { bbDir: '/file' }).value, '/env');
+  assert.equal(resolveSetting('bbDir', {}, { bbDir: '/file' }).source, 'file');
+  assert.equal(resolveSetting('bbDir', {}, {}).source, 'default');
+});
+
+test('loadEngineConfig applique userConfig', () => {
+  const c = loadEngineConfig({}, { repoDir: '/my/repo', claudeBin: '/my/claude' });
+  assert.equal(c.repoDir, '/my/repo');
+  assert.equal(c.claudeBin, '/my/claude');
+});
+
+test('buildWikiMcp dérive le script de bbDir', () => {
+  const w = buildWikiMcp({}, '/BB');
+  assert.equal(w.args[0], '/BB/scripts/mcp/mcp-wiki.py');
 });

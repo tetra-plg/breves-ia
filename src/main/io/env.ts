@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { UserConfig } from '@main/io/config';
 
 export interface WikiMcp {
   type: 'stdio';
@@ -14,22 +15,45 @@ export interface EngineConfig {
   wikiMcp: WikiMcp;
 }
 
-export function loadEngineConfig(env: NodeJS.ProcessEnv = process.env): EngineConfig {
-  const bbDir = env.BREVES_BB_DIR || '/Users/pleguern/Workspace/BoilingBrain';
+export type SettingKey = 'bbDir' | 'repoDir' | 'claudeBin';
+
+export const DEFAULTS: Record<SettingKey, string> = {
+  bbDir: '/Users/pleguern/Workspace/BoilingBrain',
+  repoDir: '/Users/pleguern/Workspace/breves-ia',
+  claudeBin: '/Users/pleguern/.local/bin/claude',
+};
+
+export const ENV_KEYS: Record<SettingKey, string> = {
+  bbDir: 'BREVES_BB_DIR',
+  repoDir: 'BREVES_REPO_DIR',
+  claudeBin: 'BREVES_CLAUDE_BIN',
+};
+
+export function resolveSetting(
+  key: SettingKey,
+  env: NodeJS.ProcessEnv,
+  userConfig: UserConfig,
+): { value: string; source: 'env' | 'file' | 'default' } {
+  const envVal = env[ENV_KEYS[key]];
+  if (envVal) return { value: envVal, source: 'env' };
+  const fileVal = userConfig[key];
+  if (fileVal) return { value: fileVal, source: 'file' };
+  return { value: DEFAULTS[key], source: 'default' };
+}
+
+export function buildWikiMcp(env: NodeJS.ProcessEnv, bbDir: string): WikiMcp {
   return {
-    bbDir,
-    // Défaut absolu en dur (symétrique de bbDir) : en app packagée, process.cwd()
-    // vaut '/' → SOUL/agents introuvables. Surcharge possible via BREVES_REPO_DIR.
-    repoDir: env.BREVES_REPO_DIR || '/Users/pleguern/Workspace/breves-ia',
-    // Binaire natif Claude Code que le SDK exécute. Non bundlé (216 Mo) : on pointe
-    // le claude installé. En app packagée, PATH est minimal → chemin absolu requis.
-    claudeBin: env.BREVES_CLAUDE_BIN || '/Users/pleguern/.local/bin/claude',
-    wikiMcp: {
-      type: 'stdio',
-      command: env.BREVES_WIKI_PY || '/Users/pleguern/.local/pipx/venvs/fastmcp/bin/python',
-      args: [env.BREVES_WIKI_SCRIPT || join(bbDir, 'scripts', 'mcp', 'mcp-wiki.py')],
-    },
+    type: 'stdio',
+    command: env.BREVES_WIKI_PY || '/Users/pleguern/.local/pipx/venvs/fastmcp/bin/python',
+    args: [env.BREVES_WIKI_SCRIPT || join(bbDir, 'scripts', 'mcp', 'mcp-wiki.py')],
   };
+}
+
+export function loadEngineConfig(env: NodeJS.ProcessEnv = process.env, userConfig: UserConfig = {}): EngineConfig {
+  const bbDir = resolveSetting('bbDir', env, userConfig).value;
+  const repoDir = resolveSetting('repoDir', env, userConfig).value;
+  const claudeBin = resolveSetting('claudeBin', env, userConfig).value;
+  return { bbDir, repoDir, claudeBin, wikiMcp: buildWikiMcp(env, bbDir) };
 }
 
 // Chargeur .env minimal (sans dépendance). Format : KEY=valeur ; # et lignes vides ignorés ; guillemets optionnels.
