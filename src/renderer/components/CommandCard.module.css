@@ -1,0 +1,5 @@
+/* src/renderer/components/CommandCard.module.css */
+.name{font:600 14px var(--display);margin-bottom:8px}
+.field{margin-bottom:10px}
+.body{min-height:220px;font:400 12px/1.55 var(--mono)}
+.save{margin-top:10px}
