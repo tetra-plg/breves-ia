@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AgentCard } from './AgentCard';
 
-const meta: Meta<typeof AgentCard> = { component: AgentCard, title: 'AgentCard' };
+const meta: Meta<typeof AgentCard> = { component: AgentCard, title: 'Composants/AgentCard' };
 export default meta;
 
 const base = {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { Card } from '@domain/checking';
 import { EnqCard } from './EnqCard';
 
-const meta: Meta<typeof EnqCard> = { component: EnqCard, title: 'EnqCard' };
+const meta: Meta<typeof EnqCard> = { component: EnqCard, title: 'Composants/EnqCard' };
 export default meta;
 
 const base: Card = {

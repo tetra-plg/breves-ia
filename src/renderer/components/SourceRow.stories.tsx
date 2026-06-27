@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SourceRow } from './SourceRow';
 
-const meta: Meta<typeof SourceRow> = { component: SourceRow, title: 'SourceRow' };
+const meta: Meta<typeof SourceRow> = { component: SourceRow, title: 'Composants/SourceRow' };
 export default meta;
 
 export const Directe: StoryObj<typeof SourceRow> = {

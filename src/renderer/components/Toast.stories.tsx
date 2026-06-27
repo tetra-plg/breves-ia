@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Toast } from './Toast';
 
-const meta: Meta<typeof Toast> = { component: Toast, title: 'Toast' };
+const meta: Meta<typeof Toast> = { component: Toast, title: 'Composants/Toast' };
 export default meta;
 
 export const Visible: StoryObj<typeof Toast> = { args: { message: 'Brèves copiées' } };

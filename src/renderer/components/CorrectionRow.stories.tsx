@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CorrectionRow } from './CorrectionRow';
 
-const meta: Meta<typeof CorrectionRow> = { component: CorrectionRow, title: 'CorrectionRow' };
+const meta: Meta<typeof CorrectionRow> = { component: CorrectionRow, title: 'Composants/CorrectionRow' };
 export default meta;
 
 export const Corrige: StoryObj<typeof CorrectionRow> = {
