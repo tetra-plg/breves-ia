@@ -71,7 +71,5 @@ textarea{width:100%;border:1px solid var(--line);resize:vertical;padding:14px 15
 .sheet{width:400px;max-width:94vw;height:760px;max-height:96vh;background:var(--win);border:1px solid var(--line);border-radius:16px;overflow:auto;box-shadow:var(--shadow)}
 .modal{width:360px;max-width:100%;background:var(--win);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
 .toast{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--win);font:500 12.5px var(--body);padding:11px 18px;border-radius:var(--radiusSm);box-shadow:var(--shadow);z-index:60;max-width:90vw;text-align:center}
-/* spinner de suivi */
-.spinner{width:15px;height:15px;flex:none;border-radius:50%;border:2px solid var(--accent);border-top-color:transparent;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 button:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}

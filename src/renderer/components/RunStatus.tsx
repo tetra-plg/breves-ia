@@ -1,4 +1,5 @@
 import type { RunStatus as RunStatusModel } from '@renderer/store/app.store';
+import { Spinner } from './ui/Spinner';
 
 interface RunStatusProps {
   status: RunStatusModel;
@@ -18,7 +19,7 @@ export function RunStatus({ status }: RunStatusProps) {
         borderColor: 'var(--accent)',
       }}
     >
-      <span className="spinner" aria-hidden="true" />
+      <Spinner />
       <div style={{ minWidth: 0, flex: 1 }}>
         <div style={{ font: '600 12.5px var(--display)' }}>
           {status.title} · {status.clock}
