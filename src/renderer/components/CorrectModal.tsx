@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Text } from '@renderer/components/ui/Text';
 import { Button } from '@renderer/components/ui/Button';
 import { Textarea } from '@renderer/components/ui/Textarea';
+import { Overlay, Modal } from '@renderer/components/ui/Modal';
 
 interface CorrectModalProps {
   initialWantSoulLesson: boolean;
@@ -13,8 +14,8 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
   const [text, setText] = useState('');
   const [want, setWant] = useState(initialWantSoulLesson);
   return (
-    <div className="overlay" style={{ zIndex: 50, padding: 16 }}>
-      <div className="modal">
+    <Overlay style={{ zIndex: 50, padding: 16 }}>
+      <Modal>
         <h2 style={{ font: '600 17px var(--display)', margin: '0 0 4px' }}>Demander une correction</h2>
         <Text tone="muted" as="p" style={{ font: '400 12.5px var(--body)', margin: '0 0 14px' }}>
           Dis ce qui ne va pas : la commande ajuste les brèves.
@@ -38,7 +39,7 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
             Envoyer
           </Button>
         </div>
-      </div>
-    </div>
+      </Modal>
+    </Overlay>
   );
 }
