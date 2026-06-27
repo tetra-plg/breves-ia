@@ -4,6 +4,7 @@ import type { VerifyOutput } from '@shared/schemas/outputs';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Pill } from '@renderer/components/ui/Pill';
+import { StatusDot } from '@renderer/components/ui/StatusDot';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -56,7 +57,7 @@ export function Drawer({ topic }: DrawerProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
         {(t.faits ?? []).map((f, i) => (
           <div key={i} style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
-            <span className="dot done">✓</span>
+            <StatusDot state="done" />
             <span style={{ font: '400 13px/1.5 var(--body)' }}>{f}</span>
           </div>
         ))}

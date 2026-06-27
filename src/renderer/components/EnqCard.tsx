@@ -2,6 +2,7 @@ import type { Card } from '@domain/checking';
 import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Badge } from '@renderer/components/ui/Badge';
+import { StatusDot } from '@renderer/components/ui/StatusDot';
 
 interface EnqCardProps {
   card: Card;
@@ -31,9 +32,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {card.steps.map((s) => (
           <div key={s.name} className="enq-step">
-            <span className={s.state === 'done' ? 'dot done' : s.state === 'active' ? 'dot active' : 'dot todo'}>
-              {s.state === 'done' ? '✓' : ''}
-            </span>
+            <StatusDot state={s.state} />
             <span style={{ color: s.state === 'todo' ? 'var(--faint)' : 'var(--text)' }}>
               {s.name.charAt(0).toUpperCase() + s.name.slice(1)}
             </span>
