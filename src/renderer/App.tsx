@@ -12,6 +12,7 @@ import { Soul } from '@renderer/pages/Soul';
 import { EchEditions } from '@renderer/pages/EchEditions';
 import { EchBreves } from '@renderer/pages/EchBreves';
 import { Agents } from '@renderer/pages/Agents';
+import { Commands } from '@renderer/pages/Commands';
 import { History } from '@renderer/pages/History';
 import { Reader } from '@renderer/pages/Reader';
 import { Settings } from '@renderer/pages/Settings';
@@ -29,6 +30,7 @@ const VIEWS: Record<string, ComponentType> = {
   'ech-editions': EchEditions,
   'ech-breves': EchBreves,
   agents: Agents,
+  commands: Commands,
   history: History,
   reader: Reader,
   settings: Settings,
