@@ -1,6 +1,6 @@
 export const VIEWS = [
   'dashboard', 'compose', 'checking', 'editor', 'archived',
-  'soul', 'history', 'agents', 'ech-editions', 'ech-breves',
+  'soul', 'history', 'agents', 'ech-editions', 'ech-breves', 'settings',
 ] as const;
 
 export const FLOW = ['compose', 'checking', 'editor', 'archived'] as const;
@@ -9,7 +9,7 @@ const LABELS = ['Sujets', 'Vérification', 'Rédaction', 'Archivé'];
 
 const ACTIONS: Record<string, string> = {
   goDash: 'dashboard', goCompose: 'compose', goSoul: 'soul', goHist: 'history', goAgents: 'agents',
-  launch: 'checking', toEditor: 'editor', validate: 'archived',
+  launch: 'checking', toEditor: 'editor', validate: 'archived', goSettings: 'settings',
 };
 
 export function nextView(current: string, action: string): string {
@@ -45,5 +45,6 @@ export function viewTitle(view: string): string {
   if (view === 'agents') return 'Agents';
   if (view === 'ech-editions') return 'Choisir une édition';
   if (view === 'ech-breves') return 'Choisir une brève';
+  if (view === 'settings') return 'Réglages';
   return 'Brèves IA';
 }

@@ -1,7 +1,7 @@
 // test/ui-state.test.mjs
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { nextView, stepper, viewTitle, FLOW } from '@domain/navigation';
+import { nextView, stepper, viewTitle, FLOW, VIEWS } from '@domain/navigation';
 
 test('transitions du flux', () => {
   assert.equal(nextView('dashboard', 'goCompose'), 'compose');
@@ -32,4 +32,13 @@ test('viewTitle', () => {
   assert.equal(viewTitle('ech-editions'), 'Choisir une édition');
   assert.equal(viewTitle('ech-breves'), 'Choisir une brève');
   assert.equal(viewTitle('dashboard'), 'Brèves IA');
+});
+test('goSettings → settings', () => {
+  assert.equal(nextView('dashboard', 'goSettings'), 'settings');
+});
+test('viewTitle(settings) = Réglages', () => {
+  assert.equal(viewTitle('settings'), 'Réglages');
+});
+test('VIEWS contient settings', () => {
+  assert.ok((VIEWS).includes('settings'));
 });
