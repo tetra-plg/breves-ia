@@ -1,11 +1,18 @@
-/* ===== Design tokens (direction « Halo », clair + sombre) — repris de design.html tokens() ===== */
 :root{
+  /* ===== Primitifs : surfaces & couleurs ===== */
   --bg:#e7e1d4; --win:#f8f4ec; --panel:#f2ece1; --panel2:#ece5d8;
   --line:rgba(64,52,34,0.12); --text:#2e2a22; --muted:#6f6557; --faint:#a89d8b;
+
+  /* ===== Sémantiques : intentions ===== */
   --accent:oklch(0.52 0.072 46); --accentSoft:oklch(0.91 0.030 62); --onAccent:#faf6ee;
   --good:oklch(0.50 0.085 150); --goodSoft:oklch(0.91 0.045 150);
   --warn:oklch(0.53 0.135 34); --warnSoft:oklch(0.92 0.05 44);
   --nuance:oklch(0.58 0.10 74); --nuanceSoft:oklch(0.91 0.06 82);
+
+  /* ===== Échelle d'espacement (nouveau — travail neuf ; primitives existantes gardent leurs px d'origine pour parité) ===== */
+  --space-1:4px; --space-2:8px; --space-3:11px; --space-4:14px; --space-5:18px; --space-6:22px;
+
+  /* ===== Formes & typo ===== */
   --radius:14px; --radiusSm:10px; --shadow:0 14px 36px rgba(60,48,28,0.10);
   --display:'Hanken Grotesk',system-ui,sans-serif; --body:'Hanken Grotesk',system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
