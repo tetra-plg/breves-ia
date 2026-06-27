@@ -7,8 +7,9 @@ import type { SoulSummary } from '@main/io/soul.io';
 import { listEditions as realListEditions } from '@main/io/editions.io';
 import type { EditionSummary } from '@main/io/editions.io';
 export type { EditionSummary };
-import { loadEngineConfig } from '@main/io/env';
+import { loadEngineConfig, buildWikiMcp } from '@main/io/env';
 import type { WikiMcp } from '@main/io/env';
+import type { UserConfig } from '@main/io/config';
 import {
   parseSoul,
   replaceSoulSections,
@@ -35,8 +36,8 @@ export interface EngineDeps {
   readdir: (p: string) => string[];
 }
 
-export function defaultDeps(env: NodeJS.ProcessEnv = process.env): EngineDeps {
-  const { bbDir, repoDir, claudeBin, wikiMcp } = loadEngineConfig(env);
+export function defaultDeps(env: NodeJS.ProcessEnv = process.env, userConfig: UserConfig = {}): EngineDeps {
+  const { bbDir, repoDir, claudeBin, wikiMcp } = loadEngineConfig(env, userConfig);
   return {
     bbDir,
     repoDir,
@@ -50,6 +51,13 @@ export function defaultDeps(env: NodeJS.ProcessEnv = process.env): EngineDeps {
     writeFile: (p, t) => writeFileSync(p, t, 'utf8'),
     readdir: (p) => readdirSync(p),
   };
+}
+
+export function applyConfig(deps: EngineDeps, patch: UserConfig, env: NodeJS.ProcessEnv = process.env): void {
+  if (patch.bbDir != null) deps.bbDir = patch.bbDir;
+  if (patch.repoDir != null) deps.repoDir = patch.repoDir;
+  if (patch.claudeBin != null) deps.claudeBin = patch.claudeBin;
+  deps.wikiMcp = buildWikiMcp(env, deps.bbDir);
 }
 
 export function loadAgents(deps: EngineDeps): { defs: Record<string, AgentDefinition>; byName: Record<string, Agent> } {

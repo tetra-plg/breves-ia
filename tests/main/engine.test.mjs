@@ -1,7 +1,7 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent } from '@main/engine';
+import { dispatch, getDashboard, readEdition, getSoul, saveSoulSections, saveSoulEchantillons, archiveAndIngest, loadAgents, getAgents, saveAgent, applyConfig } from '@main/engine';
 
 const SOUL_FIXTURE = readFileSync(new URL('../fixtures/SOUL.full.md', import.meta.url), 'utf8');
 
@@ -200,4 +200,16 @@ test("dispatch breves-draft : n'écrase pas un redacteur explicite", async () =>
     runSkill: async (a) => { seen = a; return { ok: true, value: { teamsText: 'x', corrections: [], sources: [], soulLessonProposee: null } }; } };
   await dispatch({ skill: 'breves-draft', inputs: { topics: [], redacteur: 'off' }, onEvent() {} }, deps);
   assert.equal(seen.inputs.redacteur, 'off');
+});
+
+test('applyConfig mute les champs fournis et recompute wikiMcp depuis bbDir', () => {
+  const deps = {
+    bbDir: '/old', repoDir: '/r', claudeBin: '/c',
+    wikiMcp: { type: 'stdio', command: 'py', args: ['/old/scripts/mcp/mcp-wiki.py'] },
+  };
+  applyConfig(deps, { bbDir: '/new', claudeBin: '/newclaude' }, {});
+  assert.equal(deps.bbDir, '/new');
+  assert.equal(deps.claudeBin, '/newclaude');
+  assert.equal(deps.repoDir, '/r'); // non fourni → inchangé
+  assert.equal(deps.wikiMcp.args[0], '/new/scripts/mcp/mcp-wiki.py');
 });
