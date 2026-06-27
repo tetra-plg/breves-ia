@@ -3,6 +3,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import { AgentCard } from '@renderer/components/AgentCard';
 import type { Agent } from '@domain/agents';
 import type { AgentEdits } from '@main/engine';
+import { Text } from '@renderer/components/ui/Text';
 
 export function Agents() {
   const showToast = useAppStore((s) => s.showToast);
@@ -28,9 +29,9 @@ export function Agents() {
       <div className="pad">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {agents === null ? (
-            <div className="faint">Chargement…</div>
+            <Text tone="faint" as="div">Chargement…</Text>
           ) : agents.length === 0 ? (
-            <div className="faint">Aucun agent dans .claude/agents/.</div>
+            <Text tone="faint" as="div">Aucun agent dans .claude/agents/.</Text>
           ) : (
             agents.map((a) => <AgentCard key={a.name} agent={a} onSave={(edits) => void save(a.name, edits)} />)
           )}

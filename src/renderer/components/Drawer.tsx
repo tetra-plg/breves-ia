@@ -1,6 +1,11 @@
 import { dateLong } from '@domain/format';
 import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
 import type { VerifyOutput } from '@shared/schemas/outputs';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
+import { Pill } from '@renderer/components/ui/Pill';
+import { StatusDot } from '@renderer/components/ui/StatusDot';
+import { Card } from '@renderer/components/ui/Card';
 
 type Topic = VerifyOutput['topics'][number];
 
@@ -14,10 +19,10 @@ export function Drawer({ topic }: DrawerProps) {
     <div className="pad">
       <h2 style={{ font: '600 18px/1.3 var(--display)', margin: '0 0 7px' }}>{t.sujet || t.key}</h2>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 18, flexWrap: 'wrap' }}>
-        <span className="pill" style={{ color: 'var(--accent)', background: 'var(--accentSoft)' }}>
+        <Pill style={{ color: 'var(--accent)', background: 'var(--accentSoft)' }}>
           {dateLong(t.date_reelle ?? '')}
-        </span>
-        {t.raw && <span className="faint" style={{ font: '400 11.5px var(--body)' }}>saisi : « {t.raw} »</span>}
+        </Pill>
+        {t.raw && <Text tone="faint" style={{ font: '400 11.5px var(--body)' }}>saisi : « {t.raw} »</Text>}
       </div>
       {t.alerte && (
         <div
@@ -47,31 +52,31 @@ export function Drawer({ topic }: DrawerProps) {
           </div>
         </div>
       )}
-      <div className="eyebrow" style={{ marginBottom: 10 }}>
+      <Eyebrow style={{ marginBottom: 10 }}>
         Faits vérifiés
-      </div>
+      </Eyebrow>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
         {(t.faits ?? []).map((f, i) => (
           <div key={i} style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
-            <span className="dot done">✓</span>
+            <StatusDot state="done" />
             <span style={{ font: '400 13px/1.5 var(--body)' }}>{f}</span>
           </div>
         ))}
       </div>
-      <div className="eyebrow" style={{ marginBottom: 10 }}>
+      <Eyebrow style={{ marginBottom: 10 }}>
         Source retenue
-      </div>
-      <div className="card" style={{ borderRadius: 'var(--radiusSm)', marginBottom: 18 }}>
+      </Eyebrow>
+      <Card style={{ borderRadius: 'var(--radiusSm)', marginBottom: 18 }}>
         <div style={{ font: '600 13px var(--body)' }}>{t.source ?? ''}</div>
         <div
           style={{ font: '400 11px var(--mono)', color: 'var(--accent)', wordBreak: 'break-all', marginTop: 5 }}
         >
           {t.url_citee ?? ''}
         </div>
-      </div>
-      <div className="eyebrow" style={{ marginBottom: 10 }}>
+      </Card>
+      <Eyebrow style={{ marginBottom: 10 }}>
         Extrait (clipping)
-      </div>
+      </Eyebrow>
       <div
         style={{
           background: 'var(--panel2)',

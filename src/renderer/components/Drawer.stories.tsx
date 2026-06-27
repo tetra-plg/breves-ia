@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Drawer } from './Drawer';
 import type { VerifyOutput } from '@shared/schemas/outputs';
 
-const meta: Meta<typeof Drawer> = { component: Drawer, title: 'Drawer' };
+const meta: Meta<typeof Drawer> = { component: Drawer, title: 'Composants/Drawer' };
 export default meta;
 
 const topic: VerifyOutput['topics'][number] = {
@@ -20,3 +20,6 @@ const topic: VerifyOutput['topics'][number] = {
 };
 
 export const Exemple: StoryObj<typeof Drawer> = { args: { topic } };
+export const SansAlerte: StoryObj<typeof Drawer> = {
+  args: { topic: { ...topic, alerte: null } },
+};

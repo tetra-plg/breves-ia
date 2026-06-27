@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import { renderEditionHtml } from '@domain/edition';
 import { dateLong } from '@domain/format';
+import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Reader() {
   const readerEdition = useAppStore((s) => s.readerEdition);
@@ -40,17 +42,17 @@ export function Reader() {
     <section>
       <div className="pad">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-          <span className="faint" style={{ font: '500 10px var(--mono)' }}>{sub}</span>
-          <button className="btn-ghost" style={{ marginLeft: 'auto', padding: '7px 13px' }} onClick={() => void copy()}>
+          <Text tone="faint" style={{ font: '500 10px var(--mono)' }}>{sub}</Text>
+          <Button variant="ghost" style={{ marginLeft: 'auto', padding: '7px 13px' }} onClick={() => void copy()}>
             Copier
-          </button>
+          </Button>
         </div>
         {loading ? (
-          <div className="faint">Chargement…</div>
+          <Text tone="faint" as="div">Chargement…</Text>
         ) : readerText ? (
           <div dangerouslySetInnerHTML={{ __html: renderEditionHtml(readerText) }} />
         ) : (
-          <div className="faint">Texte introuvable dans le wiki (raw/notes/{readerEdition.file}).</div>
+          <Text tone="faint" as="div">Texte introuvable dans le wiki (raw/notes/{readerEdition.file}).</Text>
         )}
       </div>
     </section>

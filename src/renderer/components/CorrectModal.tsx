@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
+import { Textarea } from '@renderer/components/ui/Textarea';
+import { Overlay, Modal } from '@renderer/components/ui/Modal';
 
 interface CorrectModalProps {
   initialWantSoulLesson: boolean;
@@ -10,13 +14,13 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
   const [text, setText] = useState('');
   const [want, setWant] = useState(initialWantSoulLesson);
   return (
-    <div className="overlay" style={{ zIndex: 50, padding: 16 }}>
-      <div className="modal">
+    <Overlay style={{ zIndex: 50, padding: 16 }}>
+      <Modal>
         <h2 style={{ font: '600 17px var(--display)', margin: '0 0 4px' }}>Demander une correction</h2>
-        <p className="muted" style={{ font: '400 12.5px var(--body)', margin: '0 0 14px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px var(--body)', margin: '0 0 14px' }}>
           Dis ce qui ne va pas : la commande ajuste les brèves.
-        </p>
-        <textarea
+        </Text>
+        <Textarea
           spellCheck={false}
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -28,14 +32,14 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
           <span style={{ font: '500 13px var(--body)' }}>Enrichir la SOUL avec cette leçon</span>
         </label>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button className="btn-ghost" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             Annuler
-          </button>
-          <button className="btn-primary" style={{ width: 'auto', padding: '10px 16px' }} onClick={() => onSend(text.trim(), want)}>
+          </Button>
+          <Button variant="primary" style={{ width: 'auto', padding: '10px 16px' }} onClick={() => onSend(text.trim(), want)}>
             Envoyer
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </Modal>
+    </Overlay>
   );
 }

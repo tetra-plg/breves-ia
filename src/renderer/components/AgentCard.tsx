@@ -2,6 +2,10 @@ import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { Agent } from '@domain/agents';
 import type { AgentEdits } from '@main/engine';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
+import { Textarea } from '@renderer/components/ui/Textarea';
 
 const MODELES: [string, string][] = [['', 'Hériter'], ['opus', 'Opus'], ['sonnet', 'Sonnet'], ['haiku', 'Haiku']];
 const MODES = ['off', 'ciblé', 'toujours'];
@@ -41,7 +45,7 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
   }
 
   return (
-    <div className="card">
+    <Card>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
         <span style={{ font: '600 14px var(--display)' }}>{agent.name}</span>
         <label style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6, font: '500 11px var(--body)', color: 'var(--muted)' }}>
@@ -49,7 +53,7 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
         </label>
       </div>
       <div style={{ font: '400 11.5px var(--body)', color: 'var(--muted)', marginBottom: 10 }}>{agent.description}</div>
-      <label className="eyebrow" style={{ display: 'block', marginBottom: 4 }}>Modèle</label>
+      <Eyebrow style={{ marginBottom: 4 }}>Modèle</Eyebrow>
       <select value={model} onChange={(e) => setModel(e.target.value)} style={selStyle}>
         {MODELES.map(([v, l]) => (
           <option key={v} value={v}>{l}</option>
@@ -57,7 +61,7 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
       </select>
       {isScept && (
         <>
-          <label className="eyebrow" style={{ display: 'block', marginBottom: 4 }}>Mode sceptique</label>
+          <Eyebrow style={{ marginBottom: 4 }}>Mode sceptique</Eyebrow>
           <select value={mode} onChange={(e) => setMode(e.target.value)} style={selStyle}>
             {MODES.map((m) => (
               <option key={m} value={m}>{m}</option>
@@ -65,17 +69,17 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
           </select>
         </>
       )}
-      <label className="eyebrow" style={{ display: 'block', marginBottom: 4 }}>Outils (séparés par des virgules)</label>
+      <Eyebrow style={{ marginBottom: 4 }}>Outils (séparés par des virgules)</Eyebrow>
       <input
         value={tools}
         onChange={(e) => setTools(e.target.value)}
         style={{ width: '100%', padding: 8, border: '1px solid var(--line)', borderRadius: 'var(--radiusSm)', background: 'var(--panel)', color: 'var(--text)', font: '400 12px var(--mono)', marginBottom: 10 }}
       />
-      <label className="eyebrow" style={{ display: 'block', marginBottom: 4 }}>Prompt système</label>
-      <textarea spellCheck={false} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} style={{ minHeight: 160, font: '400 12px/1.55 var(--mono)' }} />
-      <button className="btn-primary" style={{ marginTop: 10 }} onClick={save}>
+      <Eyebrow style={{ marginBottom: 4 }}>Prompt système</Eyebrow>
+      <Textarea spellCheck={false} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} style={{ minHeight: 160, font: '400 12px/1.55 var(--mono)' }} />
+      <Button variant="primary" style={{ marginTop: 10 }} onClick={save}>
         Enregistrer
-      </button>
-    </div>
+      </Button>
+    </Card>
   );
 }

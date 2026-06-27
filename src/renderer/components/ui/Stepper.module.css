@@ -1,0 +1,7 @@
+.stepper{flex:none;display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+.steps{display:flex;align-items:center;gap:5px}
+.step{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 11px var(--body);border:1.5px solid var(--line);background:transparent;color:var(--faint)}
+.done{background:var(--accentSoft);color:var(--accent);border-color:transparent}
+.active{background:var(--accent);color:var(--onAccent);border-color:transparent}
+.bar{width:13px;height:1.5px;background:var(--line)}
+.line{margin-left:auto;font:500 11px var(--mono);color:var(--muted)}

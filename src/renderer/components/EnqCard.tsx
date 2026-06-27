@@ -1,5 +1,9 @@
 import type { Card } from '@domain/checking';
-import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
+import { niveauColor, niveauLabel, niveauTone } from '@renderer/components/niveau';
+import { Alert } from '@renderer/components/ui/Alert';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Badge } from '@renderer/components/ui/Badge';
+import { StatusDot } from '@renderer/components/ui/StatusDot';
 
 interface EnqCardProps {
   card: Card;
@@ -20,7 +24,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
             animation: card.done ? undefined : 'pulse 1.1s ease-in-out infinite',
           }}
         />
-        <span className="eyebrow">Enquêteur</span>
+        <Eyebrow as="span">Enquêteur</Eyebrow>
         <span style={{ marginLeft: 'auto', font: '500 10.5px var(--mono)', color: statusColor }}>
           {card.status}
         </span>
@@ -29,9 +33,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {card.steps.map((s) => (
           <div key={s.name} className="enq-step">
-            <span className={s.state === 'done' ? 'dot done' : s.state === 'active' ? 'dot active' : 'dot todo'}>
-              {s.state === 'done' ? '✓' : ''}
-            </span>
+            <StatusDot state={s.state} />
             <span style={{ color: s.state === 'todo' ? 'var(--faint)' : 'var(--text)' }}>
               {s.name.charAt(0).toUpperCase() + s.name.slice(1)}
             </span>
@@ -41,11 +43,11 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
       {card.done && !card.error && (
         <div style={{ marginTop: 12, paddingTop: 11, borderTop: '1px solid var(--line)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 8, flexWrap: 'wrap' }}>
-            <span className="badge-good">Source</span>
+            <Badge tone="good">Source</Badge>
             <span style={{ font: '500 11px var(--mono)', color: 'var(--muted)' }}>{card.source ?? ''}</span>
           </div>
           {card.alerte && (
-            <div className="alert" style={{ background: niveauSoft(card.alerte.niveau) }}>
+            <Alert tone={niveauTone(card.alerte.niveau)}>
               <span
                 style={{
                   font: '600 10px var(--body)',
@@ -57,7 +59,7 @@ export function EnqCard({ card, onOpen }: EnqCardProps) {
                 {niveauLabel(card.alerte.niveau)}
               </span>
               <span style={{ font: '400 11.5px/1.4 var(--body)', color: 'var(--text)' }}>{card.alerte.texte}</span>
-            </div>
+            </Alert>
           )}
         </div>
       )}

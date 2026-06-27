@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import assert from 'node:assert/strict';
-import { niveauColor, niveauSoft, niveauLabel } from '@renderer/components/niveau';
+import { niveauColor, niveauSoft, niveauLabel, niveauTone } from '@renderer/components/niveau';
 
 test('niveauColor mappe les niveaux', () => {
   assert.equal(niveauColor('corrigé'), 'var(--warn)');
@@ -16,4 +16,9 @@ test('niveauLabel mappe les niveaux', () => {
   assert.equal(niveauLabel('corrigé'), 'Fait corrigé');
   assert.equal(niveauLabel('nuance'), 'Nuance');
   assert.equal(niveauLabel('date'), 'Date');
+});
+test('niveauTone mappe les niveaux', () => {
+  assert.equal(niveauTone('corrigé'), 'warn');
+  assert.equal(niveauTone('nuance'), 'nuance');
+  assert.equal(niveauTone('date'), 'accent');
 });

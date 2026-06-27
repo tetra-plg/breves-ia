@@ -1,0 +1,5 @@
+.root{display:flex;flex-direction:column;gap:3px;border-radius:var(--radiusSm);padding:8px 10px}
+.accent{color:var(--accent);background:var(--accentSoft)}
+.good{color:var(--good);background:var(--goodSoft)}
+.warn{color:var(--warn);background:var(--warnSoft)}
+.nuance{color:var(--nuance);background:var(--nuanceSoft)}

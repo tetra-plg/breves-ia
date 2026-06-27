@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { RunStatus } from './RunStatus';
 
-const meta: Meta<typeof RunStatus> = { component: RunStatus, title: 'RunStatus' };
+const meta: Meta<typeof RunStatus> = { component: RunStatus, title: 'Composants/RunStatus' };
 export default meta;
 
 export const Actif: StoryObj<typeof RunStatus> = {

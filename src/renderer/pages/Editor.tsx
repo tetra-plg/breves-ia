@@ -6,6 +6,11 @@ import { CorrectionRow } from '@renderer/components/CorrectionRow';
 import { SourceRow } from '@renderer/components/SourceRow';
 import { CorrectModal } from '@renderer/components/CorrectModal';
 import type { DraftOutput } from '@shared/schemas/outputs';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
+import { Pill } from '@renderer/components/ui/Pill';
+import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 export function Editor() {
   const draftValue = useAppStore((s) => s.draftValue);
@@ -60,57 +65,57 @@ export function Editor() {
   return (
     <section>
       <div className="pad">
-        <p className="muted" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 14px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 12.5px/1.5 var(--body)', margin: '0 0 14px' }}>
           Version prête à coller dans Teams. Édite le texte directement, puis valide ou corrige.
-        </p>
+        </Text>
         <RunStatus status={runStatus} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ font: '500 11px var(--mono)', color: 'var(--muted)' }}>prêt-à-coller · Teams</span>
-          <button className="pill" style={{ marginLeft: 'auto', cursor: 'pointer', border: 'none' }} onClick={toggleEditor}>
+          <Pill as="button" style={{ marginLeft: 'auto', cursor: 'pointer', border: 'none' }} onClick={toggleEditor}>
             {editorMode === 'preview' ? 'Éditer' : 'Aperçu'}
-          </button>
+          </Pill>
         </div>
         {editorMode === 'preview' ? (
           <div dangerouslySetInnerHTML={{ __html: renderEditionHtml(teamsText) }} />
         ) : (
-          <textarea
+          <Card<'textarea'>
+            as="textarea"
             spellCheck={false}
-            className="card"
             style={{ width: '100%', minHeight: 300, padding: '14px 15px', font: '400 13px/1.6 var(--mono)', color: 'var(--text)', background: 'var(--panel)', resize: 'vertical' }}
             value={teamsText}
             onChange={(e) => setTeamsText(e.target.value)}
           />
         )}
         <div className="row" style={{ marginTop: 13 }}>
-          <button className="btn-ghost" style={{ flex: 'none' }} onClick={() => setCorrectOpen(true)}>
+          <Button variant="ghost" style={{ flex: 'none' }} onClick={() => setCorrectOpen(true)}>
             Corriger
-          </button>
-          <button className="btn-primary" style={{ flex: 1 }} onClick={() => setView('archived')}>
+          </Button>
+          <Button variant="primary" style={{ flex: 1 }} onClick={() => setView('archived')}>
             Valider &amp; archiver →
-          </button>
+          </Button>
         </div>
-        <div className="card" style={{ marginTop: 16 }}>
-          <div className="eyebrow" style={{ marginBottom: 11 }}>
+        <Card style={{ marginTop: 16 }}>
+          <Eyebrow style={{ marginBottom: 11 }}>
             Corrections apportées
-          </div>
+          </Eyebrow>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
             {draftValue?.corrections?.length ? (
               draftValue.corrections.map((c, i) => <CorrectionRow key={i} correction={c} />)
             ) : (
-              <div className="faint">Aucune correction.</div>
+              <Text tone="faint" as="div">Aucune correction.</Text>
             )}
           </div>
-        </div>
-        <div className="card" style={{ marginTop: 12 }}>
-          <div className="eyebrow" style={{ marginBottom: 11 }}>
+        </Card>
+        <Card style={{ marginTop: 12 }}>
+          <Eyebrow style={{ marginBottom: 11 }}>
             Sources &amp; clippings
-          </div>
+          </Eyebrow>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
             {(draftValue?.sources ?? []).map((s, i) => (
               <SourceRow key={i} source={s} />
             ))}
           </div>
-        </div>
+        </Card>
       </div>
       {correctOpen && (
         <CorrectModal

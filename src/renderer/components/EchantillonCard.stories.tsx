@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { EchantillonCard } from './EchantillonCard';
 
-const meta: Meta<typeof EchantillonCard> = { component: EchantillonCard, title: 'EchantillonCard' };
+const meta: Meta<typeof EchantillonCard> = { component: EchantillonCard, title: 'Composants/EchantillonCard' };
 export default meta;
 
 export const Exemple: StoryObj<typeof EchantillonCard> = {

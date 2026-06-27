@@ -3,6 +3,10 @@ import { useAppStore } from '@renderer/store/app.store';
 import { EditionRow } from '@renderer/components/EditionRow';
 import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
+import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
+import { Card } from '@renderer/components/ui/Card';
 
 export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
@@ -22,13 +26,13 @@ export function Dashboard() {
   return (
     <section>
       <div className="pad">
-        <div className="eyebrow">{today}</div>
+        <Eyebrow>{today}</Eyebrow>
         <h1 className="hello">Bonjour Pierre.</h1>
-        <p className="muted" style={{ margin: '0 0 18px' }}>
+        <Text tone="muted" as="p" style={{ margin: '0 0 18px' }}>
           Prêt à compiler les prochaines brèves IA ?
-        </p>
+        </Text>
 
-        <button className="cta" style={{ marginBottom: 18 }} onClick={() => go('goCompose')}>
+        <Button variant="cta" style={{ marginBottom: 18 }} onClick={() => go('goCompose')}>
           <span className="plus">+</span>
           <span style={{ flex: 1 }}>
             <span style={{ display: 'block', font: '600 16px var(--display)' }}>Nouvelle édition</span>
@@ -44,13 +48,13 @@ export function Dashboard() {
             </span>
           </span>
           <span style={{ fontSize: 18, color: 'var(--accent)' }}>→</span>
-        </button>
+        </Button>
 
-        <div className="card" style={{ marginBottom: 18 }}>
+        <Card style={{ marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <div className="eyebrow" style={{ fontSize: 10 }}>
+            <Eyebrow style={{ fontSize: 10 }}>
               Dernière édition
-            </div>
+            </Eyebrow>
             <span style={{ marginLeft: 'auto', font: '500 11px var(--mono)', color: 'var(--text)' }}>
               {last ? dateLong(last.date) : '—'}
             </span>
@@ -66,13 +70,13 @@ export function Dashboard() {
               <b style={{ color: 'var(--text)' }}>{last ? last.count : 0}</b> sources
             </span>
           </div>
-        </div>
+        </Card>
 
-        <div className="eyebrow" style={{ margin: '0 0 9px' }}>
+        <Eyebrow style={{ margin: '0 0 9px' }}>
           Éditions récentes
-        </div>
+        </Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-          {editions.length === 0 && <div className="faint">Aucune édition archivée pour l'instant.</div>}
+          {editions.length === 0 && <Text tone="faint" as="div">Aucune édition archivée pour l'instant.</Text>}
           {editions.slice(0, 4).map((e) => (
             <EditionRow key={e.file} edition={e} onOpen={onOpen} />
           ))}

@@ -1,5 +1,6 @@
 import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
+import { Card } from '@renderer/components/ui/Card';
 
 interface HistoryRowProps {
   edition: EditionSummary;
@@ -8,7 +9,7 @@ interface HistoryRowProps {
 
 export function HistoryRow({ edition, onOpen }: HistoryRowProps) {
   return (
-    <button className="card" style={{ display: 'block', width: '100%', textAlign: 'left' }} onClick={() => onOpen(edition)}>
+    <Card as="button" style={{ display: 'block', width: '100%', textAlign: 'left' }} onClick={() => onOpen(edition)}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7 }}>
         <span style={{ font: '600 14px var(--display)' }}>{dateLong(edition.date)}</span>
         {edition.title && (
@@ -26,6 +27,6 @@ export function HistoryRow({ edition, onOpen }: HistoryRowProps) {
           <b style={{ color: 'var(--warn)' }}>{edition.corr}</b> corrections
         </span>
       </div>
-    </button>
+    </Card>
   );
 }

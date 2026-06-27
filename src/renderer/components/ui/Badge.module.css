@@ -1,0 +1,5 @@
+.root{font:500 10px var(--body);padding:3px 7px;border-radius:20px}
+.good{color:var(--good);background:var(--goodSoft)}
+.warn{color:var(--warn);background:var(--warnSoft)}
+.nuance{color:var(--nuance);background:var(--nuanceSoft)}
+.accent{color:var(--accent);background:var(--accentSoft)}

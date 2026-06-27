@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { useAppStore } from '@renderer/store/app.store';
 import type { VerifyOutput } from '@shared/schemas/outputs';
+import { Text } from '@renderer/components/ui/Text';
+import { Pill } from '@renderer/components/ui/Pill';
+import { Button } from '@renderer/components/ui/Button';
+import { Textarea } from '@renderer/components/ui/Textarea';
 
 export function Compose() {
   const [raw, setRaw] = useState('');
@@ -49,10 +53,10 @@ export function Compose() {
     <section>
       <div className="pad">
         <h1 style={{ font: '600 20px/1.15 var(--display)', margin: '0 0 4px' }}>Sujets en vrac</h1>
-        <p className="muted" style={{ font: '400 13px/1.5 var(--body)', margin: '0 0 16px' }}>
+        <Text tone="muted" as="p" style={{ font: '400 13px/1.5 var(--body)', margin: '0 0 16px' }}>
           Un sujet par ligne. Pas besoin de dates ni de liens : chaque enquêteur les trouve seul.
-        </p>
-        <textarea
+        </Text>
+        <Textarea
           spellCheck={false}
           value={raw}
           onChange={(e) => setRaw(e.target.value)}
@@ -62,23 +66,23 @@ export function Compose() {
           <span style={{ font: '500 11px var(--mono)', color: 'var(--faint)' }}>DÉTECTÉS</span>
           <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {chips.map((c, i) => (
-              <span key={i} className="pill">
+              <Pill key={i}>
                 {c}
-              </span>
+              </Pill>
             ))}
           </span>
         </div>
-        <button
-          className="btn-primary"
+        <Button
+          variant="primary"
           style={{ marginTop: 18, fontSize: 15 }}
           disabled={runActive}
           onClick={() => void launch()}
         >
           Lancer l'enquête <span style={{ fontSize: 16 }}>→</span>
-        </button>
-        <p className="faint" style={{ font: '400 12px var(--body)', textAlign: 'center', margin: '10px 0 0' }}>
+        </Button>
+        <Text tone="faint" as="p" style={{ font: '400 12px var(--body)', textAlign: 'center', margin: '10px 0 0' }}>
           Les enquêteurs partiront en parallèle sur le web.
-        </p>
+        </Text>
       </div>
     </section>
   );

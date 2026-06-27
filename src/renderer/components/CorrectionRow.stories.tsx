@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CorrectionRow } from './CorrectionRow';
 
-const meta: Meta<typeof CorrectionRow> = { component: CorrectionRow, title: 'CorrectionRow' };
+const meta: Meta<typeof CorrectionRow> = { component: CorrectionRow, title: 'Composants/CorrectionRow' };
 export default meta;
 
 export const Corrige: StoryObj<typeof CorrectionRow> = {
@@ -9,4 +9,7 @@ export const Corrige: StoryObj<typeof CorrectionRow> = {
 };
 export const Nuance: StoryObj<typeof CorrectionRow> = {
   args: { correction: { niveau: 'nuance', titre: 'Disponibilité', detail: 'Annoncé, pas encore déployé partout.' } },
+};
+export const NiveauDate: StoryObj<typeof CorrectionRow> = {
+  args: { correction: { niveau: 'date', titre: 'Date de publication', detail: 'Le modèle a été publié le 13 juin 2026, non le 10 juin.' } },
 };

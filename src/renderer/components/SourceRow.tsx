@@ -1,4 +1,5 @@
 import type { DraftOutput } from '@shared/schemas/outputs';
+import { StatusDot } from '@renderer/components/ui/StatusDot';
 
 type Source = DraftOutput['sources'][number];
 
@@ -9,7 +10,7 @@ interface SourceRowProps {
 export function SourceRow({ source }: SourceRowProps) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
-      <span className="dot done">✓</span>
+      <StatusDot state="done" />
       <div style={{ minWidth: 0 }}>
         <div style={{ font: '600 12.5px var(--body)' }}>
           {source.name}
