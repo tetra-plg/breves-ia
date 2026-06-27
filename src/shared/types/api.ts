@@ -6,6 +6,12 @@ import type { Agent } from '@domain/agents';
 export type ApiResult<T = unknown> = { ok: true; value: T } | { ok: false; error: string };
 export type SaveResult = { ok: boolean; error?: string };
 
+export type SettingKey = 'bbDir' | 'repoDir' | 'claudeBin';
+export type SettingSource = 'env' | 'file' | 'default';
+export interface SettingField { value: string; source: SettingSource; valid: boolean }
+export type SettingsState = Record<SettingKey, SettingField>;
+export type SettingsPatch = Partial<Record<SettingKey, string>>;
+
 // Forme exposée par le preload sous window.api (et l'alias window.breves).
 export interface Api {
   sendCommand(skill: string, inputs: unknown): Promise<ApiResult>;
@@ -21,4 +27,9 @@ export interface Api {
   copy(text: string): Promise<boolean>;
   openExternal(url: string): Promise<void>;
   hideWindow(): Promise<void>;
+  getSettings(): Promise<SettingsState>;
+  validatePath(path: string, kind: 'directory' | 'file'): Promise<boolean>;
+  pickPath(kind: 'directory' | 'file'): Promise<string | null>;
+  saveSettings(patch: SettingsPatch): Promise<SaveResult>;
+  quitApp(): Promise<void>;
 }

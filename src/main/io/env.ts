@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { UserConfig } from '@main/io/config';
+import type { SettingKey } from '@shared/types/api';
+export type { SettingKey };
 
 export interface WikiMcp {
   type: 'stdio';
@@ -14,8 +16,6 @@ export interface EngineConfig {
   claudeBin: string;
   wikiMcp: WikiMcp;
 }
-
-export type SettingKey = 'bbDir' | 'repoDir' | 'claudeBin';
 
 export const DEFAULTS: Record<SettingKey, string> = {
   bbDir: '/Users/pleguern/Workspace/BoilingBrain',

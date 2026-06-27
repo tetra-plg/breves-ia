@@ -1,8 +1,9 @@
-import { app, BrowserWindow, Menu, ipcMain, clipboard, shell } from 'electron';
+import { app, BrowserWindow, Menu, ipcMain, clipboard, shell, dialog } from 'electron';
 import path from 'node:path';
 import { APP_NAME, WINDOW_WIDTH, WINDOW_HEIGHT } from '@config/constants';
 import { defaultDeps } from '@main/engine';
-import { loadEnvFile } from '@main/io/env';
+import { loadEnvFile, loadEngineConfig } from '@main/io/env';
+import { readUserConfig, writeUserConfig } from '@main/io/config';
 import { registerAllHandlers } from '@main/ipc';
 import type { SystemBridge } from '@main/ipc/system.handlers';
 import type { IpcLike } from '@shared/types/ipc';
@@ -57,15 +58,34 @@ app.whenReady().then(() => {
 
   Menu.setApplicationMenu(null);
   loadEnvFile();
-  const deps = defaultDeps();
+  const userDataDir = app.getPath('userData');
+  let userConfig = readUserConfig(userDataDir);
+  if (Object.keys(userConfig).length === 0) {
+    // 1er lancement : initialiser config.json avec les valeurs effectives par défaut
+    const eff = loadEngineConfig(process.env, {});
+    userConfig = { bbDir: eff.bbDir, repoDir: eff.repoDir, claudeBin: eff.claudeBin };
+    writeUserConfig(userDataDir, userConfig);
+  }
+  const deps = defaultDeps(process.env, userConfig);
   const sys: SystemBridge = {
     writeClipboard: (text) => clipboard.writeText(text),
     openExternal: (url) => {
       void shell.openExternal(url);
     },
     hideWindow: () => win?.hide(),
+    pickPath: async (kind) => {
+      if (!win) return null;
+      const res = await dialog.showOpenDialog(win, {
+        properties:
+          kind === 'directory'
+            ? ['openDirectory', 'showHiddenFiles', 'createDirectory']
+            : ['openFile', 'showHiddenFiles'],
+      });
+      return res.canceled || !res.filePaths[0] ? null : res.filePaths[0];
+    },
+    quit: () => app.quit(),
   };
-  registerAllHandlers(ipcMain as unknown as IpcLike, deps, sys);
+  registerAllHandlers(ipcMain as unknown as IpcLike, deps, sys, userDataDir);
   createWindow();
 });
 

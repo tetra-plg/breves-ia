@@ -22,6 +22,11 @@ const api: Api = {
   copy: (text) => ipcRenderer.invoke(IPC.copy, text),
   openExternal: (url) => ipcRenderer.invoke(IPC.openExternal, url),
   hideWindow: () => ipcRenderer.invoke(IPC.hideWindow),
+  getSettings: () => ipcRenderer.invoke(IPC.getSettings),
+  validatePath: (path, kind) => ipcRenderer.invoke(IPC.validatePath, { path, kind }),
+  pickPath: (kind) => ipcRenderer.invoke(IPC.pickPath, kind),
+  saveSettings: (patch) => ipcRenderer.invoke(IPC.saveSettings, patch),
+  quitApp: () => ipcRenderer.invoke(IPC.quitApp),
 };
 
 contextBridge.exposeInMainWorld('api', api);

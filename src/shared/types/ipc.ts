@@ -12,6 +12,11 @@ export const IPC = {
   copy: 'copy',
   openExternal: 'open-external',
   hideWindow: 'hide-window',
+  getSettings: 'get-settings',
+  validatePath: 'validate-path',
+  pickPath: 'pick-path',
+  saveSettings: 'save-settings',
+  quitApp: 'quit-app',
 } as const;
 
 export interface IpcInvokeEvent {

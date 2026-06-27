@@ -4,6 +4,8 @@ export interface SystemBridge {
   writeClipboard(text: string): void;
   openExternal(url: string): void;
   hideWindow(): void;
+  pickPath(kind: 'directory' | 'file'): Promise<string | null>;
+  quit(): void;
 }
 
 export function registerSystemHandlers(ipc: IpcLike, sys: SystemBridge): void {
