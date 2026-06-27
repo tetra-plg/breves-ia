@@ -5,6 +5,7 @@ import { RunStatus } from '@renderer/components/RunStatus';
 import { ArchiveStep } from '@renderer/components/ArchiveStep';
 import type { ArchiveOutput } from '@shared/schemas/outputs';
 import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Archived() {
   const archiveValue = useAppStore((s) => s.archiveValue);
@@ -91,9 +92,9 @@ export function Archived() {
                 ))}
               </div>
             </div>
-            <button className="btn-primary" style={{ marginTop: 18 }} onClick={() => void copyNewsletter()}>
+            <Button variant="primary" style={{ marginTop: 18 }} onClick={() => void copyNewsletter()}>
               Copier les brèves (prêt à coller)
-            </button>
+            </Button>
             <div style={{ marginTop: 16, textAlign: 'left' }}>
               <div style={{ font: '500 11px var(--mono)', color: 'var(--muted)', marginBottom: 9 }}>prêt-à-coller · Teams</div>
               <div
@@ -102,12 +103,12 @@ export function Archived() {
               />
             </div>
             <div className="row" style={{ marginTop: 12 }}>
-              <button className="btn-ghost" style={{ flex: 1 }} onClick={() => go('goHist')}>
+              <Button variant="ghost" style={{ flex: 1 }} onClick={() => go('goHist')}>
                 Historique
-              </button>
-              <button className="btn-ghost" style={{ flex: 1 }} onClick={() => go('goCompose')}>
+              </Button>
+              <Button variant="ghost" style={{ flex: 1 }} onClick={() => go('goCompose')}>
                 Nouvelle édition
-              </button>
+              </Button>
             </div>
           </>
         )}

@@ -4,6 +4,7 @@ import type { SoulForm } from '@renderer/store/app.store';
 import { EchantillonCard } from '@renderer/components/EchantillonCard';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 const SOUL_FIELDS: { key: keyof SoulForm; label: string; mono: boolean; minHeight: number }[] = [
   { key: 'quiParle', label: '1 · Qui parle', mono: false, minHeight: 70 },
@@ -87,9 +88,9 @@ export function Soul() {
             />
           </div>
         ))}
-        <button className="btn-primary" style={{ marginTop: 12 }} onClick={() => void saveSections()}>
+        <Button variant="primary" style={{ marginTop: 12 }} onClick={() => void saveSections()}>
           Enregistrer
-        </button>
+        </Button>
 
         <Eyebrow style={{ margin: '22px 0 9px' }}>
           5 · Échantillons vivants{' '}
@@ -105,12 +106,12 @@ export function Soul() {
           )}
         </div>
         <div className="row" style={{ marginTop: 9 }}>
-          <button className="btn-ghost" style={{ flex: 1 }} disabled={echantillons.length >= 3} onClick={() => setView('ech-editions')}>
+          <Button variant="ghost" style={{ flex: 1 }} disabled={echantillons.length >= 3} onClick={() => setView('ech-editions')}>
             + Ajouter depuis une édition
-          </button>
-          <button className="btn-primary" style={{ flex: 1 }} onClick={() => void saveEchantillons()}>
+          </Button>
+          <Button variant="primary" style={{ flex: 1 }} onClick={() => void saveEchantillons()}>
             Enregistrer §5
-          </button>
+          </Button>
         </div>
 
         <Eyebrow style={{ margin: '22px 0 9px' }}>

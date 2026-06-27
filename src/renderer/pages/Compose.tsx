@@ -3,6 +3,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import type { VerifyOutput } from '@shared/schemas/outputs';
 import { Text } from '@renderer/components/ui/Text';
 import { Pill } from '@renderer/components/ui/Pill';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Compose() {
   const [raw, setRaw] = useState('');
@@ -70,14 +71,14 @@ export function Compose() {
             ))}
           </span>
         </div>
-        <button
-          className="btn-primary"
+        <Button
+          variant="primary"
           style={{ marginTop: 18, fontSize: 15 }}
           disabled={runActive}
           onClick={() => void launch()}
         >
           Lancer l'enquête <span style={{ fontSize: 16 }}>→</span>
-        </button>
+        </Button>
         <Text tone="faint" as="p" style={{ font: '400 12px var(--body)', textAlign: 'center', margin: '10px 0 0' }}>
           Les enquêteurs partiront en parallèle sur le web.
         </Text>

@@ -9,6 +9,7 @@ import type { DraftOutput } from '@shared/schemas/outputs';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
 import { Pill } from '@renderer/components/ui/Pill';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Editor() {
   const draftValue = useAppStore((s) => s.draftValue);
@@ -85,12 +86,12 @@ export function Editor() {
           />
         )}
         <div className="row" style={{ marginTop: 13 }}>
-          <button className="btn-ghost" style={{ flex: 'none' }} onClick={() => setCorrectOpen(true)}>
+          <Button variant="ghost" style={{ flex: 'none' }} onClick={() => setCorrectOpen(true)}>
             Corriger
-          </button>
-          <button className="btn-primary" style={{ flex: 1 }} onClick={() => setView('archived')}>
+          </Button>
+          <Button variant="primary" style={{ flex: 1 }} onClick={() => setView('archived')}>
             Valider &amp; archiver →
-          </button>
+          </Button>
         </div>
         <div className="card" style={{ marginTop: 16 }}>
           <Eyebrow style={{ marginBottom: 11 }}>

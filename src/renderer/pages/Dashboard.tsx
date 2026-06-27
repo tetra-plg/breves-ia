@@ -5,6 +5,7 @@ import { dateLong } from '@domain/format';
 import type { EditionSummary } from '@main/engine';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
 import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
@@ -30,7 +31,7 @@ export function Dashboard() {
           Prêt à compiler les prochaines brèves IA ?
         </Text>
 
-        <button className="cta" style={{ marginBottom: 18 }} onClick={() => go('goCompose')}>
+        <Button variant="cta" style={{ marginBottom: 18 }} onClick={() => go('goCompose')}>
           <span className="plus">+</span>
           <span style={{ flex: 1 }}>
             <span style={{ display: 'block', font: '600 16px var(--display)' }}>Nouvelle édition</span>
@@ -46,7 +47,7 @@ export function Dashboard() {
             </span>
           </span>
           <span style={{ fontSize: 18, color: 'var(--accent)' }}>→</span>
-        </button>
+        </Button>
 
         <div className="card" style={{ marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>

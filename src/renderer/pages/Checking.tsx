@@ -3,6 +3,7 @@ import { summary } from '@domain/checking';
 import { EnqCard } from '@renderer/components/EnqCard';
 import { RunStatus } from '@renderer/components/RunStatus';
 import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Checking() {
   const cards = useAppStore((s) => s.cards);
@@ -44,9 +45,9 @@ export function Checking() {
             <Text tone="muted" as="div" style={{ font: '400 12px var(--body)', margin: '2px 0 12px' }}>
               Tout est sourcé. On passe à la rédaction.
             </Text>
-            <button className="btn-primary" onClick={() => go('toEditor')}>
+            <Button variant="primary" onClick={() => go('toEditor')}>
               Rédiger les brèves →
-            </button>
+            </Button>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 import { inlineMd, dateLong } from '@domain/format';
 import type { Echantillon } from '@domain/soul';
+import { Button } from '@renderer/components/ui/Button';
 
 interface EchantillonCardProps {
   echantillon: Echantillon;
@@ -14,9 +15,9 @@ export function EchantillonCard({ echantillon, onRemove }: EchantillonCardProps)
           {dateLong(echantillon.date)}
           {echantillon.source ? ' · ' + echantillon.source : ''}
         </span>
-        <button className="btn-ghost" style={{ marginLeft: 'auto', padding: '5px 10px', fontSize: 11 }} onClick={onRemove}>
+        <Button variant="ghost" style={{ marginLeft: 'auto', padding: '5px 10px', fontSize: 11 }} onClick={onRemove}>
           Retirer
-        </button>
+        </Button>
       </div>
       <div style={{ font: '400 12.5px/1.5 var(--body)' }} dangerouslySetInnerHTML={{ __html: inlineMd(echantillon.texte) }} />
     </div>

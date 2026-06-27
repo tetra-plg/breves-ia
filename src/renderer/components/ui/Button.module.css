@@ -1,0 +1,5 @@
+.primary{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;background:var(--accent);color:var(--onAccent);font:600 14px var(--body);padding:12px;border-radius:var(--radiusSm)}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--text);font:600 13px var(--body);padding:11px 16px;border-radius:var(--radiusSm)}
+.icon{display:flex;align-items:center;justify-content:center;width:30px;height:30px;flex:none;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px}
+.cta{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:1px solid var(--accent);background:var(--accentSoft);border-radius:var(--radius);padding:15px 16px}
+.root:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}

@@ -3,6 +3,7 @@ import { useAppStore } from '@renderer/store/app.store';
 import { renderEditionHtml } from '@domain/edition';
 import { dateLong } from '@domain/format';
 import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 export function Reader() {
   const readerEdition = useAppStore((s) => s.readerEdition);
@@ -42,9 +43,9 @@ export function Reader() {
       <div className="pad">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
           <Text tone="faint" style={{ font: '500 10px var(--mono)' }}>{sub}</Text>
-          <button className="btn-ghost" style={{ marginLeft: 'auto', padding: '7px 13px' }} onClick={() => void copy()}>
+          <Button variant="ghost" style={{ marginLeft: 'auto', padding: '7px 13px' }} onClick={() => void copy()}>
             Copier
-          </button>
+          </Button>
         </div>
         {loading ? (
           <Text tone="faint" as="div">Chargement…</Text>

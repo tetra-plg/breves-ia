@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import type { Agent } from '@domain/agents';
 import type { AgentEdits } from '@main/engine';
 import { Eyebrow } from '@renderer/components/ui/Eyebrow';
+import { Button } from '@renderer/components/ui/Button';
 
 const MODELES: [string, string][] = [['', 'Hériter'], ['opus', 'Opus'], ['sonnet', 'Sonnet'], ['haiku', 'Haiku']];
 const MODES = ['off', 'ciblé', 'toujours'];
@@ -74,9 +75,9 @@ export function AgentCard({ agent, onSave }: AgentCardProps) {
       />
       <Eyebrow style={{ marginBottom: 4 }}>Prompt système</Eyebrow>
       <textarea spellCheck={false} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} style={{ minHeight: 160, font: '400 12px/1.55 var(--mono)' }} />
-      <button className="btn-primary" style={{ marginTop: 10 }} onClick={save}>
+      <Button variant="primary" style={{ marginTop: 10 }} onClick={save}>
         Enregistrer
-      </button>
+      </Button>
     </div>
   );
 }

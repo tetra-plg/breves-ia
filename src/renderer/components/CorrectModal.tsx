@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Text } from '@renderer/components/ui/Text';
+import { Button } from '@renderer/components/ui/Button';
 
 interface CorrectModalProps {
   initialWantSoulLesson: boolean;
@@ -29,12 +30,12 @@ export function CorrectModal({ initialWantSoulLesson, onCancel, onSend }: Correc
           <span style={{ font: '500 13px var(--body)' }}>Enrichir la SOUL avec cette leçon</span>
         </label>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button className="btn-ghost" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             Annuler
-          </button>
-          <button className="btn-primary" style={{ width: 'auto', padding: '10px 16px' }} onClick={() => onSend(text.trim(), want)}>
+          </Button>
+          <Button variant="primary" style={{ width: 'auto', padding: '10px 16px' }} onClick={() => onSend(text.trim(), want)}>
             Envoyer
-          </button>
+          </Button>
         </div>
       </div>
     </div>
