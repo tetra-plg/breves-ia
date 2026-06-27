@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config: StorybookConfig = {
-  stories: ['../src/renderer/**/*.stories.@(ts|tsx)'],
+  stories: ['../src/renderer/**/*.mdx', '../src/renderer/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs'],
   framework: { name: '@storybook/react-vite', options: {} },
   viteFinal: async (cfg) => {

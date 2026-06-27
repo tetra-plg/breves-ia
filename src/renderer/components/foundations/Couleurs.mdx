@@ -1,0 +1,16 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/addon-docs/blocks';
+
+<Meta title="Fondations/Couleurs" />
+
+# Couleurs
+
+Rôles sémantiques (les valeurs s'adaptent automatiquement au thème via les tokens).
+
+<ColorPalette>
+  <ColorItem title="accent" subtitle="--accent / --accentSoft" colors={{ accent: 'var(--accent)', accentSoft: 'var(--accentSoft)' }} />
+  <ColorItem title="good" subtitle="--good / --goodSoft" colors={{ good: 'var(--good)', goodSoft: 'var(--goodSoft)' }} />
+  <ColorItem title="warn" subtitle="--warn / --warnSoft" colors={{ warn: 'var(--warn)', warnSoft: 'var(--warnSoft)' }} />
+  <ColorItem title="nuance" subtitle="--nuance / --nuanceSoft" colors={{ nuance: 'var(--nuance)', nuanceSoft: 'var(--nuanceSoft)' }} />
+  <ColorItem title="Surfaces" subtitle="bg / win / panel / panel2" colors={{ bg: 'var(--bg)', win: 'var(--win)', panel: 'var(--panel)', panel2: 'var(--panel2)' }} />
+  <ColorItem title="Texte" subtitle="text / muted / faint" colors={{ text: 'var(--text)', muted: 'var(--muted)', faint: 'var(--faint)' }} />
+</ColorPalette>

@@ -1,0 +1,16 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Fondations/Espacements" />
+
+# Espacements
+
+Échelle `--space-1` à `--space-6`. À utiliser pour tout nouvel agencement.
+
+<div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+  {[1, 2, 3, 4, 5, 6].map((n) => (
+    <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <code style={{ width: 90 }}>--space-{n}</code>
+      <div style={{ height: 14, width: `var(--space-${n})`, background: 'var(--accent)', borderRadius: 3 }} />
+    </div>
+  ))}
+</div>
