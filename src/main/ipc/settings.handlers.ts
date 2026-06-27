@@ -39,6 +39,7 @@ export function registerSettingsHandlers(
   ipc.handle(IPC.saveSettings, (_e, payload: unknown) => {
     const patch = (payload ?? {}) as UserConfig;
     for (const key of Object.keys(patch) as SettingKey[]) {
+      if (!(key in KINDS)) continue;
       const v = patch[key];
       if (v != null && !pathValid(v, KINDS[key])) {
         return { ok: false, error: `Chemin invalide pour ${key} : ${v}` };
