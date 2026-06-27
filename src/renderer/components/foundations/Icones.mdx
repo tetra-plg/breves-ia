@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Fondations/Icônes" />
+
+# Icônes
+
+Glyphes Unicode utilisés dans l'app (pas de composant `Icon` : usage inline via `Button variant="icon"`).
+
+<table>
+  <thead>
+    <tr><th align="left">Glyphe</th><th align="left">Sens</th><th align="left">Où</th></tr>
+  </thead>
+  <tbody>
+    {[
+      ['←', 'Retour', 'Header (vues hors dashboard)'],
+      ['✦', 'SOUL — le style', 'Header'],
+      ['⚙', 'Agents', 'Header'],
+      ['⌘', 'Commandes', 'Header'],
+      ['⛭', 'Réglages', 'Header'],
+      ['◑', 'Thème clair/sombre', 'Header'],
+      ['✕', 'Quitter / état invalide', 'Header · StatusDot(error)'],
+      ['✓', 'Validé', 'StatusDot(done)'],
+      ['→', 'Action / lien', 'CTA · liens · lignes'],
+      ['+', 'Nouvelle édition', 'CTA dashboard'],
+    ].map(([g, sens, ou]) => (
+      <tr key={sens}>
+        <td style={{ fontSize: 20, textAlign: 'center' }}>{g}</td>
+        <td>{sens}</td>
+        <td style={{ color: 'var(--muted)' }}>{ou}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
