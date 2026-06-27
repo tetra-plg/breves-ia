@@ -20,3 +20,6 @@ const topic: VerifyOutput['topics'][number] = {
 };
 
 export const Exemple: StoryObj<typeof Drawer> = { args: { topic } };
+export const SansAlerte: StoryObj<typeof Drawer> = {
+  args: { topic: { ...topic, alerte: null } },
+};

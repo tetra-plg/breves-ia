@@ -7,3 +7,6 @@ export default meta;
 export const Ouverte: StoryObj<typeof CorrectModal> = {
   args: { initialWantSoulLesson: true, onCancel: () => {}, onSend: () => {} },
 };
+export const SansLecon: StoryObj<typeof CorrectModal> = {
+  args: { initialWantSoulLesson: false, onCancel: () => {}, onSend: () => {} },
+};

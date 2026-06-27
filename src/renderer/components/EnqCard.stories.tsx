@@ -20,3 +20,6 @@ export const Termine: StoryObj<typeof EnqCard> = { args: { card: base } };
 export const EnCours: StoryObj<typeof EnqCard> = {
   args: { card: { ...base, done: false, status: 'en cours', alerte: null, steps: base.steps.map((s, i) => ({ ...s, state: i < 2 ? 'done' : i === 2 ? 'active' : 'todo' })) } },
 };
+export const EnErreur: StoryObj<typeof EnqCard> = {
+  args: { card: { ...base, done: true, status: 'Erreur', error: 'Timeout réseau — aucune réponse de l\'enquêteur.', alerte: null, steps: base.steps.map((s, i) => ({ ...s, state: i < 2 ? 'done' : 'todo' })) } },
+};
