@@ -1,10 +1,10 @@
-import type { ElementType, ComponentPropsWithoutRef } from 'react';
+import type { ElementType, ComponentPropsWithoutRef, ReactNode } from 'react';
 import s from './Pill.module.css';
 
 interface PillOwnProps {
   as?: ElementType;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 type PillProps<T extends ElementType = 'span'> = PillOwnProps & Omit<ComponentPropsWithoutRef<T>, keyof PillOwnProps>;

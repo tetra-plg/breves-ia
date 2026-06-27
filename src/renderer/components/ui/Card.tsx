@@ -1,10 +1,10 @@
-import type { ElementType, ComponentPropsWithoutRef } from 'react';
+import type { ElementType, ComponentPropsWithoutRef, ReactNode } from 'react';
 import s from './Card.module.css';
 
 interface CardOwnProps {
   as?: ElementType;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 type CardProps<T extends ElementType = 'div'> = CardOwnProps & Omit<ComponentPropsWithoutRef<T>, keyof CardOwnProps>;

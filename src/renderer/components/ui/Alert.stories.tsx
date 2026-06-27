@@ -11,3 +11,4 @@ export default meta;
 export const Accent: StoryObj<typeof Alert> = { args: { tone: 'accent', children: 'Information de date' } };
 export const Warn: StoryObj<typeof Alert> = { args: { tone: 'warn', children: 'Fait corrigé' } };
 export const Nuance: StoryObj<typeof Alert> = { args: { tone: 'nuance', children: 'Nuance importante' } };
+export const Good: StoryObj<typeof Alert> = { args: { tone: 'good', children: 'Tout est vérifié' } };
