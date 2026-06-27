@@ -8,6 +8,7 @@ export function Dashboard() {
   const dashboard = useAppStore((s) => s.dashboard);
   const setDashboard = useAppStore((s) => s.setDashboard);
   const go = useAppStore((s) => s.go);
+  const openReader = useAppStore((s) => s.openReader);
 
   useEffect(() => {
     void window.api.getDashboard().then(setDashboard);
@@ -16,9 +17,7 @@ export function Dashboard() {
   const editions = dashboard?.editions ?? [];
   const last = editions[0];
   const today = dateLong(new Date().toISOString().slice(0, 10));
-  const onOpen: (edition: EditionSummary) => void = () => {
-    /* lecteur d'édition : Phase 3b */
-  };
+  const onOpen: (edition: EditionSummary) => void = (edition) => openReader(edition, 'dashboard');
 
   return (
     <section>
