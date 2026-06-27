@@ -72,9 +72,23 @@ export function Dashboard() {
           </div>
         </Card>
 
-        <Eyebrow style={{ margin: '0 0 9px' }}>
-          Éditions récentes
-        </Eyebrow>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', margin: '0 0 9px' }}>
+          <Eyebrow style={{ margin: 0 }}>Éditions récentes</Eyebrow>
+          <button
+            type="button"
+            onClick={() => go('goHist')}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              font: '500 12px var(--body)',
+              color: 'var(--accent)',
+            }}
+          >
+            voir l'historique →
+          </button>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {editions.length === 0 && <Text tone="faint" as="div">Aucune édition archivée pour l'instant.</Text>}
           {editions.slice(0, 4).map((e) => (
